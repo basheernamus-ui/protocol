@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Protocol">
+<meta name="theme-color" content="#050A0F">
+<link rel="manifest" href="/protocol/manifest.json">
+<link rel="apple-touch-icon" href="/protocol/apple-touch-icon.png">
+<title>PROTOCOL — 30</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Amiri:wght@400;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange:#FF6B00; --orange-bright:#FF8C2A; --orange-dim:rgba(255,107,0,0.12);
+  --orange-glow:rgba(255,107,0,0.22); --orange-border:rgba(255,107,0,0.35);
+  --navy:#2A4A6B; --navy-light:#3A5A7E; --navy-dim:rgba(42,74,107,0.3);
+  --black:#000000; --bg:#050A0F; --s1:#0B1520; --s2:#0E1A2B; --s3:#142030;
+  --border:rgba(42,74,107,0.4); --border2:rgba(42,74,107,0.2);
+  --green:#39FF8A; --green-dim:rgba(57,255,138,0.1);
+  --red:#FF3A5C; --red-dim:rgba(255,58,92,0.15);
+  --amber:#FFB830; --amber-dim:rgba(255,184,48,0.12);
+  --text:#C8D8E8; --text-bright:#E8F0F8; --dim:#3A5070; --dim2:#1E3040;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;max-width:480px;margin:0 auto;padding-bottom:84px;position:relative;}
+body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(42,74,107,0.35) 0%,transparent 60%),radial-gradient(ellipse 40% 30% at 0% 100%,rgba(255,107,0,0.06) 0%,transparent 50%),linear-gradient(180deg,#050A0F 0%,#030710 100%);pointer-events:none;}
+body::after{content:'';position:fixed;inset:0;z-index:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(14,26,43,0.4) 3px,rgba(14,26,43,0.4) 4px);pointer-events:none;opacity:0.4;}
+
+/* HEADER */
+.hdr{position:sticky;top:0;z-index:100;padding:0;background:rgba(5,10,15,0.95);backdrop-filter:blur(20px) saturate(1.5);border-bottom:1px solid var(--border);}
+.hdr::before{content:'';display:block;height:3px;background:linear-gradient(90deg,var(--orange),var(--orange-bright),transparent 90%);}
+.hdr-inner{padding:10px 16px 12px;}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.logo-real{display:flex;align-items:center;gap:7px;user-select:none;}
+.licon{background:linear-gradient(145deg,#f97b2a 0%,#e85f0e 100%);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(244,110,28,0.35),inset 0 1px 0 rgba(255,255,255,0.15);}
+.licon::before{content:'';position:absolute;top:-9px;left:-9px;width:24px;height:24px;background:rgba(255,255,255,.13);border-radius:50%;}
+.licon::after{content:'';position:absolute;bottom:-7px;right:-7px;width:22px;height:22px;background:rgba(0,0,0,.18);border-radius:50%;}
+.licon svg{position:relative;z-index:1;}
+.licon-hdr{width:36px;height:36px;border-radius:9px;}
+.licon-hdr svg{width:20px;height:20px;}
+.lwm{display:flex;flex-direction:column;line-height:1;}
+.ltech{font-family:'Barlow Condensed',sans-serif;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:0.12em;font-size:22px;line-height:1;}
+.ltech-wrap{position:relative;display:inline-block;}
+.ltech-wrap::after{content:'';position:absolute;left:0;bottom:-2px;width:100%;height:2px;background:linear-gradient(90deg,#f46e1c 0%,#f5d84c 100%);border-radius:2px;}
+.day-block{text-align:right;}
+.day-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:30px;color:var(--text-bright);line-height:1;letter-spacing:-0.02em;}
+.day-lbl{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.18em;color:var(--dim);margin-top:1px;}
+.hdr-date{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.1em;margin-top:6px;text-transform:uppercase;}
+.honor-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.honor-track{flex:1;height:3px;background:var(--s3);position:relative;overflow:visible;}
+.honor-fill{height:100%;background:linear-gradient(90deg,var(--orange) 0%,var(--orange-bright) 100%);transition:width 0.8s cubic-bezier(0.16,1,0.3,1);position:relative;}
+.honor-fill::after{content:'';position:absolute;right:-2px;top:-4px;width:11px;height:11px;background:var(--orange);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);box-shadow:0 0 10px var(--orange),0 0 20px var(--orange-glow);}
+.honor-lbl{font-family:'Roboto Mono',monospace;font-size:11px;font-weight:700;color:var(--orange);letter-spacing:0.05em;white-space:nowrap;}
+.today-pts-lbl{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--navy-light);letter-spacing:0.1em;margin-top:2px;text-align:right;}
+.level-row{display:flex;align-items:center;justify-content:space-between;margin-top:5px;}
+.level-badge{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border:1px solid;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;}
+.lvl-recruit{color:#6A8AA0;border-color:rgba(106,138,160,0.4);background:rgba(106,138,160,0.07);}
+.lvl-warrior{color:var(--orange);border-color:var(--orange-border);background:var(--orange-dim);}
+.lvl-elite{color:var(--amber);border-color:rgba(255,184,48,0.4);background:var(--amber-dim);}
+.lvl-legend{color:var(--green);border-color:rgba(57,255,138,0.4);background:var(--green-dim);}
+.streak-fire{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:13px;letter-spacing:0.08em;color:var(--dim);}
+.streak-fire.on-fire{color:var(--orange);animation:fireFlicker 1.5s ease-in-out infinite alternate;}
+@keyframes fireFlicker{0%{text-shadow:0 0 8px rgba(255,107,0,0.6);}100%{text-shadow:0 0 15px rgba(255,107,0,0.9),0 0 30px rgba(255,107,0,0.5);}}
+
+/* PRAYER TIMES WIDGET */
+.prayer-times-widget{margin:10px 14px 0;background:var(--s1);border:1px solid var(--border);border-top:2px solid var(--navy);padding:10px 13px;position:relative;z-index:1;animation:fadeUp 0.3s ease both;}
+.ptw-label{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.3em;color:var(--navy-light);text-transform:uppercase;margin-bottom:8px;}
+.ptw-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;}
+.ptw-item{text-align:center;padding:6px 2px;border:1px solid var(--border2);background:rgba(5,10,15,0.4);position:relative;overflow:hidden;}
+.ptw-item.ptw-active{border-color:var(--orange);background:var(--orange-dim);}
+.ptw-item.ptw-next{border-color:var(--amber);background:var(--amber-dim);}
+.ptw-item.ptw-done{border-color:var(--dim2);opacity:0.5;}
+.ptw-name{font-family:'Roboto Mono',monospace;font-size:7px;letter-spacing:0.08em;color:var(--dim);text-transform:uppercase;}
+.ptw-time{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;color:var(--text);margin-top:2px;}
+.ptw-item.ptw-active .ptw-time{color:var(--orange);}
+.ptw-item.ptw-next .ptw-time{color:var(--amber);}
+.ptw-countdown{font-family:'Roboto Mono',monospace;font-size:8px;color:var(--amber);letter-spacing:0.06em;margin-top:6px;text-align:center;}
+.ptw-countdown.urgent{color:var(--red);animation:pulse-red 1s ease-in-out infinite;}
+@keyframes pulse-red{0%,100%{opacity:1;}50%{opacity:0.5;}}
+
+/* QUOTE TICKER */
+.quote-ticker{margin:10px 14px 0;padding:10px 13px;border-left:2px solid var(--orange-border);background:rgba(255,107,0,0.04);position:relative;z-index:1;animation:fadeUp 0.3s ease both;}
+.quote-text{font-family:'Barlow',sans-serif;font-style:italic;font-size:11px;color:var(--text);line-height:1.7;letter-spacing:0.01em;}
+.quote-cursor{display:inline-block;width:2px;height:11px;background:var(--orange);animation:blink 0.7s step-end infinite;vertical-align:middle;margin-left:1px;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* CHALLENGE */
+.challenge-card{margin:10px 14px 0;background:linear-gradient(135deg,rgba(11,21,32,0.98),rgba(14,20,43,0.98));border:1px solid rgba(255,184,48,0.3);border-top:2px solid var(--amber);padding:12px 14px;position:relative;z-index:1;animation:fadeUp 0.3s 0.03s ease both;overflow:hidden;}
+.challenge-card::before{content:'⚡';position:absolute;right:12px;top:8px;font-size:32px;opacity:0.08;pointer-events:none;}
+.challenge-label{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.3em;color:var(--amber);text-transform:uppercase;margin-bottom:5px;}
+.challenge-text{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:var(--text-bright);letter-spacing:0.04em;line-height:1.4;}
+.challenge-sub{font-size:10px;color:var(--dim);margin-top:4px;}
+.challenge-pts{font-family:'Roboto Mono',monospace;font-size:10px;color:var(--amber);margin-top:6px;font-weight:700;}
+
+/* AYAH */
+.ayah-card{margin:10px 14px 0;background:var(--s1);border:1px solid var(--border);border-top:2px solid var(--orange-border);padding:14px 16px;position:relative;z-index:1;animation:fadeUp 0.3s 0.01s ease both;}
+.ayah-label{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.3em;color:var(--orange);text-transform:uppercase;margin-bottom:8px;opacity:0.7;}
+.ayah-ar{font-family:'Amiri',serif;font-size:16px;direction:rtl;text-align:right;line-height:2.2;color:var(--text-bright);margin-bottom:6px;}
+.ayah-tr{font-size:10px;color:var(--dim);font-style:italic;line-height:1.7;letter-spacing:0.01em;}
+
+/* HONOR CARD */
+.honor-card{margin:10px 14px 0;border:1px solid rgba(42,74,107,0.5);border-top:2px solid var(--navy);background:linear-gradient(135deg,rgba(14,26,43,0.95),rgba(11,21,32,0.95));padding:14px 16px;position:relative;z-index:1;overflow:hidden;animation:fadeUp 0.3s 0.04s ease both;}
+.honor-card::before{content:'HONOR 600';position:absolute;right:-10px;top:-8px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:52px;letter-spacing:-0.02em;color:rgba(42,74,107,0.15);pointer-events:none;line-height:1;}
+.honor-card-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:0.3em;color:var(--navy-light);text-transform:uppercase;margin-bottom:12px;}
+.honor-req{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;}
+.honor-req-item{background:rgba(5,10,15,0.5);border:1px solid var(--border2);padding:10px 8px;text-align:center;}
+.honor-req-item.achieved{border-color:var(--orange);background:var(--orange-dim);}
+.honor-req-val{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;color:var(--navy-light);line-height:1;}
+.honor-req-item.achieved .honor-req-val{color:var(--orange);}
+.honor-req-lbl{font-family:'Roboto Mono',monospace;font-size:7px;color:var(--dim);letter-spacing:0.15em;text-transform:uppercase;margin-top:3px;}
+.honor-req-need{font-size:8px;color:var(--dim2);margin-top:2px;font-family:'Roboto Mono',monospace;letter-spacing:0.05em;}
+.honor-req-item.achieved .honor-req-need{color:rgba(255,107,0,0.5);}
+.honor-progress-track{height:2px;background:var(--s3);margin-bottom:6px;overflow:hidden;}
+.honor-progress-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--orange));transition:width 0.8s cubic-bezier(0.16,1,0.3,1);}
+.honor-days-left{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.08em;text-align:center;}
+
+/* PHONE */
+.phone-section{margin:10px 14px 0;border:1px solid var(--border);border-top:2px solid var(--navy);background:linear-gradient(135deg,rgba(8,16,24,0.98) 0%,rgba(11,21,32,0.98) 100%);position:relative;z-index:1;overflow:hidden;}
+.phone-section::before{content:'';position:absolute;top:0;right:0;width:60%;bottom:0;background:radial-gradient(ellipse at 80% 50%,rgba(42,74,107,0.15) 0%,transparent 70%);pointer-events:none;}
+.phone-section-inner{display:flex;align-items:stretch;min-height:160px;}
+.phone-left{flex:1;padding:14px 0 14px 14px;display:flex;flex-direction:column;justify-content:space-between;position:relative;z-index:1;}
+.phone-tag{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.3em;color:var(--navy-light);text-transform:uppercase;margin-bottom:4px;}
+.phone-name{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;letter-spacing:0.05em;color:var(--text-bright);line-height:1;}
+.phone-color{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.12em;text-transform:uppercase;margin-top:3px;margin-bottom:10px;}
+.phone-specs{display:flex;flex-direction:column;gap:3px;margin-bottom:10px;}
+.phone-spec-item{display:flex;align-items:center;gap:6px;}
+.spec-lbl{font-family:'Roboto Mono',monospace;font-size:7px;letter-spacing:0.15em;color:var(--dim);width:24px;}
+.spec-val{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;color:var(--navy-light);letter-spacing:0.04em;}
+.phone-unlock-bar{height:2px;background:var(--s3);margin-bottom:5px;overflow:hidden;}
+.phone-unlock-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--orange));transition:width 0.8s cubic-bezier(0.16,1,0.3,1);}
+.phone-unlock-lbl{font-family:'Roboto Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.08em;}
+.phone-right{width:130px;flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.phone-right::before{content:'';position:absolute;left:0;top:0;bottom:0;width:40px;background:linear-gradient(90deg,rgba(8,16,24,0.9),transparent);z-index:1;}
+.phone-img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:drop-shadow(-8px 4px 20px rgba(0,0,0,0.8));display:block;}
+
+/* SECTIONS */
+.sec{padding:0 14px;margin-top:12px;position:relative;z-index:1;animation:fadeUp 0.3s ease both;}
+.sec-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.sec-tag{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;padding:3px 10px;border:1px solid;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));}
+.tag-core{color:var(--orange);border-color:var(--orange-border);background:var(--orange-dim);}
+.tag-disc{color:var(--navy-light);border-color:rgba(42,74,107,0.6);background:rgba(42,74,107,0.15);}
+.tag-growth{color:var(--green);border-color:rgba(57,255,138,0.3);background:var(--green-dim);}
+.tag-viol{color:var(--red);border-color:var(--red-dim);}
+.sec-pts{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.1em;margin-left:auto;}
+
+/* PRAYER GRID */
+.prayer-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:6px;}
+.prayer-btn{background:var(--s1);border:1px solid var(--border2);border-bottom:2px solid var(--dim2);padding:9px 2px 8px;text-align:center;cursor:pointer;transition:all 0.18s cubic-bezier(0.34,1.56,0.64,1);user-select:none;-webkit-user-select:none;position:relative;overflow:hidden;}
+.prayer-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.03) 0%,transparent 100%);pointer-events:none;}
+.prayer-btn:active{transform:scale(0.92);}
+.prayer-btn.p-done{border-bottom-color:var(--orange);background:var(--orange-dim);}
+.prayer-btn.p-witr.p-done{border-bottom-color:var(--navy-light);background:var(--navy-dim);}
+.prayer-btn.p-done .prayer-chk{color:var(--orange);}
+.prayer-btn.p-witr.p-done .prayer-chk{color:var(--navy-light);}
+.prayer-name{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:9px;letter-spacing:0.1em;color:var(--dim);text-transform:uppercase;margin-bottom:4px;}
+.prayer-btn.p-done .prayer-name{color:var(--text);}
+.prayer-chk{font-size:14px;color:var(--dim2);min-height:17px;display:flex;align-items:center;justify-content:center;font-family:'Roboto Mono',monospace;font-weight:700;}
+.prayer-summary{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.12em;padding:4px 0 2px;text-align:center;}
+
+/* TASKS */
+.task{background:var(--s1);border:1px solid var(--border2);border-left:3px solid var(--dim2);padding:11px 12px 11px 13px;margin-bottom:4px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all 0.15s ease;user-select:none;-webkit-user-select:none;position:relative;overflow:hidden;}
+.task:active{transform:scale(0.988);}
+.task.t-done{border-left-color:var(--orange);background:var(--orange-dim);}
+.task.t-done .task-name{text-decoration:line-through;color:rgba(200,216,232,0.45);}
+.task.core-task{border-left-color:rgba(255,107,0,0.3);}
+.task.core-task.t-done{border-left-color:var(--orange);background:var(--orange-dim);}
+.task.disc-task{border-left-color:rgba(42,74,107,0.5);}
+.task.disc-task.t-done{border-left-color:var(--navy-light);background:var(--navy-dim);}
+.task.disc-task.t-done .task-pts{color:var(--navy-light);}
+.task.growth-task{border-left-color:rgba(57,255,138,0.2);}
+.task.growth-task.t-done{border-left-color:var(--green);background:var(--green-dim);}
+.task.growth-task .task-pts,.task.growth-task.t-done .task-pts{color:var(--green);}
+.task-chk{width:18px;height:18px;flex-shrink:0;border:1px solid var(--dim2);display:flex;align-items:center;justify-content:center;font-size:11px;transition:all 0.15s;font-family:'Roboto Mono',monospace;font-weight:700;}
+.task.t-done .task-chk{background:var(--orange);border-color:var(--orange);color:var(--black);}
+.task.disc-task.t-done .task-chk{background:var(--navy);border-color:var(--navy-light);color:white;}
+.task.growth-task.t-done .task-chk{background:var(--green);border-color:var(--green);color:var(--black);}
+.task-info{flex:1;min-width:0;}
+.task-name{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:0.04em;color:var(--text-bright);transition:all 0.2s;}
+.task-sub{font-size:10px;color:var(--dim);margin-top:1px;letter-spacing:0.02em;}
+.task-pts{font-family:'Roboto Mono',monospace;font-size:11px;font-weight:700;color:var(--orange);letter-spacing:0.04em;flex-shrink:0;}
+.prayer-wrap{background:var(--s1);border:1px solid var(--border2);border-left:3px solid rgba(255,107,0,0.3);padding:11px 12px 10px 13px;margin-bottom:4px;position:relative;}
+.prayer-wrap.p-active{border-left-color:var(--orange);}
+.prayer-wrap-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.prayer-wrap-name{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:0.04em;color:var(--text-bright);}
+.prayer-wrap-pts{font-family:'Roboto Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:0.06em;}
+
+/* TASBIH */
+.tasbih-card{margin:12px 14px 0;background:var(--s1);border:1px solid var(--border);border-top:2px solid rgba(200,144,240,0.5);padding:14px 16px;position:relative;z-index:1;}
+.tasbih-label{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.3em;color:#c890f0;text-transform:uppercase;margin-bottom:10px;opacity:0.8;}
+.tasbih-row{display:flex;align-items:center;gap:12px;}
+.tasbih-count{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:52px;color:var(--text-bright);line-height:1;letter-spacing:-0.02em;min-width:70px;}
+.tasbih-right{flex:1;}
+.tasbih-dhikr{font-family:'Amiri',serif;font-size:15px;direction:rtl;color:var(--text-bright);margin-bottom:4px;line-height:1.6;}
+.tasbih-dhikr-tr{font-size:10px;color:var(--dim);font-style:italic;}
+.tasbih-btns{display:flex;gap:8px;margin-top:10px;}
+.tasbih-btn{flex:1;padding:10px;border:none;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.15em;text-transform:uppercase;transition:all 0.15s;}
+.tasbih-btn-tap{background:rgba(200,144,240,0.15);color:#c890f0;border:1px solid rgba(200,144,240,0.3);flex:3;}
+.tasbih-btn-tap:active{background:rgba(200,144,240,0.3);transform:scale(0.97);}
+.tasbih-btn-reset{background:var(--s2);color:var(--dim);border:1px solid var(--border2);}
+.tasbih-progress{height:2px;background:var(--s3);margin-top:8px;}
+.tasbih-progress-fill{height:100%;background:linear-gradient(90deg,#c890f0,#a060d0);transition:width 0.3s ease;}
+.tasbih-milestones{font-family:'Roboto Mono',monospace;font-size:8px;color:var(--dim);margin-top:4px;letter-spacing:0.06em;}
+
+/* VIOLATIONS */
+.violation-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.viol-btn{background:var(--s1);border:1px solid var(--red-dim);border-bottom:2px solid rgba(255,58,92,0.3);padding:12px 10px;cursor:pointer;text-align:center;transition:all 0.15s;user-select:none;position:relative;}
+.viol-btn:active{background:rgba(255,58,92,0.08);transform:scale(0.96);}
+.viol-icon{font-size:18px;margin-bottom:5px;}
+.viol-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:0.12em;color:var(--red);text-transform:uppercase;}
+.viol-sub{font-size:9px;color:var(--dim);margin-top:2px;}
+
+/* MOOD */
+.mood-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;}
+.mood-btn{background:var(--s1);border:1px solid var(--border2);padding:10px 4px;text-align:center;cursor:pointer;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);user-select:none;}
+.mood-btn:active{transform:scale(0.92);}
+.mood-emoji{font-size:20px;margin-bottom:4px;}
+.mood-lbl{font-size:8px;color:var(--dim);letter-spacing:0.05em;font-family:'Roboto Mono',monospace;}
+
+/* UNCONFIRMED */
+.unconfirmed-screen{display:none;padding:16px 14px;position:relative;z-index:1;}
+.unc-box{background:rgba(255,58,92,0.04);border:1px solid rgba(255,58,92,0.3);border-top:3px solid var(--red);padding:16px;}
+.unc-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:0.15em;color:var(--red);margin-bottom:8px;}
+.unc-msg{font-size:11px;color:var(--dim);line-height:1.7;margin-bottom:14px;}
+.unc-btns{display:flex;gap:8px;}
+.unc-btn{flex:1;padding:10px;border:1px solid;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;background:none;}
+.unc-btn.confirm{border-color:var(--green);color:var(--green);}
+.unc-btn.admit{border-color:var(--red);color:var(--red);}
+
+/* NAV */
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(5,10,15,0.97);border-top:1px solid var(--border);backdrop-filter:blur(20px);display:flex;z-index:200;}
+.nav::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--orange-border),transparent);}
+.nav-btn{flex:1;padding:10px 6px 16px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;border:none;background:none;color:var(--dim);transition:all 0.2s;font-size:18px;position:relative;}
+.nav-btn.active{color:var(--orange);}
+.nav-btn.active::before{content:'';position:absolute;top:0;left:25%;right:25%;height:2px;background:var(--orange);}
+.nav-btn span{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;}
+
+/* TOAST */
+.toast{position:fixed;top:72px;left:50%;transform:translateX(-50%) translateY(-12px);background:var(--s2);border:1px solid var(--orange-border);border-top:2px solid var(--orange);color:var(--orange);font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.1em;padding:7px 16px;z-index:999;opacity:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.red{border-color:var(--red-dim);border-top-color:var(--red);color:var(--red);}
+.toast.green{border-color:rgba(57,255,138,0.3);border-top-color:var(--green);color:var(--green);}
+
+/* FLASH */
+.flash{position:fixed;inset:0;z-index:500;pointer-events:none;opacity:0;transition:opacity 0.35s;}
+.flash.show{opacity:1;background:rgba(255,107,0,0.04);}
+.flash.red-flash{background:rgba(255,58,92,0.06);}
+
+/* COMBO POP */
+.combo-pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:var(--s2);border:2px solid var(--orange);padding:12px 24px;z-index:800;pointer-events:none;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);opacity:0;text-align:center;}
+.combo-pop.show{opacity:1;transform:translate(-50%,-60%) scale(1);}
+.combo-pop-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;color:var(--orange);letter-spacing:0.15em;}
+.combo-pop-sub{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.1em;margin-top:3px;}
+
+/* MODALS */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:600;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--s1);border:1px solid rgba(255,58,92,0.3);border-top:3px solid var(--red);padding:20px;width:100%;max-width:340px;}
+.modal-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;letter-spacing:0.15em;color:var(--red);margin-bottom:8px;}
+.modal-msg{font-size:11px;color:var(--dim);line-height:1.8;margin-bottom:12px;}
+.modal-penalty{font-family:'Roboto Mono',monospace;font-size:11px;color:var(--text);padding:10px;background:rgba(255,58,92,0.05);border:1px solid rgba(255,58,92,0.2);margin-bottom:14px;line-height:1.7;}
+.modal-close{width:100%;padding:11px;border:1px solid rgba(255,58,92,0.4);background:none;color:var(--red);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;}
+.modal-close:active{background:rgba(255,58,92,0.08);}
+.reward-modal{background:var(--s1);border:1px solid rgba(255,107,0,0.4);border-top:3px solid var(--orange);padding:24px 20px;width:100%;max-width:340px;text-align:center;}
+.reward-icon{font-size:38px;margin-bottom:10px;}
+.reward-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;letter-spacing:0.1em;color:var(--orange);margin-bottom:8px;}
+.reward-msg{font-size:11px;color:var(--dim);line-height:1.8;margin-bottom:16px;}
+.reward-close{width:100%;padding:11px;border:1px solid var(--orange-border);background:none;color:var(--orange);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;}
+
+/* HISTORY / SETTINGS / STATS */
+.history-view,.settings-view,.stats-view{display:none;padding:14px;position:relative;z-index:1;}
+.hist-view-title,.settings-title,.stats-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;letter-spacing:0.2em;color:var(--orange);margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:10px;}
+.hist-day{background:var(--s1);border:1px solid var(--border2);border-left:3px solid var(--dim2);padding:11px 13px;margin-bottom:5px;display:flex;align-items:center;gap:11px;}
+.hist-date-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;color:var(--dim);min-width:30px;line-height:1;}
+.hist-info{flex:1;}
+.hist-lbl{font-size:11px;letter-spacing:0.05em;color:var(--text);}
+.hist-pts{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);margin-top:2px;}
+.hist-bar{width:50px;height:3px;background:var(--s3);}
+.hist-bar-fill{height:100%;background:var(--orange);}
+.hist-badge{font-family:'Roboto Mono',monospace;font-size:8px;padding:2px 5px;border:1px solid;margin-top:4px;display:inline-block;letter-spacing:0.1em;}
+.badge-perfect{color:var(--orange);border-color:var(--orange-border);}
+.badge-viol{color:var(--red);border-color:var(--red-dim);}
+.setting-row{background:var(--s1);border:1px solid var(--border2);padding:13px;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background 0.15s;}
+.setting-row:active{background:var(--s2);}
+.setting-lbl{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;letter-spacing:0.06em;color:var(--text);}
+.setting-sub{font-size:10px;color:var(--dim);margin-top:2px;}
+.stat-week-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.week-btn{background:var(--s1);border:1px solid var(--border2);color:var(--dim);font-size:12px;padding:6px 14px;cursor:pointer;font-family:'Roboto Mono',monospace;transition:all 0.15s;}
+.week-btn:active{border-color:var(--orange);color:var(--orange);}
+.week-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.2em;color:var(--orange);text-transform:uppercase;}
+.stat-card{background:var(--s1);border:1px solid var(--border2);border-top:1px solid var(--border);padding:13px;margin-bottom:8px;}
+.stat-card-title{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.25em;color:var(--dim);text-transform:uppercase;margin-bottom:12px;}
+.bar-chart{display:flex;align-items:flex-end;gap:5px;height:80px;margin-bottom:6px;}
+.bar-labels{display:flex;gap:5px;}
+.bar-day-lbl{flex:1;text-align:center;font-family:'Roboto Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.05em;}
+.bar-day-lbl.today-lbl-bar{color:var(--orange);}
+.stat-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px;}
+.stat-mini{background:var(--s1);border:1px solid var(--border2);padding:11px 10px;text-align:center;}
+.stat-mini-val{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;color:var(--orange);line-height:1;}
+.stat-mini-lbl{font-family:'Roboto Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.1em;text-transform:uppercase;margin-top:3px;}
+.growth-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:40px;line-height:1;letter-spacing:-0.02em;}
+.growth-positive{color:var(--green);}.growth-negative{color:var(--red);}.growth-neutral{color:var(--dim);}
+.growth-sub{font-size:10px;color:var(--dim);letter-spacing:0.06em;margin-top:4px;}
+.task-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border2);}
+.task-row:last-child{border-bottom:none;}
+.task-row-name{font-size:10px;color:var(--text);flex:1;letter-spacing:0.03em;}
+.task-row-bar{width:70px;height:2px;background:var(--s3);}
+.task-row-fill{height:100%;transition:width 0.5s ease;}
+.fill-green{background:var(--green);}.fill-amber{background:var(--amber);}.fill-red{background:var(--red);}
+.task-row-pct{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);width:26px;text-align:right;}
+.task-status{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:9px;padding:2px 6px;border:1px solid;letter-spacing:0.1em;flex-shrink:0;}
+.status-maintain{color:var(--green);border-color:rgba(57,255,138,0.3);}
+.status-focus{color:var(--red);border-color:rgba(255,58,92,0.3);}
+.status-improve{color:var(--amber);border-color:rgba(255,184,48,0.3);}
+.streak-map{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:6px;}
+.sm-cell{aspect-ratio:1;border:1px solid var(--border2);}
+.sm-full{background:var(--orange);border-color:var(--orange);}
+.sm-partial{background:var(--navy);border-color:var(--navy-light);}
+.sm-missed{background:rgba(255,58,92,0.2);border-color:var(--red-dim);}
+.sm-future{background:var(--s3);border-color:var(--border2);}
+.sm-today{outline:2px solid var(--orange);outline-offset:1px;}
+.viol-stat-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border2);}
+.viol-stat-row:last-child{border-bottom:none;}
+.viol-stat-name{font-size:10px;color:var(--text);flex:1;}
+.viol-stat-count{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;color:var(--red);}
+.prayer-stat-row{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:8px;}
+.prayer-stat-cell{text-align:center;background:var(--s2);padding:6px 2px;border:1px solid var(--border2);}
+.prayer-stat-name{font-family:'Roboto Mono',monospace;font-size:7px;color:var(--dim);letter-spacing:0.06em;}
+.prayer-stat-count{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;color:var(--orange);}
+.prayer-stat-pct{font-size:7px;color:var(--dim);font-family:'Roboto Mono',monospace;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes taskBounce{0%{transform:scale(1);}40%{transform:scale(1.04);}100%{transform:scale(1);}}
+.task-bounce{animation:taskBounce 0.35s ease;}
+@keyframes pulse-orange{0%,100%{box-shadow:0 0 0 0 var(--orange-glow);}50%{box-shadow:0 0 0 6px transparent;}}
+</style>
+</head>
+<body>
+<div class="flash" id="flash"></div>
+<div class="combo-pop" id="combo-pop"><div class="combo-pop-title" id="combo-pop-title">COMBO ×2</div><div class="combo-pop-sub" id="combo-pop-sub">KEEP THE MOMENTUM</div></div>
+
+<div class="modal-overlay" id="penalty-modal"><div class="modal"><div class="modal-title" id="pm-title">VIOLATION</div><div class="modal-msg" id="pm-msg"></div><div class="modal-penalty" id="pm-penalty"></div><button class="modal-close" onclick="closeModal('penalty-modal')">I ACKNOWLEDGE</button></div></div>
+<input type="file" id="import-file-input" accept=".json" style="display:none;" onchange="handleImportFile(event)">
+<div class="modal-overlay" id="reward-modal"><div class="reward-modal"><div class="reward-icon" id="rm-icon">⚡</div><div class="reward-title" id="rm-title">ACHIEVEMENT</div><div class="reward-msg" id="rm-msg"></div><button class="reward-close" onclick="closeModal('reward-modal')">RECEIVED</button></div></div>
+<div class="toast" id="toast"></div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-top">
+      <div class="logo-real">
+        <div class="licon licon-hdr">
+          <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;">
+            <text x="10" y="15.5" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-weight="900" font-size="16" fill="#0a0a0a" letter-spacing="-0.5">30</text>
+          </svg>
+        </div>
+        <div class="lwm"><div class="ltech-wrap"><span class="ltech">PROTOCOL</span></div></div>
+      </div>
+      <div class="day-block">
+        <div class="day-num" id="day-num">—</div>
+        <div class="day-lbl">OF 30</div>
+      </div>
+    </div>
+    <div class="hdr-date" id="hdr-date">—</div>
+    <div class="level-row">
+      <div class="level-badge lvl-recruit" id="level-badge">◆ RECRUIT</div>
+      <div class="streak-fire" id="streak-fire">🔥 0</div>
+    </div>
+    <div class="honor-row">
+      <div class="honor-track"><div class="honor-fill" id="pts-fill" style="width:0%"></div></div>
+      <div class="honor-lbl" id="pts-lbl">0 pts</div>
+    </div>
+    <div class="today-pts-lbl" id="today-lbl">TODAY: 0 PTS</div>
+  </div>
+</div>
+
+<!-- DAILY VIEW -->
+<div id="view-daily">
+
+  <!-- PRAYER TIMES WIDGET -->
+  <div class="prayer-times-widget">
+    <div class="ptw-label">🕌 Damascus Prayer Times</div>
+    <div class="ptw-grid" id="ptw-grid"></div>
+    <div class="ptw-countdown" id="ptw-countdown"></div>
+  </div>
+
+  <!-- UNCONFIRMED -->
+  <div class="unconfirmed-screen" id="unconfirmed-screen">
+    <div class="unc-box">
+      <div class="unc-title">⚠ YESTERDAY UNCONFIRMED</div>
+      <div class="unc-msg" id="unc-msg">Tasks from yesterday were never confirmed.</div>
+      <div id="unc-task-list" style="margin-bottom:10px;"></div>
+      <div style="font-size:9px;color:var(--amber);font-family:'Roboto Mono',monospace;letter-spacing:0.06em;margin-bottom:10px;">⚠ LATE LOG — 25% POINT PENALTY APPLIES</div>
+      <div class="unc-btns">
+        <button class="unc-btn confirm" onclick="confirmYesterdayLate()">LOG WHAT I DID</button>
+        <button class="unc-btn admit" onclick="confirmYesterday(false)">I MISSED IT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOTIVATIONAL QUOTE -->
+  <div class="quote-ticker"><div class="quote-text" id="quote-text"><span class="quote-cursor"></span></div></div>
+
+  <!-- DAILY CHALLENGE -->
+  <div class="challenge-card">
+    <div class="challenge-label">⚡ Daily Challenge</div>
+    <div class="challenge-text" id="challenge-text">—</div>
+    <div class="challenge-sub" id="challenge-sub"></div>
+    <div class="challenge-pts" id="challenge-pts"></div>
+  </div>
+
+  <!-- AYAH -->
+  <div class="ayah-card">
+    <div class="ayah-label">Daily Verse</div>
+    <div class="ayah-ar" id="ayah-ar">وَأَعِدُّوا لَهُم مَّا اسْتَطَعْتُم مِّن قُوَّةٍ</div>
+    <div class="ayah-tr" id="ayah-tr">"Prepare against them whatever force you are able." — 8:60</div>
+  </div>
+
+  <!-- HONOR GOAL -->
+  <div class="honor-card">
+    <div class="honor-card-title">◈ HONOR GOAL</div>
+    <div class="honor-req">
+      <div class="honor-req-item" id="honor-req-streak"><div class="honor-req-val" id="honor-streak-val">0</div><div class="honor-req-lbl">Streak</div><div class="honor-req-need">Need 30</div></div>
+      <div class="honor-req-item" id="honor-req-pts-item"><div class="honor-req-val" id="honor-pts-val">0%</div><div class="honor-req-lbl">Efficiency</div><div class="honor-req-need" id="honor-req-need-pts">Need 75%</div></div>
+      <div class="honor-req-item"><div class="honor-req-val" id="honor-streak-days-val">30</div><div class="honor-req-lbl">Streak Left</div><div class="honor-req-need" id="honor-days-sub">of 30 days</div></div>
+    </div>
+    <div class="honor-progress-track"><div class="honor-progress-fill" id="honor-progress-fill" style="width:0%"></div></div>
+    <div class="honor-days-left" id="honor-days-left">—</div>
+  </div>
+
+  <!-- PHONE TARGET -->
+  <div class="phone-section">
+    <div class="phone-section-inner">
+      <div class="phone-left">
+        <div class="phone-tag">◈ TARGET</div>
+        <div class="phone-name">HONOR 600</div>
+        <div class="phone-color">Obsidian Black</div>
+        <div class="phone-specs">
+          <div class="phone-spec-item"><span class="spec-lbl">CAM</span><span class="spec-val">200MP</span></div>
+          <div class="phone-spec-item"><span class="spec-lbl">BAT</span><span class="spec-val">7000mAh</span></div>
+          <div class="phone-spec-item"><span class="spec-lbl">CPU</span><span class="spec-val">SD 7 Gen 4</span></div>
+        </div>
+        <div class="phone-unlock-bar"><div class="phone-unlock-fill" id="phone-unlock-fill" style="width:0%"></div></div>
+        <div class="phone-unlock-lbl" id="phone-unlock-lbl">0% efficiency · need 75% over 30 days</div>
+      </div>
+      <div class="phone-right">
+        <img src="https://www.honor.com/content/dam/honor/common/products/honor-600/kv/honor-600-black.png" onerror="this.src='https://fdn2.gsmarena.com/vv/pics/honor/honor-600-1.jpg';this.onerror=null;" alt="Honor 600 Black" class="phone-img">
+      </div>
+    </div>
+  </div>
+
+  <!-- BEDROCKS -->
+  <div class="sec">
+    <div class="sec-hdr"><div class="sec-tag tag-core">⚡ Bedrocks</div><div class="sec-pts" id="core-pts-label">0 / 26 PTS</div></div>
+    <div class="prayer-wrap" id="prayer-section">
+      <div class="prayer-wrap-hdr"><div class="prayer-wrap-name">Salah + Witr</div><div class="prayer-wrap-pts">2pts / 3pts</div></div>
+      <div class="prayer-grid">
+        <div class="prayer-btn" id="pb-fajr" onclick="togglePrayer('fajr')"><div class="prayer-name">Fajr</div><div class="prayer-chk" id="pc-fajr">○</div></div>
+        <div class="prayer-btn" id="pb-dhuhr" onclick="togglePrayer('dhuhr')"><div class="prayer-name">Dhuhr</div><div class="prayer-chk" id="pc-dhuhr">○</div></div>
+        <div class="prayer-btn" id="pb-asr" onclick="togglePrayer('asr')"><div class="prayer-name">Asr</div><div class="prayer-chk" id="pc-asr">○</div></div>
+        <div class="prayer-btn" id="pb-maghrib" onclick="togglePrayer('maghrib')"><div class="prayer-name">Mgrib</div><div class="prayer-chk" id="pc-maghrib">○</div></div>
+        <div class="prayer-btn" id="pb-isha" onclick="togglePrayer('isha')"><div class="prayer-name">Isha</div><div class="prayer-chk" id="pc-isha">○</div></div>
+        <div class="prayer-btn p-witr" id="pb-witr" onclick="togglePrayer('witr')"><div class="prayer-name">Witr</div><div class="prayer-chk" id="pc-witr">○</div></div>
+      </div>
+      <div class="prayer-summary" id="prayer-summary">0 / 6 today</div>
+    </div>
+    <div class="task core-task" id="t-athkar_m" onclick="toggleSimple('athkar_m')"><div class="task-chk" id="chk-athkar_m"></div><div class="task-info"><div class="task-name">Athkar — Morning</div><div class="task-sub">After Fajr</div></div><div class="task-pts">+2</div></div>
+    <div class="task core-task" id="t-athkar_a" onclick="toggleSimple('athkar_a')"><div class="task-chk" id="chk-athkar_a"></div><div class="task-info"><div class="task-name">Athkar — Afternoon</div><div class="task-sub">After Asr</div></div><div class="task-pts">+2</div></div>
+    <div class="task core-task" id="t-wird" onclick="toggleSimple('wird')"><div class="task-chk" id="chk-wird"></div><div class="task-info"><div class="task-name">Daily Wird</div><div class="task-sub">Quran — daily portion</div></div><div class="task-pts">+3</div></div>
+    <div class="task core-task" id="t-walk" onclick="toggleSimple('walk')"><div class="task-chk" id="chk-walk"></div><div class="task-info"><div class="task-name">30min Walk</div><div class="task-sub">Outside. Move.</div></div><div class="task-pts">+2</div></div>
+    <div class="task core-task" id="t-uni" onclick="toggleSimple('uni')"><div class="task-chk" id="chk-uni"></div><div class="task-info"><div class="task-name">Uni Work</div><div class="task-sub">Focused session — university only</div></div><div class="task-pts">+3</div></div>
+  </div>
+
+  <!-- DISCIPLINE -->
+  <div class="sec">
+    <div class="sec-hdr"><div class="sec-tag tag-disc">◈ Discipline</div><div class="sec-pts">21 PTS MAX</div></div>
+    <div class="task disc-task" id="t-memorize" onclick="toggleSimple('memorize')"><div class="task-chk" id="chk-memorize"></div><div class="task-info"><div class="task-name">Quran Memorization</div><div class="task-sub">New verses — active recall</div></div><div class="task-pts">+5</div></div>
+    <div class="task disc-task" id="t-gym" onclick="toggleSimple('gym')"><div class="task-chk" id="chk-gym"></div><div class="task-info"><div class="task-name">Gym</div><div class="task-sub">Full session</div></div><div class="task-pts">+4</div></div>
+    <div class="task disc-task" id="t-unireview" onclick="toggleSimple('unireview')"><div class="task-chk" id="chk-unireview"></div><div class="task-info"><div class="task-name">Uni Review</div><div class="task-sub">Revisit and consolidate</div></div><div class="task-pts">+4</div></div>
+    <div class="task disc-task" id="t-noscroll" onclick="toggleSimple('noscroll')"><div class="task-chk" id="chk-noscroll"></div><div class="task-info"><div class="task-name">No Doom Scrolling</div><div class="task-sub">Reels / mindless feed</div></div><div class="task-pts">+3</div></div>
+    <div class="task disc-task" id="t-nofog" onclick="toggleSimple('nofog')"><div class="task-chk" id="chk-nofog"></div><div class="task-info"><div class="task-name">No Fog</div><div class="task-sub">Clear mind. Clear soul.</div></div><div class="task-pts">+5</div></div>
+  </div>
+
+  <!-- GROWTH -->
+  <div class="sec">
+    <div class="sec-hdr"><div class="sec-tag tag-growth">▲ Growth</div><div class="sec-pts">12 PTS MAX</div></div>
+    <div class="task growth-task" id="t-drone" onclick="toggleSimple('drone')"><div class="task-chk" id="chk-drone"></div><div class="task-info"><div class="task-name">Drone Building Course</div><div class="task-sub">Watch + apply — not passive</div></div><div class="task-pts">+4</div></div>
+    <div class="task growth-task" id="t-tajweed" onclick="toggleSimple('tajweed')"><div class="task-chk" id="chk-tajweed"></div><div class="task-info"><div class="task-name">Tajweed Session</div><div class="task-sub">Prepare or study rules</div></div><div class="task-pts">+4</div></div>
+    <div class="task growth-task" id="t-beneficial" onclick="toggleSimple('beneficial')"><div class="task-chk" id="chk-beneficial"></div><div class="task-info"><div class="task-name">Something Beneficial</div><div class="task-sub">Reading, skill, service — your call</div></div><div class="task-pts">+4</div></div>
+  </div>
+
+  <!-- TASBIH -->
+  <div class="tasbih-card">
+    <div class="tasbih-label">📿 Tasbih Counter</div>
+    <div class="tasbih-row">
+      <div class="tasbih-count" id="tasbih-count">0</div>
+      <div class="tasbih-right">
+        <div class="tasbih-dhikr" id="tasbih-dhikr">سُبْحَانَ اللَّهِ</div>
+        <div class="tasbih-dhikr-tr" id="tasbih-dhikr-tr">SubhanAllah</div>
+      </div>
+    </div>
+    <div class="tasbih-progress"><div class="tasbih-progress-fill" id="tasbih-fill" style="width:0%"></div></div>
+    <div class="tasbih-milestones" id="tasbih-milestones">0 / 33</div>
+    <div class="tasbih-btns">
+      <button class="tasbih-btn tasbih-btn-tap" onclick="tapTasbih()">DHIKR +1</button>
+      <button class="tasbih-btn tasbih-btn-reset" onclick="resetTasbih()">RESET</button>
+    </div>
+  </div>
+
+  <!-- MOOD -->
+  <div class="sec">
+    <div class="sec-hdr"><div class="sec-tag" style="color:#a07cc5;border-color:#3a2060;">🌡 Mood</div><div class="sec-pts" id="mood-submitted-label">ONCE PER DAY</div></div>
+    <div id="mood-area">
+      <div class="mood-grid" id="mood-grid">
+        <div class="mood-btn" onclick="submitMood(5)"><div class="mood-emoji">💪</div><div class="mood-lbl">Powerful</div></div>
+        <div class="mood-btn" onclick="submitMood(4)"><div class="mood-emoji">😊</div><div class="mood-lbl">Good</div></div>
+        <div class="mood-btn" onclick="submitMood(3)"><div class="mood-emoji">😐</div><div class="mood-lbl">Neutral</div></div>
+        <div class="mood-btn" onclick="submitMood(2)"><div class="mood-emoji">😔</div><div class="mood-lbl">Low</div></div>
+        <div class="mood-btn" onclick="submitMood(1)"><div class="mood-emoji">😤</div><div class="mood-lbl">Rough</div></div>
+      </div>
+      <div id="mood-done" style="display:none;font-size:11px;color:var(--dim);text-align:center;padding:10px 0;letter-spacing:0.06em;"></div>
+    </div>
+  </div>
+
+  <!-- VIOLATIONS -->
+  <div class="sec" style="margin-bottom:14px;">
+    <div class="sec-hdr"><div class="sec-tag tag-viol">⚠ Violations</div><div class="sec-pts">TAP IF BROKEN</div></div>
+    <div class="violation-grid">
+      <div class="viol-btn" onclick="reportViolation('missedprayer')"><div class="viol-icon">🕌</div><div class="viol-name">Missed Prayer</div><div class="viol-sub">Prayed late or skipped</div></div>
+      <div class="viol-btn" onclick="reportViolation('haram')"><div class="viol-icon">🌫️</div><div class="viol-name">Fog</div><div class="viol-sub">You know what this is</div></div>
+      <div class="viol-btn" onclick="reportViolation('scroll')"><div class="viol-icon">📱</div><div class="viol-name">Doom Scroll</div><div class="viol-sub">Mindless feed</div></div>
+      <div class="viol-btn" onclick="reportViolation('early')"><div class="viol-icon">🎮</div><div class="viol-name">Played Early</div><div class="viol-sub">Before bedrocks done</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div id="view-history" class="history-view"><div class="hist-view-title">HISTORY</div><div id="history-list"></div></div>
+
+<!-- SETTINGS -->
+<div id="view-settings" class="settings-view">
+  <div class="settings-title">SETTINGS</div>
+  <div class="setting-row"><div><div class="setting-lbl">Journey Start</div><div class="setting-sub" id="start-date-display">8 Jun 2026</div></div></div>
+  <div class="setting-row"><div><div class="setting-lbl">Current Streak</div><div class="setting-sub" id="streak-display">0 days</div></div></div>
+  <div class="setting-row" onclick="requestNotifPermission()"><div><div class="setting-lbl" id="notif-lbl" style="color:var(--orange);">Enable Notifications</div><div class="setting-sub" id="notif-sub">Daily reminder 9pm · Motivation 2pm</div></div><div id="notif-icon" style="font-size:16px;color:var(--orange);">🔔</div></div>
+  <div class="setting-row" onclick="sendTestNotification()"><div><div class="setting-lbl" style="color:var(--orange);">Send Test Notification</div><div class="setting-sub">Fire one right now</div></div><div style="font-size:16px;color:var(--orange);">▶</div></div>
+  <div class="setting-row" onclick="exportWeeklyReport()"><div><div class="setting-lbl" style="color:#c890f0;">Export Weekly Report</div><div class="setting-sub">Download .txt report</div></div><div style="font-size:16px;color:#c890f0;">📋</div></div>
+  <div class="setting-row" onclick="exportBackup()"><div><div class="setting-lbl" style="color:var(--green);">Export Backup</div><div class="setting-sub">Download JSON backup</div></div><div style="font-size:16px;color:var(--green);">↓</div></div>
+  <div class="setting-row" onclick="document.getElementById('import-file-input').click()"><div><div class="setting-lbl" style="color:var(--orange);">Import Backup</div><div class="setting-sub">Restore from JSON</div></div><div style="font-size:16px;color:var(--orange);">↑</div></div>
+  <div class="setting-row" onclick="resetToday()"><div><div class="setting-lbl" style="color:var(--amber);">Reset Today</div><div class="setting-sub">Clear today's checkboxes</div></div><div style="font-size:16px;color:var(--amber);">↺</div></div>
+  <div class="setting-row" onclick="confirmReset()"><div><div class="setting-lbl" style="color:var(--red);">Reset All Data</div><div class="setting-sub">Wipes all history and points</div></div><div style="font-size:16px;color:var(--red);">✕</div></div>
+  <div class="ayah-card" style="margin-top:14px;"><div class="ayah-ar">وَمَا تَوْفِيقِي إِلَّا بِاللَّهِ</div><div class="ayah-tr">"My success is only through Allah." — 11:88</div></div>
+</div>
+
+<!-- STATS -->
+<div id="view-stats" class="stats-view">
+  <div class="stats-title">STATISTICS</div>
+  <div class="stat-week-row"><button class="week-btn" onclick="shiftWeek(-1)">◀</button><div class="week-label" id="stat-week-label">THIS WEEK</div><button class="week-btn" onclick="shiftWeek(1)">▶</button></div>
+  <div class="stat-card"><div class="stat-card-title">DAILY MOOD</div><div id="mood-chart" style="display:flex;align-items:flex-end;gap:5px;height:60px;margin-bottom:6px;"></div><div class="bar-labels" id="mood-chart-labels"></div></div>
+  <div class="stat-card"><div class="stat-card-title">DAILY POINTS</div><div class="bar-chart" id="bar-chart"></div><div class="bar-labels" id="bar-labels"></div></div>
+  <div class="stat-row-3" id="stat-summary-row"></div>
+  <div class="stat-card"><div class="stat-card-title">PRAYER ATTENDANCE</div><div class="prayer-stat-row" id="prayer-stat-row"></div></div>
+  <div class="stat-card"><div class="stat-card-title">WEEK-ON-WEEK GROWTH</div><div style="text-align:center;padding:8px 0;" id="growth-display"></div></div>
+  <div class="stat-card"><div class="stat-card-title">TASK BREAKDOWN</div><div id="task-breakdown"></div></div>
+  <div class="stat-card"><div class="stat-card-title">VIOLATIONS</div><div id="violation-breakdown"></div></div>
+  <div class="stat-card"><div class="stat-card-title">30-DAY MAP</div><div class="streak-map" id="streak-map"></div><div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--dim);"><div style="width:9px;height:9px;background:var(--orange);"></div>FULL</div><div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--dim);"><div style="width:9px;height:9px;background:var(--navy);"></div>PARTIAL</div><div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--dim);"><div style="width:9px;height:9px;background:var(--red-dim);"></div>MISSED</div></div></div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-btn active" id="nav-daily" onclick="switchView('daily')"><span>⚡</span><span>Today</span></button>
+  <button class="nav-btn" id="nav-history" onclick="switchView('history')"><span>📅</span><span>History</span></button>
+  <button class="nav-btn" id="nav-stats" onclick="switchView('stats')"><span>📊</span><span>Stats</span></button>
+  <button class="nav-btn" id="nav-settings" onclick="switchView('settings')"><span>⚙</span><span>Settings</span></button>
+</nav>
+<script>
+// ================================================================
+// CONFIG
+// ================================================================
+const START_DATE = new Date(Date.UTC(2026, 5, 8)); // Jun 8 2026
+const HONOR_TARGET_EFF = 0.75;
+const ALL_PRAYERS = ['fajr','dhuhr','asr','maghrib','isha','witr'];
+const PRAYER_PTS  = { fajr:3, dhuhr:2, asr:2, maghrib:2, isha:2, witr:3 };
+const SIMPLE_TASKS = {
+  athkar_m:{pts:2,type:'core'}, athkar_a:{pts:2,type:'core'},
+  wird:{pts:3,type:'core'}, walk:{pts:2,type:'core'}, uni:{pts:3,type:'core'},
+  memorize:{pts:5,type:'disc'}, gym:{pts:4,type:'disc'}, unireview:{pts:4,type:'disc'},
+  noscroll:{pts:3,type:'disc'}, nofog:{pts:5,type:'disc'},
+  drone:{pts:4,type:'growth'}, tajweed:{pts:4,type:'growth'}, beneficial:{pts:4,type:'growth'},
+};
+const MAX_DAILY = 59;
+
+// ================================================================
+// DAMASCUS PRAYER TIMES (approximate, sun-based estimates for Damascus, Syria)
+// Uses a simple algorithm based on date/sun position.
+// Damascus: Lat 33.51, Lon 36.29, UTC+3
+// ================================================================
+function getDamascusPrayerTimes(date) {
+  // Accurate-enough fixed monthly approximate times (Damascus, summer 2026)
+  // Format: [hhmm, hhmm, ...] for Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha
+  // These are LOCAL Damascus time (UTC+3, currently no DST - Syria stopped DST in 2022)
+  const month = date.getMonth(); // 0-based
+  // Monthly average times (Damascus local time, 24h)
+  const monthlyTimes = [
+    // Jan  Feb  Mar  Apr  May  Jun  Jul  Aug  Sep  Oct  Nov  Dec
+    {fajr:[5,30],dhuhr:[12,10],asr:[14,50],maghrib:[17,5],isha:[18,35]},  // Jan
+    {fajr:[5,10],dhuhr:[12,10],asr:[15,10],maghrib:[17,30],isha:[19,0]},   // Feb
+    {fajr:[4,40],dhuhr:[12,0],asr:[15,30],maghrib:[18,0],isha:[19,25]},    // Mar
+    {fajr:[4,0],dhuhr:[11,50],asr:[15,55],maghrib:[18,30],isha:[20,0]},    // Apr
+    {fajr:[3,30],dhuhr:[11,45],asr:[16,10],maghrib:[19,0],isha:[20,30]},   // May
+    {fajr:[3,15],dhuhr:[11,50],asr:[16,20],maghrib:[19,30],isha:[21,5]},   // Jun
+    {fajr:[3,25],dhuhr:[11,55],asr:[16,15],maghrib:[19,35],isha:[21,5]},   // Jul
+    {fajr:[3,55],dhuhr:[11,55],asr:[16,0],maghrib:[19,10],isha:[20,40]},   // Aug
+    {fajr:[4,25],dhuhr:[11,45],asr:[15,35],maghrib:[18,30],isha:[20,0]},   // Sep
+    {fajr:[4,55],dhuhr:[11,40],asr:[15,5],maghrib:[17,50],isha:[19,20]},   // Oct
+    {fajr:[5,25],dhuhr:[11,45],asr:[14,40],maghrib:[17,20],isha:[18,50]},  // Nov
+    {fajr:[5,45],dhuhr:[12,0],asr:[14,35],maghrib:[17,0],isha:[18,35]},    // Dec
+  ];
+  const t = monthlyTimes[month];
+  const toMinutes = (h, m) => h * 60 + m;
+  return {
+    fajr:    toMinutes(...t.fajr),
+    dhuhr:   toMinutes(...t.dhuhr),
+    asr:     toMinutes(...t.asr),
+    maghrib: toMinutes(...t.maghrib),
+    isha:    toMinutes(...t.isha),
+  };
+}
+
+function formatTime(totalMins) {
+  const h = Math.floor(totalMins / 60) % 24;
+  const m = totalMins % 60;
+  const ampm = h >= 12 ? 'pm' : 'am';
+  const h12 = h % 12 || 12;
+  return h12 + ':' + String(m).padStart(2,'0') + ampm;
+}
+
+function renderPrayerTimesWidget() {
+  // Damascus is UTC+3
+  const nowUTC = new Date();
+  const damascusOffsetMs = 3 * 3600 * 1000;
+  const damascusNow = new Date(nowUTC.getTime() + damascusOffsetMs);
+  const currentMins = damascusNow.getUTCHours() * 60 + damascusNow.getUTCMinutes();
+  const times = getDamascusPrayerTimes(damascusNow);
+
+  const prayers = [
+    {key:'fajr',label:'Fajr',mins:times.fajr},
+    {key:'dhuhr',label:'Dhuhr',mins:times.dhuhr},
+    {key:'asr',label:'Asr',mins:times.asr},
+    {key:'maghrib',label:'Mgrib',mins:times.maghrib},
+    {key:'isha',label:'Isha',mins:times.isha},
+    {key:'witr',label:'Witr',mins:times.isha + 90}, // ~90min after Isha
+  ];
+
+  // Determine active/next prayer
+  let activePrayer = null;
+  let nextPrayer = null;
+  for (let i = 0; i < prayers.length; i++) {
+    const p = prayers[i];
+    const end = (i + 1 < prayers.length) ? prayers[i+1].mins : prayers[i].mins + 90;
+    if (currentMins >= p.mins && currentMins < end) { activePrayer = p; nextPrayer = prayers[i+1] || null; break; }
+    if (currentMins < p.mins && !nextPrayer) { nextPrayer = p; break; }
+  }
+
+  const grid = document.getElementById('ptw-grid');
+  grid.innerHTML = '';
+  prayers.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'ptw-item';
+    const isDone = currentMins >= p.mins + 90;
+    if (activePrayer && activePrayer.key === p.key) div.classList.add('ptw-active');
+    else if (nextPrayer && nextPrayer.key === p.key) div.classList.add('ptw-next');
+    else if (isDone) div.classList.add('ptw-done');
+    div.innerHTML = `<div class="ptw-name">${p.label}</div><div class="ptw-time">${formatTime(p.mins)}</div>`;
+    grid.appendChild(div);
+  });
+
+  // Countdown
+  const countdownEl = document.getElementById('ptw-countdown');
+  if (nextPrayer) {
+    const minsUntil = nextPrayer.mins - currentMins;
+    if (minsUntil > 0) {
+      const h = Math.floor(minsUntil / 60);
+      const m = minsUntil % 60;
+      const str = h > 0 ? `${h}h ${m}m` : `${m}m`;
+      countdownEl.textContent = `${nextPrayer.label} in ${str}`;
+      countdownEl.className = 'ptw-countdown' + (minsUntil <= 15 ? ' urgent' : '');
+    } else {
+      countdownEl.textContent = '';
+    }
+  } else if (activePrayer) {
+    countdownEl.textContent = `${activePrayer.label} time — pray now ✓`;
+    countdownEl.className = 'ptw-countdown urgent';
+  } else {
+    countdownEl.textContent = 'All prayers passed — Witr before sleep';
+    countdownEl.className = 'ptw-countdown';
+  }
+}
+
+// ================================================================
+// STATE
+// ================================================================
+let _activeView = 'daily';
+let _lastTaskTime = 0;
+let _comboCount = 0;
+let _comboTimer = null;
+let statsWeekOffset = 0;
+
+let S = {
+  v:5, version:5,
+  totalPts:0,
+  globalPenaltyPts:0,
+  bonusPts:0,
+  history:{},
+  streak:0,
+  seenSurprises:[],
+  honorAchieved:false,
+  tasbihCount:0,
+  tasbihDhikrIdx:0,
+  tasbihTotal:0,
+};
+
+const QUOTES = [
+  "The man who wakes up before sunrise is already ahead of 90% of the world.",
+  "إِنَّ مَعَ الْعُسْرِ يُسْرًا — With every hardship comes ease. Don't stop now.",
+  "Discipline is doing what needs to be done even when every cell in your body says no.",
+  "Your nafs will negotiate with you every single day. Win the negotiation.",
+  "The Fajr prayer separates the wolves from the sheep. Which one are you?",
+  "Every push-up, every page, every Quran verse — it compounds. Trust the math.",
+  "You are building a version of yourself that future-you will be proud of.",
+  "Weakness is a choice disguised as a feeling. Choose differently.",
+  "وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ — Man will only have what he strives for.",
+  "The strong man controls himself in anger. — Hadith. The warrior controls himself always.",
+  "30 days isn't long. But most people won't even start. You already did.",
+  "Every time you resist temptation, your willpower muscle gets stronger.",
+  "رَبِّ زِدْنِي عِلْمًا — My Lord, increase me in knowledge. Say it, then open the book.",
+  "You don't need motivation. You need systems. This is your system. Run it.",
+  "Champions are made in the moments they want to stop but don't.",
+  "Comfort is the enemy of growth. Choose discomfort with intention.",
+  "Talk is cheap. Your checkboxes are your words.",
+  "Allah sees every sujood, every sacrifice, every silent struggle. None of it is wasted.",
+  "Your future self is watching you from the other side of your decision right now.",
+  "One day you will look back and thank the version of you who didn't quit today.",
+  "Honor is not given. It is earned rep by rep, prayer by prayer, day by day.",
+  "Damascus has seen a thousand warriors rise. Be the one worth remembering.",
+  "Sleep less than your competition. Pray more than your doubts.",
+  "Small wins stack. Every check you tick today is a brick in tomorrow's fortress.",
+  "The Quran doesn't get memorized by thinking about memorizing it.",
+  "If you're not growing, you're dying. There is no neutral.",
+  "إن مع العسر يسرا — The ease is coming. First, finish this hard thing.",
+  "Day 1 or day 30 — the mission is the same: show up completely.",
+  "He who has no vision of eternity has no hold on time.",
+  "The grind is not glamorous. That's why so few see it through.",
+];
+
+const CHALLENGES = [
+  {text:"Complete ALL 6 prayers on time today",sub:"Not early, not late — on time",pts:"Mission-critical"},
+  {text:"Read 2 extra pages of Quran beyond your wird",sub:"Every letter is 10 hasanat",pts:"Spiritual depth"},
+  {text:"Do 100 push-ups throughout the day",sub:"Break it into sets — no excuses",pts:"Warrior mode"},
+  {text:"No phone until after Dhuhr",sub:"First half of the day belongs to Allah and your goals",pts:"Mental clarity"},
+  {text:"Write 3 things you're grateful for tonight",sub:"Shukr is a multiplier",pts:"Mindset reset"},
+  {text:"Memorize one extra verse today",sub:"One more than planned",pts:"Compound growth"},
+  {text:"Do your gym session fasted",sub:"Test the limits of your discipline",pts:"Iron will"},
+  {text:"Complete your uni work before Dhuhr",sub:"Front-load the hard thing",pts:"Peak performance"},
+  {text:"Make dua for your parents after every prayer",sub:"Their dua for you is answered",pts:"Barakah"},
+  {text:"No social media at all today",sub:"Replace every urge with Quran or dhikr",pts:"Full clarity"},
+  {text:"Do your walk right after Fajr",sub:"Sunrise + movement = unstoppable start",pts:"Level up"},
+  {text:"Recite Ayat al-Kursi after every prayer",sub:"Protection and connection",pts:"Spiritual armor"},
+  {text:"Study 30 minutes more than your planned session",sub:"Push past the comfort zone",pts:"Compound gains"},
+  {text:"Complete all tasks before Maghrib",sub:"Finish the day before the sun does",pts:"Full protocol"},
+  {text:"Do 200 tasbih today — SubhanAllah, Alhamdulillah, AllahuAkbar",sub:"Use the counter below",pts:"Dhikr warrior"},
+];
+
+const AYAHS = [
+  {ar:'وَأَعِدُّوا لَهُم مَّا اسْتَطَعْتُم مِّن قُوَّةٍ',tr:'"Prepare against them whatever force you are able." — 8:60'},
+  {ar:'إِنَّ اللَّهَ لَا يُغَيِّرُ مَا بِقَوْمٍ حَتَّىٰ يُغَيِّرُوا مَا بِأَنفُسِهِمْ',tr:'"Allah will not change a people\'s condition until they change themselves." — 13:11'},
+  {ar:'وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا',tr:'"Whoever fears Allah — He will make for him a way out." — 65:2'},
+  {ar:'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا',tr:'"For indeed, with hardship will be ease." — 94:5'},
+  {ar:'وَقُل رَّبِّ زِدْنِي عِلْمًا',tr:'"My Lord, increase me in knowledge." — 20:114'},
+  {ar:'وَلَا تَهِنُوا وَلَا تَحْزَنُوا وَأَنتُمُ الْأَعْلَوْنَ',tr:'"Do not weaken and do not grieve — you will be superior." — 3:139'},
+  {ar:'قُل لَّن يُصِيبَنَا إِلَّا مَا كَتَبَ اللَّهُ لَنَا',tr:'"Nothing will befall us except what Allah has decreed for us." — 9:51'},
+  {ar:'وَاصْبِرْ وَمَا صَبْرُكَ إِلَّا بِاللَّهِ',tr:'"Be patient — and your patience is only through Allah." — 16:127'},
+  {ar:'فَاذْكُرُونِي أَذْكُرْكُمْ',tr:'"Remember Me and I will remember you." — 2:152'},
+  {ar:'وَمَن جَاهَدَ فَإِنَّمَا يُجَاهِدُ لِنَفْسِهِ',tr:'"Whoever strives, strives only for himself." — 29:6'},
+  {ar:'لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ',tr:'"Do not despair of the mercy of Allah." — 39:53'},
+  {ar:'إِن تَنصُرُوا اللَّهَ يَنصُرْكُمْ',tr:'"If you support Allah, He will support you." — 47:7'},
+];
+
+const SURPRISES = [
+  {id:'s3',check:s=>s.streak>=3,icon:'🔥',title:'3-DAY FIRE',msg:'Three days straight. The body adapts. Keep the heat.'},
+  {id:'s7',check:s=>s.streak>=7,icon:'⚡',title:'ONE WEEK SOLID',msg:'Seven days. New habits are taking root. You are not the same person you were a week ago.'},
+  {id:'s14',check:s=>s.streak>=14,icon:'🏗️',title:'TWO WEEKS BUILT',msg:'The 14-day mark. The protocol is becoming identity. Bonus: +20 pts added.'},
+  {id:'s21',check:s=>s.streak>=21,icon:'🌙',title:'21 DAYS — HABIT FORGED',msg:'Three weeks of war against your lower self. You\'re winning. Bonus: +15 pts.'},
+  {id:'s30',check:s=>s.streak>=30,icon:'🕌',title:'30 DAYS — HONOR EARNED',msg:'The protocol held for a full month. This is no longer a challenge — this is who you are.'},
+];
+
+const TASBIH_DHIKRS = [
+  {ar:'سُبْحَانَ اللَّهِ',tr:'SubhanAllah'},
+  {ar:'الْحَمْدُ لِلَّهِ',tr:'Alhamdulillah'},
+  {ar:'اللَّهُ أَكْبَرُ',tr:'Allahu Akbar'},
+  {ar:'لَا إِلَهَ إِلَّا اللَّهُ',tr:'La ilaha illallah'},
+  {ar:'أَسْتَغْفِرُ اللَّهَ',tr:'Astaghfirullah'},
+];
+
+// ================================================================
+// STATE MANAGEMENT
+// ================================================================
+function loadState() {
+  try {
+    const r = localStorage.getItem('daraya_v5');
+    if (r) { const p = JSON.parse(r); if (p.version === 5) { S = p; return; } }
+    const r4 = localStorage.getItem('daraya_v4');
+    if (r4) {
+      const p = JSON.parse(r4);
+      if (p.version === 4) {
+        S = {...S, totalPts:p.totalPts||0, globalPenaltyPts:p.globalPenaltyPts||0,
+             history:p.history||{}, streak:p.streak||0, seenSurprises:p.seenSurprises||[]};
+        save();
+      }
+    }
+  } catch(e) {}
+}
+function save() { try { localStorage.setItem('daraya_v5', JSON.stringify(S)); } catch(e) {} }
+
+// ================================================================
+// DATE HELPERS
+// ================================================================
+function todayKey() { return new Date().toISOString().split('T')[0]; }
+function yesterKey() { const n=new Date(); return new Date(Date.UTC(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate()-1)).toISOString().split('T')[0]; }
+function getDayNum() {
+  const now=new Date();
+  const todayUTC=Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate());
+  const diff=Math.floor((todayUTC-START_DATE.getTime())/86400000)+1;
+  return diff>0?diff:null;
+}
+function getTD() {
+  const k=todayKey();
+  if(!S.history[k]) S.history[k]={simple:{},prayers:{},pts:0,violations:[],confirmed:false};
+  if(!S.history[k].prayers) S.history[k].prayers={};
+  return S.history[k];
+}
+
+// ================================================================
+// POINTS
+// ================================================================
+function calcTodayPts() {
+  const td=getTD(); let pts=0;
+  ALL_PRAYERS.forEach(p=>{if(td.prayers[p])pts+=PRAYER_PTS[p];});
+  Object.entries(SIMPLE_TASKS).forEach(([k,cfg])=>{if(td.simple[k])pts+=cfg.pts;});
+  return Math.max(0,pts);
+}
+function recalcTotal() {
+  let t=0;
+  Object.values(S.history).forEach(d=>{t+=(d.pts||0);});
+  t=t+(S.bonusPts||0)-(S.globalPenaltyPts||0);
+  S.totalPts=Math.max(0,t); save();
+}
+
+// ================================================================
+// LEVEL SYSTEM
+// ================================================================
+function getLevel(pts) {
+  if(pts>=800) return{label:'LEGEND',cls:'lvl-legend',icon:'⚜️'};
+  if(pts>=400) return{label:'ELITE',cls:'lvl-elite',icon:'🔱'};
+  if(pts>=150) return{label:'WARRIOR',cls:'lvl-warrior',icon:'⚔️'};
+  return{label:'RECRUIT',cls:'lvl-recruit',icon:'◆'};
+}
+
+// ================================================================
+// HONOR
+// ================================================================
+function calcHonorProgress() {
+  const dn=getDayNum(); const daysElapsed=dn?Math.min(dn,30):0;
+  const possible=daysElapsed*MAX_DAILY;
+  const efficiency=possible>0?S.totalPts/possible:0;
+  const effOk=efficiency>=HONOR_TARGET_EFF; const streakOk=S.streak>=30;
+  const honorAchieved=streakOk&&effOk&&daysElapsed>=30;
+  if(honorAchieved&&!S.honorAchieved){S.honorAchieved=true;save();showReward('🏆','HONOR ACHIEVED','30-day streak. 75%+ efficiency. You earned it.');}
+  return{streakOk,effOk,honorAchieved,efficiency,daysElapsed,possible};
+}
+
+// ================================================================
+// COMBO
+// ================================================================
+function triggerCombo() {
+  const now=Date.now();
+  if(now-_lastTaskTime<8000){
+    _comboCount++;
+    if(_comboCount>=2){
+      const pop=document.getElementById('combo-pop');
+      document.getElementById('combo-pop-title').textContent='COMBO ×'+(_comboCount+1);
+      document.getElementById('combo-pop-sub').textContent=['KEEP THE MOMENTUM','ON A ROLL!','UNSTOPPABLE!','MACHINE MODE!'][Math.min(_comboCount-1,3)];
+      pop.classList.add('show');
+      if(_comboTimer)clearTimeout(_comboTimer);
+      _comboTimer=setTimeout(()=>pop.classList.remove('show'),1800);
+    }
+  } else { _comboCount=0; }
+  _lastTaskTime=now;
+}
+
+// ================================================================
+// TOGGLES
+// ================================================================
+function togglePrayer(name) {
+  const td=getTD(); td.prayers[name]=!td.prayers[name];
+  td.pts=calcTodayPts(); recalcTotal(); save(); renderToday();
+  if(td.prayers[name]){flashGold();showToast('+'+PRAYER_PTS[name]+' — '+name.charAt(0).toUpperCase()+name.slice(1)+' ✓');triggerCombo();}
+  checkStreakSurprises(); syncStatsIfVisible();
+}
+function toggleSimple(key) {
+  const td=getTD(); const was=!!td.simple[key]; td.simple[key]=!was;
+  td.pts=calcTodayPts(); recalcTotal(); save(); renderToday();
+  if(!was){
+    flashGold(); showToast('+'+(SIMPLE_TASKS[key]?.pts||0)+' pts'); triggerCombo();
+    const el=document.getElementById('t-'+key);
+    if(el){el.classList.add('task-bounce');setTimeout(()=>el.classList.remove('task-bounce'),350);}
+  }
+  checkStreakSurprises(); syncStatsIfVisible();
+}
+function syncStatsIfVisible(){if(_activeView==='stats')renderStats();}
+
+// ================================================================
+// TASBIH
+// ================================================================
+function tapTasbih() {
+  S.tasbihCount=(S.tasbihCount||0)+1;
+  S.tasbihTotal=(S.tasbihTotal||0)+1;
+  if(S.tasbihCount>=33){
+    S.tasbihCount=0;
+    S.tasbihDhikrIdx=((S.tasbihDhikrIdx||0)+1)%TASBIH_DHIKRS.length;
+    showToast('33 ✓ — switching dhikr');
+  }
+  save(); renderTasbih();
+}
+function resetTasbih(){S.tasbihCount=0;save();renderTasbih();}
+function renderTasbih() {
+  const cnt=S.tasbihCount||0; const idx=(S.tasbihDhikrIdx||0)%TASBIH_DHIKRS.length;
+  const dhikr=TASBIH_DHIKRS[idx];
+  document.getElementById('tasbih-count').textContent=cnt;
+  document.getElementById('tasbih-dhikr').textContent=dhikr.ar;
+  document.getElementById('tasbih-dhikr-tr').textContent=dhikr.tr;
+  document.getElementById('tasbih-fill').style.width=Math.min(100,(cnt/33)*100)+'%';
+  document.getElementById('tasbih-milestones').textContent=cnt+' / 33 · Total today: '+(S.tasbihTotal||0);
+}
+
+// ================================================================
+// TYPEWRITER QUOTE
+// ================================================================
+let _quoteTimer=null;
+function typewriterQuote(text,el){
+  if(_quoteTimer)clearTimeout(_quoteTimer);
+  el.innerHTML='<span class="quote-cursor"></span>';
+  let i=0;
+  function next(){
+    if(i<text.length){
+      el.innerHTML=text.substring(0,i+1)+'<span class="quote-cursor"></span>';
+      i++; _quoteTimer=setTimeout(next,20+Math.random()*10);
+    }
+  }
+  next();
+}
+function renderQuote(){
+  const dn=getDayNum()||1; const q=QUOTES[(dn-1)%QUOTES.length];
+  const el=document.getElementById('quote-text');
+  if(el) typewriterQuote(q,el);
+}
+function renderChallenge(){
+  const dn=getDayNum()||1; const c=CHALLENGES[(dn-1)%CHALLENGES.length];
+  document.getElementById('challenge-text').textContent=c.text;
+  document.getElementById('challenge-sub').textContent=c.sub;
+  document.getElementById('challenge-pts').textContent=c.pts;
+}
+
+// ================================================================
+// VIOLATIONS
+// ================================================================
+const VIOLATION_CONFIG={
+  missedprayer:{label:'Missed Prayer Time',severity:'heavy',
+    penalties:[{desc:'-5 pts from total',apply:()=>{S.globalPenaltyPts=(S.globalPenaltyPts||0)+5;}},{desc:'-10 pts from total',apply:()=>{S.globalPenaltyPts=(S.globalPenaltyPts||0)+10;}}]},
+  haram:{label:'Fog',severity:'heavy',
+    penalties:[{desc:'-10 pts + streak reset',apply:()=>{S.globalPenaltyPts=(S.globalPenaltyPts||0)+10;S.streak=0;}},{desc:'-15 pts + streak reset',apply:()=>{S.globalPenaltyPts=(S.globalPenaltyPts||0)+15;S.streak=0;}}]},
+  scroll:{label:'Doom Scrolling',severity:'mild',
+    penalties:[{desc:'-3 pts from total',apply:()=>{S.globalPenaltyPts=(S.globalPenaltyPts||0)+3;}},{desc:'-5 pts from total',apply:()=>{S.globalPenaltyPts=(S.globalPenaltyPts||0)+5;}}]},
+  early:{label:'Played Before Finishing Bedrocks',severity:'heavy',
+    penalties:[{desc:'-8 pts from total',apply:()=>{S.globalPenaltyPts=(S.globalPenaltyPts||0)+8;}},{desc:'-12 pts from total',apply:()=>{S.globalPenaltyPts=(S.globalPenaltyPts||0)+12;}}]},
+};
+function reportViolation(type){
+  const cfg=VIOLATION_CONFIG[type];if(!cfg)return;
+  const idx=Math.floor(Math.random()*cfg.penalties.length);
+  const penalty=cfg.penalties[idx]; penalty.apply();
+  getTD().violations=getTD().violations||[];
+  getTD().violations.push({type,ts:Date.now(),penaltyDesc:penalty.desc});
+  if(type==='haram'){getTD().simple.nofog=false;}
+  save();
+  document.getElementById('pm-title').textContent='⚠ '+cfg.label.toUpperCase();
+  document.getElementById('pm-msg').textContent=cfg.severity==='heavy'?'Heavy violation. Be honest with yourself — this is between you and Allah.':'Small slip. Noted. The system sees it. More importantly, you do.';
+  document.getElementById('pm-penalty').textContent='PENALTY: '+penalty.desc;
+  document.getElementById('penalty-modal').classList.add('show');
+  flashRed(); recalcTotal(); calcStreak(); renderToday();
+}
+
+// ================================================================
+// STREAK
+// ================================================================
+function calcStreak(){
+  const todayKeyStr=todayKey(); const todayDay=S.history[todayKeyStr];
+  if(todayDay?.violations?.some(v=>v.type==='haram')){S.streak=0;save();return;}
+  let streak=0; const now=new Date();
+  let d=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()-1));
+  for(let i=0;i<100;i++){
+    const k=d.toISOString().split('T')[0]; const day=S.history[k];
+    if(!day||!day.confirmed)break; if(!day.simple?.nofog)break;
+    streak++; d=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()-1));
+  }
+  if(todayDay?.simple?.nofog)streak++;
+  S.streak=streak; save();
+}
+function checkStreakSurprises(){
+  calcStreak();
+  SURPRISES.forEach(s=>{
+    if(!S.seenSurprises.includes(s.id)&&s.check(S)){
+      S.seenSurprises.push(s.id);
+      if(s.id==='s14'){S.bonusPts=(S.bonusPts||0)+20;}
+      if(s.id==='s21'){S.bonusPts=(S.bonusPts||0)+15;}
+      save(); showReward(s.icon,s.title,s.msg);
+    }
+  });
+  calcHonorProgress();
+}
+
+// ================================================================
+// UNCONFIRMED
+// ================================================================
+function checkUnconfirmed(){
+  const _now=new Date(); let d=new Date(Date.UTC(_now.getUTCFullYear(),_now.getUTCMonth(),_now.getUTCDate()));
+  for(let i=1;i<=7;i++){
+    d=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()-1));
+    const k=d.toISOString().split('T')[0]; const day=S.history[k];
+    if(day&&!day.confirmed){
+      document.getElementById('unc-msg').textContent='What did you actually complete on '+k+'? (25% late penalty applies)';
+      const container=document.getElementById('unc-task-list'); container.innerHTML='';
+      const allTasks=[
+        {key:'fajr',label:'Fajr',pts:3,type:'prayer'},{key:'dhuhr',label:'Dhuhr',pts:2,type:'prayer'},
+        {key:'asr',label:'Asr',pts:2,type:'prayer'},{key:'maghrib',label:'Maghrib',pts:2,type:'prayer'},
+        {key:'isha',label:'Isha',pts:2,type:'prayer'},{key:'witr',label:'Witr',pts:3,type:'prayer'},
+        {key:'athkar_m',label:'Athkar Morning',pts:2,type:'simple'},{key:'athkar_a',label:'Athkar Afternoon',pts:2,type:'simple'},
+        {key:'wird',label:'Daily Wird',pts:3,type:'simple'},{key:'walk',label:'30min Walk',pts:2,type:'simple'},
+        {key:'uni',label:'Uni Work',pts:3,type:'simple'},{key:'memorize',label:'Quran Memorization',pts:5,type:'simple'},
+        {key:'gym',label:'Gym',pts:4,type:'simple'},{key:'unireview',label:'Uni Review',pts:4,type:'simple'},
+        {key:'noscroll',label:'No Doom Scrolling',pts:3,type:'simple'},{key:'nofog',label:'No Fog',pts:5,type:'simple'},
+        {key:'drone',label:'Drone Course',pts:4,type:'simple'},{key:'tajweed',label:'Tajweed',pts:4,type:'simple'},
+        {key:'beneficial',label:'Something Beneficial',pts:4,type:'simple'},
+      ];
+      allTasks.forEach(t=>{
+        const row=document.createElement('div');
+        row.style.cssText='display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border2);cursor:pointer;';
+        row.dataset.key=t.key; row.dataset.type=t.type; row.dataset.pts=t.pts;
+        const chk=document.createElement('div');
+        chk.style.cssText='width:15px;height:15px;border:1px solid var(--dim2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-family:"Roboto Mono",monospace;';
+        const already=(t.type==='prayer'?day?.prayers?.[t.key]:day?.simple?.[t.key])||false;
+        chk.dataset.checked=already?'1':'0';
+        if(already){chk.textContent='✓';chk.style.background='var(--orange)';chk.style.borderColor='var(--orange)';chk.style.color='var(--black)';}
+        const lbl=document.createElement('div');
+        lbl.style.cssText='flex:1;font-size:11px;color:var(--text);font-family:"Barlow Condensed",sans-serif;font-weight:600;letter-spacing:0.04em;';
+        lbl.textContent=t.label;
+        const ptsEl=document.createElement('div');
+        ptsEl.style.cssText='font-size:10px;color:var(--orange);font-family:"Roboto Mono",monospace;';
+        ptsEl.textContent='+'+t.pts;
+        row.appendChild(chk); row.appendChild(lbl); row.appendChild(ptsEl);
+        row.onclick=()=>{const on=chk.dataset.checked==='0';chk.dataset.checked=on?'1':'0';chk.textContent=on?'✓':'';chk.style.background=on?'var(--orange)':'';chk.style.borderColor=on?'var(--orange)':'var(--dim2)';chk.style.color=on?'var(--black)':'';};
+        container.appendChild(row);
+      });
+      document.getElementById('unconfirmed-screen').style.display='block'; return true;
+    }
+  }
+  return false;
+}
+function getUnconfirmedKey(){
+  const _n=new Date(); let d=new Date(Date.UTC(_n.getUTCFullYear(),_n.getUTCMonth(),_n.getUTCDate()));
+  for(let i=1;i<=7;i++){d=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()-1));const k=d.toISOString().split('T')[0];const day=S.history[k];if(day&&!day.confirmed)return k;}
+  return null;
+}
+function confirmYesterday(yes){
+  const k=getUnconfirmedKey();if(!k)return;
+  const day=S.history[k];if(!yes){day.simple=day.simple||{};day.simple.nofog=false;}
+  day.confirmed=true;day.coreAchieved=!!day.simple?.nofog;
+  document.getElementById('unconfirmed-screen').style.display='none';
+  save();calcStreak();renderToday();
+}
+function confirmYesterdayLate(){
+  const k=getUnconfirmedKey();if(!k)return;const day=S.history[k];
+  const rows=document.querySelectorAll('#unc-task-list [data-key]');
+  day.simple={};day.prayers={};let rawPts=0;
+  rows.forEach(row=>{
+    const chk=row.querySelector('[data-checked]');
+    if(chk&&chk.dataset.checked==='1'){
+      const key=row.dataset.key;const pts=parseInt(row.dataset.pts)||0;
+      if(row.dataset.type==='prayer')day.prayers[key]=true;else day.simple[key]=true;
+      rawPts+=pts;
+    }
+  });
+  day.pts=Math.floor(rawPts*0.75);day.confirmed=true;day.coreAchieved=!!day.simple?.nofog;day.lateConfirmed=true;
+  document.getElementById('unconfirmed-screen').style.display='none';
+  recalcTotal();save();calcStreak();renderToday();showToast('Logged: '+rawPts+' pts → '+day.pts+' (25% penalty)');
+}
+function autoConfirmTrackedDays(){
+  const now=new Date();let changed=false;
+  for(let i=1;i<=7;i++){
+    const d=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()-i));
+    const k=d.toISOString().split('T')[0];const day=S.history[k];
+    if(!day||day.confirmed)continue;
+    const hasData=Object.values(day.simple||{}).some(Boolean)||Object.values(day.prayers||{}).some(Boolean);
+    if(hasData){day.confirmed=true;day.coreAchieved=!!day.simple?.nofog;changed=true;}
+  }
+  if(changed)save();
+}
+let _midnightConfirmFired=false;
+function checkMidnightConfirm(){
+  const yKey=yesterKey();const yDay=S.history[yKey];
+  if(!yDay||yDay.confirmed)return;
+  const hasData=Object.values(yDay.simple||{}).some(Boolean)||Object.values(yDay.prayers||{}).some(Boolean);
+  if(hasData){yDay.confirmed=true;yDay.coreAchieved=!!yDay.simple?.nofog;save();calcStreak();renderToday();return;}
+  if(_midnightConfirmFired)return;
+  const _n2=new Date();const midnightUTC=Date.UTC(_n2.getUTCFullYear(),_n2.getUTCMonth(),_n2.getUTCDate());
+  if(Date.now()>midnightUTC+12*3600*1000){_midnightConfirmFired=true;checkUnconfirmed();}
+}
+
+// ================================================================
+// RENDER TODAY
+// ================================================================
+function renderToday(){
+  const td=getTD(); const dn=getDayNum();
+  const ayahIdx=dn?(dn-1)%AYAHS.length:0;
+  document.getElementById('ayah-ar').textContent=AYAHS[ayahIdx].ar;
+  document.getElementById('ayah-tr').textContent=AYAHS[ayahIdx].tr;
+  document.getElementById('day-num').textContent=dn?'D'+dn:'—';
+  const now=new Date();
+  const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('hdr-date').textContent=DAYS[now.getDay()].toUpperCase()+' · '+now.getDate()+' '+MONTHS[now.getMonth()].toUpperCase()+' '+now.getFullYear();
+  const todayPts=calcTodayPts(); const totalPts=S.totalPts;
+  const fullTarget=Math.round(30*MAX_DAILY*0.75);
+  const pct=fullTarget>0?Math.min(100,(totalPts/fullTarget)*100):0;
+  document.getElementById('pts-fill').style.width=pct+'%';
+  document.getElementById('pts-lbl').textContent=totalPts+' / '+fullTarget;
+  document.getElementById('today-lbl').textContent='TODAY: '+todayPts+' PTS';
+
+  const lvl=getLevel(totalPts);
+  const badge=document.getElementById('level-badge');
+  badge.className='level-badge '+lvl.cls;
+  badge.textContent=lvl.icon+' '+lvl.label;
+
+  const fire=document.getElementById('streak-fire');
+  fire.textContent=(S.streak>=3?'🔥':'◆')+' '+S.streak;
+  fire.className='streak-fire'+(S.streak>=3?' on-fire':'');
+
+  const h=calcHonorProgress(); const effPct=Math.round(h.efficiency*100);
+  document.getElementById('honor-streak-val').textContent=S.streak;
+  document.getElementById('honor-pts-val').textContent=effPct+'%';
+  const needPtsEl=document.getElementById('honor-req-need-pts');
+  if(needPtsEl)needPtsEl.textContent=effPct>=75?'✓ Done':'Need 75%';
+  const daysLeft=Math.max(0,30-S.streak);
+  if(document.getElementById('honor-streak-days-val'))document.getElementById('honor-streak-days-val').textContent=daysLeft;
+  const overallProg=Math.round((Math.min(100,(S.streak/30)*100)+Math.min(100,(h.efficiency/0.75)*100))/2);
+  document.getElementById('honor-progress-fill').style.width=overallProg+'%';
+  document.getElementById('honor-days-left').textContent=S.honorAchieved?'✦ HONOR ACHIEVED ✦':daysLeft+' streak days remaining · '+overallProg+'% toward honor';
+  document.getElementById('honor-streak-val').style.color=S.streak>=30?'var(--green)':S.streak>=20?'var(--amber)':'var(--orange)';
+  document.getElementById('honor-pts-val').style.color=effPct>=75?'var(--green)':effPct>=50?'var(--amber)':'var(--orange)';
+
+  let corePts=0;
+  ['athkar_m','athkar_a','wird','walk','uni'].forEach(k=>{if(td.simple[k])corePts+=SIMPLE_TASKS[k].pts;});
+  let prayerPts=0; ALL_PRAYERS.forEach(p=>{if(td.prayers[p])prayerPts+=PRAYER_PTS[p];});
+  document.getElementById('core-pts-label').textContent=(corePts+prayerPts)+' / 26 PTS';
+
+  ALL_PRAYERS.forEach(name=>{
+    const pDone=!!td.prayers[name];
+    const btn=document.getElementById('pb-'+name); const pChk=document.getElementById('pc-'+name);
+    if(!btn||!pChk)return;
+    btn.classList.toggle('p-done',pDone); pChk.textContent=pDone?'✓':'○';
+  });
+  const prayerCount=ALL_PRAYERS.filter(p=>!!td.prayers[p]).length;
+  document.getElementById('prayer-summary').textContent=prayerCount+' / 6 today';
+  const ps=document.getElementById('prayer-section');
+  if(prayerCount===6)ps.classList.add('p-active');else ps.classList.remove('p-active');
+
+  Object.keys(SIMPLE_TASKS).forEach(key=>{
+    const tDone=!!td.simple[key];const tEl=document.getElementById('t-'+key);const tChk=document.getElementById('chk-'+key);
+    if(!tEl)return; tEl.classList.toggle('t-done',tDone); if(tChk)tChk.textContent=tDone?'✓':'';
+  });
+
+  renderMoodUI(); renderTasbih(); renderPrayerTimesWidget();
+
+  const phoneFill=document.getElementById('phone-unlock-fill');const phoneLbl=document.getElementById('phone-unlock-lbl');
+  if(phoneFill)phoneFill.style.width=pct+'%';
+  if(phoneLbl){
+    if(S.honorAchieved){phoneLbl.textContent='✦ HONOR ACHIEVED ✦';phoneLbl.style.color='var(--orange)';}
+    else{phoneLbl.textContent=Math.round(h.efficiency*100)+'% efficiency · need 75% over 30 days';phoneLbl.style.color='';}
+  }
+  document.getElementById('streak-display').textContent=S.streak+' day'+(S.streak!==1?'s':'');
+  updateNotifUI();
+}
+
+// ================================================================
+// MOOD
+// ================================================================
+function submitMood(val){getTD().mood=val;save();renderMoodUI();showToast('Mood logged ✓');}
+function renderMoodUI(){
+  const td=getTD();const hasMood=td.mood!=null;
+  document.getElementById('mood-grid').style.display=hasMood?'none':'grid';
+  document.getElementById('mood-done').style.display=hasMood?'block':'none';
+  document.getElementById('mood-submitted-label').textContent=hasMood?'LOGGED ✓':'ONCE PER DAY';
+  if(hasMood){
+    const emojis={1:'😤',2:'😔',3:'😐',4:'😊',5:'💪'};const labels={1:'Rough',2:'Low',3:'Neutral',4:'Good',5:'Powerful'};
+    document.getElementById('mood-done').textContent=emojis[td.mood]+' '+labels[td.mood]+' — logged ✓';
+  }
+}
+
+// ================================================================
+// HISTORY
+// ================================================================
+function renderHistory(){
+  const list=document.getElementById('history-list');if(!list)return;
+  const keys=Object.keys(S.history).sort().reverse();
+  if(!keys.length){list.innerHTML='<div style="font-size:11px;color:var(--dim);text-align:center;padding:40px 0;">No history yet.</div>';return;}
+  list.innerHTML='';const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  keys.forEach(key=>{
+    const day=S.history[key];if(!day||(!day.pts&&!day.confirmed))return;
+    const d=new Date(key);const pct=Math.min(100,((day.pts||0)/MAX_DAILY)*100);
+    const el=document.createElement('div');el.className='hist-day';
+    const badges=[];
+    if(day.pts>=MAX_DAILY*0.9)badges.push('<span class="hist-badge badge-perfect">PERFECT</span>');
+    if(day.violations?.length)badges.push('<span class="hist-badge badge-viol">VIOLATION</span>');
+    el.innerHTML=`<div class="hist-date-num">${d.getDate()}</div><div class="hist-info"><div class="hist-lbl">${MONTHS[d.getMonth()]} ${d.getFullYear()}</div><div class="hist-pts">${day.pts||0} pts · ${Math.round(pct)}%</div><div>${badges.join('')}</div></div><div class="hist-bar"><div class="hist-bar-fill" style="width:${pct}%"></div></div>`;
+    list.appendChild(el);
+  });
+}
+
+// ================================================================
+// UI HELPERS
+// ================================================================
+function showToast(msg,red){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(red?' red':'');setTimeout(()=>t.classList.remove('show'),2200);}
+function flashGold(){const f=document.getElementById('flash');f.className='flash show';setTimeout(()=>f.className='flash',350);}
+function flashRed(){const f=document.getElementById('flash');f.className='flash red-flash show';setTimeout(()=>f.className='flash',400);}
+function closeModal(id){document.getElementById(id).classList.remove('show');renderToday();}
+function showReward(icon,title,msg){document.getElementById('rm-icon').textContent=icon;document.getElementById('rm-title').textContent=title;document.getElementById('rm-msg').textContent=msg;document.getElementById('reward-modal').classList.add('show');}
+
+function switchView(v){
+  _activeView=v;
+  document.getElementById('view-daily').style.display=v==='daily'?'block':'none';
+  document.getElementById('view-history').style.display=v==='history'?'block':'none';
+  document.getElementById('view-stats').style.display=v==='stats'?'block':'none';
+  document.getElementById('view-settings').style.display=v==='settings'?'block':'none';
+  ['daily','history','stats','settings'].forEach(n=>{const el=document.getElementById('nav-'+n);if(el)el.classList.toggle('active',n===v);});
+  if(v==='history')renderHistory();if(v==='stats')renderStats();
+}
+
+function resetToday(){const k=todayKey();S.history[k]={simple:{},prayers:{},pts:0,violations:[],confirmed:false};recalcTotal();save();renderToday();showToast('Today reset');}
+function tsStamp(){const n=new Date();const pad=x=>String(x).padStart(2,'0');return n.getFullYear()+'-'+pad(n.getMonth()+1)+'-'+pad(n.getDate())+'_'+pad(n.getHours())+'-'+pad(n.getMinutes());}
+function exportBackup(){const ts=tsStamp();const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='daraya_backup_'+ts+'.json';a.click();URL.revokeObjectURL(url);showToast('Backup exported ✓');}
+function handleImportFile(e){
+  const file=e.target.files[0];if(!file)return;
+  const ts=tsStamp();const oldBlob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});const oldUrl=URL.createObjectURL(oldBlob);const oldA=document.createElement('a');oldA.href=oldUrl;oldA.download='daraya_old_'+ts+'.json';oldA.click();URL.revokeObjectURL(oldUrl);
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    const backup=JSON.stringify(S);
+    try{const parsed=JSON.parse(ev.target.result);if(typeof parsed!=='object'||parsed===null)throw new Error('Not an object');if(parsed.version!==5&&parsed.version!==4)throw new Error('Unknown version');S={...S,...parsed,version:5};save();recalcTotal();calcStreak();renderToday();showToast('Backup restored ✓');}
+    catch(err){try{S=JSON.parse(backup);}catch(e){}showToast('Import failed: '+err.message,true);}
+  };
+  reader.readAsText(file);e.target.value='';
+}
+function confirmReset(){
+  const modal=document.createElement('div');modal.className='modal-overlay show';
+  modal.innerHTML=`<div class="modal" style="border-color:var(--red-dim);"><div class="modal-title">RESET ALL DATA?</div><div class="modal-msg">Current data will be exported as backup first.</div><div style="display:flex;gap:8px;margin-top:4px;"><button class="modal-close" style="border-color:var(--red);color:var(--red);" id="confirm-reset-yes">EXPORT + WIPE</button><button class="modal-close" style="border-color:var(--border2);color:var(--dim);" id="confirm-reset-no">CANCEL</button></div></div>`;
+  document.body.appendChild(modal);
+  document.getElementById('confirm-reset-yes').onclick=()=>{const ts=tsStamp();const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='daraya_before_reset_'+ts+'.json';a.click();URL.revokeObjectURL(url);setTimeout(()=>{localStorage.removeItem('daraya_v5');localStorage.removeItem('daraya_v4');location.reload();},500);};
+  document.getElementById('confirm-reset-no').onclick=()=>modal.remove();
+}
+
+// ================================================================
+// NOTIFICATIONS (page-side — works without a push server)
+// ================================================================
+let _notifScheduled=false;
+function updateNotifUI(){
+  const lbl=document.getElementById('notif-lbl');const sub=document.getElementById('notif-sub');const icon=document.getElementById('notif-icon');
+  if(!('Notification' in window)){if(lbl){lbl.textContent='Notifications not supported';lbl.style.color='var(--dim2)';}return;}
+  const perm=Notification.permission;
+  if(perm==='granted'){if(lbl){lbl.textContent='Notifications Active ✓';lbl.style.color='var(--green)';}if(sub)sub.textContent='9pm daily reminder + 2pm motivation active';if(icon)icon.textContent='🔔';}
+  else if(perm==='denied'){if(lbl){lbl.textContent='Notifications Blocked';lbl.style.color='var(--red)';}if(sub)sub.textContent='Go to browser Settings → Site Settings → Notifications to unblock';if(icon)icon.textContent='🔕';}
+  else{if(lbl){lbl.textContent='Enable Notifications';lbl.style.color='var(--orange)';}if(sub)sub.textContent='9pm daily reminder + 2pm motivation';if(icon)icon.textContent='🔔';}
+}
+function schedulePageNotifs(){
+  if(_notifScheduled)return;_notifScheduled=true;
+  const now=new Date();
+  const MOTIV=["Prayer time is waiting. Don't let it pass.","Every check you tick is a wall between you and the person you don't want to be.","Allah is watching. Make it worth watching.","The Honor 600 isn't bought with money. It's earned with discipline.","Damascus warriors don't quit."];
+  const pm9=new Date();pm9.setHours(21,0,0,0);
+  if(pm9>now){setTimeout(()=>{if(Notification.permission==='granted'){new Notification('Protocol ◆ Daily Check',{body:"Log your tasks. Every point counts. Don't let the day slip.",icon:'/protocol/icon-192.png',tag:'protocol-9pm'});}},pm9-now);}
+  const pm2=new Date();pm2.setHours(14,0,0,0);
+  if(pm2>now){setTimeout(()=>{if(Notification.permission==='granted'){const q=MOTIV[new Date().getDate()%MOTIV.length];new Notification('Protocol ◆ Midday Push',{body:q,icon:'/protocol/icon-192.png',tag:'protocol-2pm'});}},pm2-now);}
+}
+async function requestNotifPermission(){
+  if(!('Notification' in window)){showToast('Notifications not supported on this browser');return;}
+  if(Notification.permission==='denied'){showToast('Unblock in: browser Settings → Privacy → Notifications',true);return;}
+  if(Notification.permission==='granted'){_notifScheduled=false;schedulePageNotifs();showToast('Notifications rescheduled ✓');updateNotifUI();return;}
+  const result=await Notification.requestPermission();updateNotifUI();
+  if(result==='granted'){schedulePageNotifs();showToast('Notifications enabled ✓ — 9pm & 2pm daily');}
+  else{showToast('Permission denied',true);}
+}
+async function sendTestNotification(){
+  if(!('Notification' in window)){showToast('Not supported');return;}
+  if(Notification.permission!=='granted'){await requestNotifPermission();return;}
+  new Notification('Protocol ◆ Test',{body:'Notifications working. 9pm reminder + 2pm motivation active.',icon:'/protocol/icon-192.png',tag:'protocol-test'});
+  showToast('Test notification sent ✓');
+}
+
+// ================================================================
+// STATS
+// ================================================================
+function shiftWeek(dir){statsWeekOffset+=dir;if(statsWeekOffset>0)statsWeekOffset=0;renderStats();}
+function getWeekDays(offset){
+  const now=new Date();const todayUTC=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()));
+  const dow=todayUTC.getUTCDay();const mondayOffset=dow===0?-6:1-dow;const days=[];
+  for(let i=0;i<7;i++){const d=new Date(Date.UTC(todayUTC.getUTCFullYear(),todayUTC.getUTCMonth(),todayUTC.getUTCDate()+mondayOffset+offset*7+i));days.push(d.toISOString().split('T')[0]);}
+  return days;
+}
+function getDayStatus(key){
+  const day=S.history[key];const k=todayKey();const startK=START_DATE.toISOString().split('T')[0];
+  if(key>k||key<startK)return'future';
+  if(key===k){if(!day)return'missed';if(day.simple?.nofog&&(day.pts||0)>=Math.round(MAX_DAILY*0.75))return'full';if((day.pts||0)>0)return'partial';return'missed';}
+  if(!day||(!day.pts&&!day.confirmed))return'missed';
+  if(day.confirmed&&day.coreAchieved)return'full';if((day.pts||0)>0)return'partial';return'missed';
+}
+function renderStats(){
+  getTD().pts=calcTodayPts();const todayK=todayKey();const days=getWeekDays(statsWeekOffset);
+  const DAY_NAMES=['MON','TUE','WED','THU','FRI','SAT','SUN'];const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const first=new Date(days[0]);const last=new Date(days[6]);const isCurrent=statsWeekOffset===0;
+  document.getElementById('stat-week-label').textContent=isCurrent?'THIS WEEK':first.getDate()+' '+MONTHS[first.getMonth()].toUpperCase()+' — '+last.getDate()+' '+MONTHS[last.getMonth()].toUpperCase();
+  const moodChart=document.getElementById('mood-chart');const moodLabels=document.getElementById('mood-chart-labels');moodChart.innerHTML='';moodLabels.innerHTML='';
+  const emojis={1:'😤',2:'😔',3:'😐',4:'😊',5:'💪'};
+  days.forEach((key,i)=>{
+    const day=S.history[key];const mood=day?.mood;
+    const col=document.createElement('div');col.style.cssText='flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;height:100%;';
+    const val=document.createElement('div');val.style.cssText='font-size:9px;min-height:14px;';val.textContent=mood?emojis[mood]:'';
+    const fill=document.createElement('div');const hp=mood?(mood/5)*100:0;fill.style.cssText=`width:100%;height:${hp}%;background:#a07cc5;opacity:${mood?1:0.12};transition:height 0.5s;`;
+    col.appendChild(val);col.appendChild(fill);moodChart.appendChild(col);
+    const lbl=document.createElement('div');lbl.className='bar-day-lbl'+(key===todayK?' today-lbl-bar':'');lbl.textContent=DAY_NAMES[i];moodLabels.appendChild(lbl);
+  });
+  const barChart=document.getElementById('bar-chart');const barLabels=document.getElementById('bar-labels');barChart.innerHTML='';barLabels.innerHTML='';
+  days.forEach((key,i)=>{
+    const day=S.history[key];const pts=day?.pts||0;const status=getDayStatus(key);
+    const hp=status==='future'?4:pts===0?0:Math.max(10,(pts/MAX_DAILY)*100);
+    const col=document.createElement('div');col.style.cssText='flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;height:100%;';
+    const valEl=document.createElement('div');valEl.style.cssText='font-size:8px;color:var(--dim);min-height:12px;';valEl.textContent=(status!=='future'&&pts>0)?pts:'';
+    const fill=document.createElement('div');fill.style.cssText=`width:100%;height:${hp}%;transition:height 0.5s;`;
+    if(status==='future')fill.style.background='var(--s3)';
+    else if(key===todayK)fill.style.background='var(--orange)';
+    else if(status==='missed'||pts===0)fill.style.background='var(--red-dim)';
+    else fill.style.background='rgba(42,74,107,0.4)';
+    col.appendChild(valEl);col.appendChild(fill);barChart.appendChild(col);
+    const lbl=document.createElement('div');lbl.className='bar-day-lbl'+(key===todayK?' today-lbl-bar':'');lbl.textContent=DAY_NAMES[i];barLabels.appendChild(lbl);
+  });
+  const weekPts=days.reduce((s,k)=>s+(S.history[k]?.pts||0),0);
+  const startK=START_DATE.toISOString().split('T')[0];const pastDays=days.filter(k=>k<=todayK&&k>=startK);const activeDays=pastDays.length||1;
+  const fullDays=days.filter(k=>getDayStatus(k)==='full').length;const avgPts=Math.round(weekPts/activeDays);
+  document.getElementById('stat-summary-row').innerHTML=`<div class="stat-mini"><div class="stat-mini-val">${weekPts}</div><div class="stat-mini-lbl">WEEK PTS</div></div><div class="stat-mini"><div class="stat-mini-val">${fullDays}</div><div class="stat-mini-lbl">FULL DAYS</div></div><div class="stat-mini"><div class="stat-mini-val">${avgPts}</div><div class="stat-mini-lbl">AVG / DAY</div></div>`;
+  const prayerStatRow=document.getElementById('prayer-stat-row');prayerStatRow.innerHTML='';
+  const pLbls={fajr:'Fajr',dhuhr:'Dhuhr',asr:'Asr',maghrib:'Mgrib',isha:'Isha',witr:'Witr'};
+  ALL_PRAYERS.forEach(name=>{
+    let count=0;pastDays.forEach(k=>{const day=S.history[k];if(day?.prayers?.[name])count++;});
+    const pct=activeDays>0?Math.round((count/activeDays)*100):0;
+    const cell=document.createElement('div');cell.className='prayer-stat-cell';
+    cell.innerHTML=`<div class="prayer-stat-name">${pLbls[name]}</div><div class="prayer-stat-count">${count}</div><div class="prayer-stat-pct">${pct}%</div>`;
+    prayerStatRow.appendChild(cell);
+  });
+  const prevDays=getWeekDays(statsWeekOffset-1);const prevPts=prevDays.reduce((s,k)=>s+(S.history[k]?.pts||0),0);
+  const growthEl=document.getElementById('growth-display');
+  if(prevPts===0&&weekPts===0){growthEl.innerHTML='<div style="font-size:11px;color:var(--dim);padding:8px 0;">Not enough data yet.</div>';}
+  else{const diff=weekPts-prevPts;const pct2=prevPts>0?Math.round((diff/prevPts)*100):(weekPts>0?100:0);const cls=diff>0?'growth-positive':diff<0?'growth-negative':'growth-neutral';const arrow=diff>0?'▲':diff<0?'▼':'—';growthEl.innerHTML=`<div class="growth-num ${cls}">${arrow} ${Math.abs(pct2)}%</div><div class="growth-sub">${diff>=0?'+':''}${diff} pts vs last week</div>`;}
+  const allTaskKeys=[{key:'athkar_m',label:'Athkar Morning'},{key:'athkar_a',label:'Athkar Afternoon'},{key:'wird',label:'Daily Wird'},{key:'walk',label:'30min Walk'},{key:'uni',label:'Uni Work'},{key:'memorize',label:'Quran Memorize'},{key:'gym',label:'Gym'},{key:'unireview',label:'Uni Review'},{key:'noscroll',label:'No Doom Scroll'},{key:'nofog',label:'No Fog'},{key:'drone',label:'Drone Course'},{key:'tajweed',label:'Tajweed'},{key:'beneficial',label:'Beneficial'},];
+  const total=pastDays.length||1;
+  const taskData=allTaskKeys.map(t=>{let count=0;pastDays.forEach(k=>{const day=S.history[k];if(day?.simple?.[t.key])count++;});return{...t,pct:Math.round((count/total)*100)};}).sort((a,b)=>a.pct-b.pct);
+  const breakdown=document.getElementById('task-breakdown');breakdown.innerHTML='';
+  taskData.forEach(t=>{const fc=t.pct>=80?'fill-green':t.pct>=50?'fill-amber':'fill-red';const sl=t.pct>=80?'MAINTAIN':t.pct>=50?'IMPROVE':'FOCUS';const sc=t.pct>=80?'status-maintain':t.pct>=50?'status-improve':'status-focus';const row=document.createElement('div');row.className='task-row';row.innerHTML=`<div class="task-row-name">${t.label}</div><div class="task-row-bar"><div class="task-row-fill ${fc}" style="width:${t.pct}%"></div></div><div class="task-row-pct">${t.pct}%</div><div class="task-status ${sc}">${sl}</div>`;breakdown.appendChild(row);});
+  const violCounts={missedprayer:0,haram:0,scroll:0,early:0};const violLabels={missedprayer:'Missed Prayer',haram:'Fog',scroll:'Doom Scroll',early:'Played Early'};
+  days.forEach(k=>{(S.history[k]?.violations||[]).forEach(v=>{if(violCounts[v.type]!==undefined)violCounts[v.type]++;});});
+  const totalViols=Object.values(violCounts).reduce((a,b)=>a+b,0);
+  const violBreakdown=document.getElementById('violation-breakdown');
+  if(totalViols===0){violBreakdown.innerHTML='<div style="font-size:11px;color:var(--green);text-align:center;padding:8px 0;">Clean week. ✓</div>';}
+  else{violBreakdown.innerHTML='';Object.entries(violCounts).filter(([,c])=>c>0).forEach(([key,count])=>{const row=document.createElement('div');row.className='viol-stat-row';row.innerHTML=`<div class="viol-stat-name">${violLabels[key]}</div><div class="viol-stat-count">${count}×</div>`;violBreakdown.appendChild(row);});}
+  const mapEl=document.getElementById('streak-map');mapEl.innerHTML='';
+  for(let i=0;i<30;i++){const d=new Date(Date.UTC(START_DATE.getUTCFullYear(),START_DATE.getUTCMonth(),START_DATE.getUTCDate()+i));const k=d.toISOString().split('T')[0];const status=getDayStatus(k);const cell=document.createElement('div');cell.className='sm-cell';if(k===todayK)cell.classList.add('sm-today');if(status==='full')cell.classList.add('sm-full');else if(status==='partial')cell.classList.add('sm-partial');else if(status==='missed'&&k<=todayK)cell.classList.add('sm-missed');else cell.classList.add('sm-future');mapEl.appendChild(cell);}
+}
+
+function exportWeeklyReport(){
+  const days=getWeekDays(statsWeekOffset);const todayK=todayKey();const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];const DAY_NAMES=['MON','TUE','WED','THU','FRI','SAT','SUN'];
+  const first=new Date(days[0]);const last=new Date(days[6]);const weekLabel=first.getDate()+' '+MONTHS[first.getMonth()]+' — '+last.getDate()+' '+MONTHS[last.getMonth()];
+  const _td=getTD();_td.pts=calcTodayPts();recalcTotal();
+  let lines=['═══════════════════════════════════════','  PROTOCOL — WEEKLY REPORT','  Week: '+weekLabel,'  Exported: '+new Date().toLocaleString(),'═══════════════════════════════════════',''];
+  lines.push('OVERVIEW','────────────────────────────────────────');
+  let weekPts=0,fullDays=0,violTotal=0;const pastDays=days.filter(k=>k<=todayK);
+  pastDays.forEach(k=>{weekPts+=(S.history[k]?.pts||0);});pastDays.forEach(k=>{if(getDayStatus(k)==='full')fullDays++;});pastDays.forEach(k=>{violTotal+=(S.history[k]?.violations?.length||0);});
+  const possible=pastDays.length*MAX_DAILY;const eff=possible>0?Math.round((weekPts/possible)*100):0;
+  lines.push('  Total Points   : '+weekPts+' / '+possible+' ('+eff+'%)','  Full Days      : '+fullDays+' / '+pastDays.length,'  Violations     : '+violTotal,'  Current Streak : '+S.streak+' days','');
+  lines.push('END OF REPORT');
+  const text=lines.join('\n');const blob=new Blob([text],{type:'text/plain'});const url=URL.createObjectURL(blob);const a=document.createElement('a');const ts=tsStamp();a.href=url;a.download='protocol_week_'+ts+'.txt';a.click();URL.revokeObjectURL(url);showToast('Report exported ✓');
+}
+
+// ================================================================
+// INIT
+// ================================================================
+loadState();recalcTotal();autoConfirmTrackedDays();calcStreak();renderToday();renderQuote();renderChallenge();checkMidnightConfirm();
+if('Notification' in window && Notification.permission==='granted'){schedulePageNotifs();}
+
+setInterval(()=>{
+  const unc=document.getElementById('unconfirmed-screen');
+  if(unc&&unc.style.display==='block')return;
+  checkMidnightConfirm();renderToday();renderPrayerTimesWidget();
+  const statsView=document.getElementById('view-stats');
+  if(statsView&&statsView.style.display==='block')renderStats();
+},60000);
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',async()=>{try{await navigator.serviceWorker.register('/protocol/sw.js');}catch(e){}updateNotifUI();});
+}
+</script>
+</body>
+</html>
