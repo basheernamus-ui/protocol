@@ -1,0 +1,2323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Protocol">
+<meta name="theme-color" content="#050A0F">
+<link rel="manifest" href="/protocol/manifest.json">
+<link rel="apple-touch-icon" href="/protocol/apple-touch-icon.png">
+<title>PROTOCOL — 53</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Amiri:wght@400;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange:#FF6B00; --orange-bright:#FF8C2A; --orange-dim:rgba(255,107,0,0.12);
+  --orange-glow:rgba(255,107,0,0.22); --orange-border:rgba(255,107,0,0.35);
+  --navy:#2A4A6B; --navy-light:#3A5A7E; --navy-dim:rgba(42,74,107,0.3);
+  --black:#000000; --bg:#050A0F; --s1:#0B1520; --s2:#0E1A2B; --s3:#142030;
+  --border:rgba(42,74,107,0.4); --border2:rgba(42,74,107,0.2);
+  --green:#39FF8A; --green-dim:rgba(57,255,138,0.1);
+  --red:#FF3A5C; --red-dim:rgba(255,58,92,0.15);
+  --amber:#FFB830; --amber-dim:rgba(255,184,48,0.12);
+  --teal:#00D4AA; --teal-dim:rgba(0,212,170,0.1);
+  --text:#C8D8E8; --text-bright:#E8F0F8; --dim:#3A5070; --dim2:#1E3040;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;max-width:480px;margin:0 auto;padding-bottom:84px;position:relative;}
+body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(42,74,107,0.35) 0%,transparent 60%),radial-gradient(ellipse 40% 30% at 0% 100%,rgba(255,107,0,0.06) 0%,transparent 50%),linear-gradient(180deg,#050A0F 0%,#030710 100%);pointer-events:none;}
+body::after{content:'';position:fixed;inset:0;z-index:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(14,26,43,0.4) 3px,rgba(14,26,43,0.4) 4px);pointer-events:none;opacity:0.4;}
+.hdr{position:sticky;top:0;z-index:100;padding:0;background:rgba(5,10,15,0.95);backdrop-filter:blur(20px) saturate(1.5);border-bottom:1px solid var(--border);}
+.hdr::before{content:'';display:block;height:3px;background:linear-gradient(90deg,var(--orange),var(--orange-bright),transparent 90%);}
+.hdr-inner{padding:10px 16px 12px;}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.logo-real{display:flex;align-items:center;gap:7px;user-select:none;}
+.licon{background:linear-gradient(145deg,#f97b2a 0%,#e85f0e 100%);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(244,110,28,0.35),inset 0 1px 0 rgba(255,255,255,0.15);}
+.licon::before{content:'';position:absolute;top:-9px;left:-9px;width:24px;height:24px;background:rgba(255,255,255,.13);border-radius:50%;}
+.licon::after{content:'';position:absolute;bottom:-7px;right:-7px;width:22px;height:22px;background:rgba(0,0,0,.18);border-radius:50%;}
+.licon svg{position:relative;z-index:1;}
+.licon-hdr{width:36px;height:36px;border-radius:9px;}
+.licon-hdr svg{width:20px;height:20px;}
+.lwm{display:flex;flex-direction:column;line-height:1;}
+.ltech{font-family:'Barlow Condensed',sans-serif;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:0.12em;font-size:22px;line-height:1;}
+.ltech-wrap{position:relative;display:inline-block;}
+.ltech-wrap::after{content:'';position:absolute;left:0;bottom:-2px;width:100%;height:2px;background:linear-gradient(90deg,#f46e1c 0%,#f5d84c 100%);border-radius:2px;}
+.day-block{text-align:right;}
+.day-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:30px;color:var(--text-bright);line-height:1;letter-spacing:-0.02em;}
+.day-lbl{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.18em;color:var(--dim);margin-top:1px;}
+.hdr-date{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.1em;margin-top:6px;text-transform:uppercase;}
+.honor-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.honor-track{flex:1;height:3px;background:var(--s3);position:relative;overflow:visible;}
+.honor-fill{height:100%;background:linear-gradient(90deg,var(--orange) 0%,var(--orange-bright) 100%);transition:width 0.8s cubic-bezier(0.16,1,0.3,1);position:relative;}
+.honor-fill::after{content:'';position:absolute;right:-2px;top:-4px;width:11px;height:11px;background:var(--orange);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);box-shadow:0 0 10px var(--orange),0 0 20px var(--orange-glow);}
+.honor-lbl{font-family:'Roboto Mono',monospace;font-size:11px;font-weight:700;color:var(--orange);letter-spacing:0.05em;white-space:nowrap;}
+.today-pts-lbl{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--navy-light);letter-spacing:0.1em;margin-top:2px;text-align:right;}
+.level-row{display:flex;align-items:center;justify-content:space-between;margin-top:5px;}
+.level-badge{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border:1px solid;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;}
+.lvl-recruit{color:#6A8AA0;border-color:rgba(106,138,160,0.4);background:rgba(106,138,160,0.07);}
+.lvl-warrior{color:var(--orange);border-color:var(--orange-border);background:var(--orange-dim);}
+.lvl-elite{color:var(--amber);border-color:rgba(255,184,48,0.4);background:var(--amber-dim);}
+.lvl-legend{color:var(--green);border-color:rgba(57,255,138,0.4);background:var(--green-dim);}
+.streak-fire{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:13px;letter-spacing:0.08em;color:var(--dim);}
+.streak-fire.on-fire{color:var(--orange);animation:fireFlicker 1.5s ease-in-out infinite alternate;}
+@keyframes fireFlicker{0%{text-shadow:0 0 8px rgba(255,107,0,0.6);}100%{text-shadow:0 0 15px rgba(255,107,0,0.9),0 0 30px rgba(255,107,0,0.5);}}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+.ayah-card{margin:10px 14px 0;background:var(--s1);border:1px solid var(--border);border-top:2px solid var(--orange-border);padding:14px 16px;position:relative;z-index:1;}
+.ayah-ar{font-family:'Amiri',serif;font-size:16px;direction:rtl;text-align:right;line-height:2.2;color:var(--text-bright);margin-bottom:6px;}
+.ayah-tr{font-size:10px;color:var(--dim);font-style:italic;line-height:1.7;letter-spacing:0.01em;}
+.honor-req{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;}
+.honor-req-item{background:rgba(5,10,15,0.5);border:1px solid var(--border2);padding:10px 8px;text-align:center;}
+.honor-req-item.achieved{border-color:var(--orange);background:var(--orange-dim);}
+.honor-req-val{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;color:var(--navy-light);line-height:1;}
+.honor-req-item.achieved .honor-req-val{color:var(--orange);}
+.honor-req-lbl{font-family:'Roboto Mono',monospace;font-size:7px;color:var(--dim);letter-spacing:0.15em;text-transform:uppercase;margin-top:3px;}
+.honor-req-need{font-size:8px;color:var(--dim2);margin-top:2px;font-family:'Roboto Mono',monospace;letter-spacing:0.05em;}
+.honor-req-item.achieved .honor-req-need{color:rgba(255,107,0,0.5);}
+.honor-days-left{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.08em;text-align:center;}
+.phone-section{margin:10px 14px 0;border:1px solid var(--border);border-top:2px solid var(--navy);background:linear-gradient(135deg,rgba(8,16,24,0.98) 0%,rgba(11,21,32,0.98) 100%);position:relative;z-index:1;overflow:hidden;}
+.phone-section::before{content:'';position:absolute;top:0;right:0;width:60%;bottom:0;background:radial-gradient(ellipse at 80% 50%,rgba(42,74,107,0.15) 0%,transparent 70%);pointer-events:none;}
+.phone-section-inner{display:flex;align-items:stretch;min-height:185px;}
+.phone-left{flex:1;padding:14px 0 14px 14px;display:flex;flex-direction:column;justify-content:space-between;position:relative;z-index:1;}
+.phone-tag{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.3em;color:var(--navy-light);text-transform:uppercase;margin-bottom:4px;}
+.phone-name{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;letter-spacing:0.05em;color:var(--text-bright);line-height:1;}
+.phone-color{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.12em;text-transform:uppercase;margin-top:3px;margin-bottom:10px;}
+.phone-specs{display:flex;flex-direction:column;gap:3px;margin-bottom:10px;}
+.phone-spec-item{display:flex;align-items:center;gap:6px;}
+.spec-lbl{font-family:'Roboto Mono',monospace;font-size:7px;letter-spacing:0.15em;color:var(--dim);width:24px;}
+.spec-val{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;color:var(--navy-light);letter-spacing:0.04em;}
+.phone-unlock-bar{height:2px;background:var(--s3);margin-bottom:5px;overflow:hidden;}
+.phone-unlock-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--orange));transition:width 0.8s cubic-bezier(0.16,1,0.3,1);}
+.phone-unlock-lbl{font-family:'Roboto Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.08em;}
+.phone-right{width:130px;flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.phone-right::before{content:'';position:absolute;left:0;top:0;bottom:0;width:40px;background:linear-gradient(90deg,rgba(8,16,24,0.9),transparent);z-index:1;}
+.phone-img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:drop-shadow(-8px 4px 20px rgba(0,0,0,0.8));display:block;}
+.sec{padding:0 14px;margin-top:12px;position:relative;z-index:1;}
+.sec-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.sec-tag{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;padding:3px 10px;border:1px solid;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));}
+.tag-core{color:var(--orange);border-color:var(--orange-border);background:var(--orange-dim);}
+.tag-disc{color:var(--navy-light);border-color:rgba(42,74,107,0.6);background:rgba(42,74,107,0.15);}
+.tag-growth{color:var(--green);border-color:rgba(57,255,138,0.3);background:var(--green-dim);}
+.tag-sunnah{color:var(--amber);border-color:rgba(255,184,48,0.35);background:var(--amber-dim);}
+.sec-pts{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.1em;margin-left:auto;}
+.prayer-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:6px;}
+.prayer-btn{background:var(--s1);border:1px solid var(--border2);border-bottom:2px solid var(--dim2);padding:7px 2px 6px;text-align:center;cursor:pointer;transition:all 0.18s cubic-bezier(0.34,1.56,0.64,1);user-select:none;-webkit-user-select:none;position:relative;overflow:hidden;}
+.prayer-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.03) 0%,transparent 100%);pointer-events:none;}
+.prayer-btn:active{transform:scale(0.92);}
+.prayer-btn.p-home{border-bottom-color:var(--navy-light);background:var(--navy-dim);}
+.prayer-btn.p-mosque{border-bottom-color:var(--orange);background:var(--orange-dim);}
+.prayer-name{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:9px;letter-spacing:0.1em;color:var(--dim);text-transform:uppercase;margin-bottom:2px;}
+.prayer-btn.p-home .prayer-name,.prayer-btn.p-mosque .prayer-name{color:var(--text);}
+.prayer-state{font-size:11px;color:var(--dim2);min-height:14px;display:flex;align-items:center;justify-content:center;font-family:'Roboto Mono',monospace;font-weight:700;line-height:1;}
+.prayer-btn.p-home .prayer-state{color:var(--navy-light);}
+.prayer-btn.p-mosque .prayer-state{color:var(--orange);}
+.prayer-pts-row{font-family:'Roboto Mono',monospace;font-size:7px;letter-spacing:0.04em;color:var(--dim2);margin-top:1px;}
+.prayer-btn.p-home .prayer-pts-row{color:var(--navy-light);}
+.prayer-btn.p-mosque .prayer-pts-row{color:var(--orange);}
+.prayer-summary{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.12em;padding:4px 0 2px;text-align:center;}
+.prayer-legend{display:flex;gap:12px;margin-bottom:6px;padding:0 2px;}
+.prayer-legend-item{display:flex;align-items:center;gap:4px;font-family:'Roboto Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.06em;}
+.legend-dot{width:7px;height:7px;border-radius:1px;}
+.legend-mosque{background:var(--orange);}
+.legend-home{background:var(--navy-light);}
+.sunnah-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:4px;}
+.sunnah-btn{background:var(--s1);border:1px solid var(--border2);border-bottom:2px solid var(--dim2);padding:9px 8px;cursor:pointer;transition:all 0.18s cubic-bezier(0.34,1.56,0.64,1);user-select:none;-webkit-user-select:none;display:flex;align-items:center;gap:7px;position:relative;overflow:hidden;}
+.sunnah-btn:active{transform:scale(0.97);}
+.sunnah-btn.s-done{border-bottom-color:var(--amber);background:rgba(255,184,48,0.1);}
+.sunnah-chk{width:16px;height:16px;flex-shrink:0;border:1px solid var(--dim2);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:'Roboto Mono',monospace;font-weight:700;transition:all 0.15s;}
+.sunnah-btn.s-done .sunnah-chk{background:var(--amber);border-color:var(--amber);color:var(--black);}
+.sunnah-info{flex:1;min-width:0;}
+.sunnah-name{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;letter-spacing:0.04em;color:var(--text-bright);}
+.sunnah-sub{font-size:8px;color:var(--dim);margin-top:1px;}
+.sunnah-pts{font-family:'Roboto Mono',monospace;font-size:10px;font-weight:700;color:var(--amber);flex-shrink:0;}
+.sunnah-btn.sunnah-full{grid-column:1/-1;}
+.task{background:var(--s1);border:1px solid var(--border2);border-left:3px solid var(--dim2);padding:11px 12px 11px 13px;margin-bottom:4px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all 0.15s ease;user-select:none;-webkit-user-select:none;position:relative;overflow:hidden;}
+.task:active{transform:scale(0.988);}
+.task.t-done{border-left-color:var(--orange);background:var(--orange-dim);}
+.task.t-done .task-name{text-decoration:line-through;color:rgba(200,216,232,0.45);}
+.task.core-task{border-left-color:rgba(255,107,0,0.3);}
+.task.core-task.t-done{border-left-color:var(--orange);background:var(--orange-dim);}
+.task.disc-task{border-left-color:rgba(42,74,107,0.5);}
+.task.disc-task.t-done{border-left-color:var(--navy-light);background:var(--navy-dim);}
+.task.disc-task.t-done .task-pts{color:var(--navy-light);}
+.task.growth-task{border-left-color:rgba(57,255,138,0.2);}
+.task.growth-task.t-done{border-left-color:var(--green);background:var(--green-dim);}
+.task.growth-task .task-pts,.task.growth-task.t-done .task-pts{color:var(--green);}
+.task.diet-task{border-left-color:rgba(0,212,170,0.3);}
+.task.diet-task.t-done{border-left-color:var(--teal);background:var(--teal-dim);}
+.task.diet-task .task-pts,.task.diet-task.t-done .task-pts{color:var(--teal);}
+.task-chk{width:18px;height:18px;flex-shrink:0;border:1px solid var(--dim2);display:flex;align-items:center;justify-content:center;font-size:11px;transition:all 0.15s;font-family:'Roboto Mono',monospace;font-weight:700;}
+.task.t-done .task-chk{background:var(--orange);border-color:var(--orange);color:var(--black);}
+.task.disc-task.t-done .task-chk{background:var(--navy);border-color:var(--navy-light);color:white;}
+.task.growth-task.t-done .task-chk{background:var(--green);border-color:var(--green);color:var(--black);}
+.task.diet-task.t-done .task-chk{background:var(--teal);border-color:var(--teal);color:var(--black);}
+.task-info{flex:1;min-width:0;}
+.task-name{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:0.04em;color:var(--text-bright);transition:all 0.2s;}
+.task-sub{font-size:10px;color:var(--dim);margin-top:1px;letter-spacing:0.02em;}
+.task-pts{font-family:'Roboto Mono',monospace;font-size:11px;font-weight:700;color:var(--orange);letter-spacing:0.04em;flex-shrink:0;}
+.prayer-wrap{background:var(--s1);border:1px solid var(--border2);border-left:3px solid rgba(255,107,0,0.3);padding:11px 12px 10px 13px;margin-bottom:4px;position:relative;}
+.prayer-wrap.p-active{border-left-color:var(--orange);}
+.prayer-wrap-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.prayer-wrap-name{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:0.04em;color:var(--text-bright);}
+.prayer-wrap-pts{font-family:'Roboto Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:0.06em;}
+.mood-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;}
+.mood-btn{background:var(--s1);border:1px solid var(--border2);padding:10px 4px;text-align:center;cursor:pointer;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);user-select:none;}
+.mood-btn:active{transform:scale(0.92);}
+.mood-emoji{font-size:20px;margin-bottom:4px;}
+.mood-lbl{font-size:8px;color:var(--dim);letter-spacing:0.05em;font-family:'Roboto Mono',monospace;}
+.unconfirmed-screen{display:none;padding:16px 14px;position:relative;z-index:1;}
+.unc-box{background:rgba(255,58,92,0.04);border:1px solid rgba(255,58,92,0.3);border-top:3px solid var(--red);padding:16px;}
+.unc-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:0.15em;color:var(--red);margin-bottom:8px;}
+.unc-msg{font-size:11px;color:var(--dim);line-height:1.7;margin-bottom:14px;}
+.unc-btns{display:flex;gap:8px;}
+.unc-btn{flex:1;padding:10px;border:1px solid;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;background:none;}
+.unc-btn.confirm{border-color:var(--green);color:var(--green);}
+.unc-btn.admit{border-color:var(--red);color:var(--red);}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(5,10,15,0.97);border-top:1px solid var(--border);backdrop-filter:blur(20px);display:flex;z-index:200;}
+.nav::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--orange-border),transparent);}
+.nav-btn{flex:1;padding:10px 6px 16px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;border:none;background:none;color:var(--dim);transition:all 0.2s;font-size:18px;position:relative;}
+.nav-btn.active{color:var(--orange);}
+.nav-btn.active::before{content:'';position:absolute;top:0;left:25%;right:25%;height:2px;background:var(--orange);}
+.nav-btn span{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;}
+.toast{position:fixed;top:72px;left:50%;transform:translateX(-50%) translateY(-12px);background:var(--s2);border:1px solid var(--orange-border);border-top:2px solid var(--orange);color:var(--orange);font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:0.1em;padding:7px 16px;z-index:999;opacity:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.red{border-color:var(--red-dim);border-top-color:var(--red);color:var(--red);}
+.toast.green{border-color:rgba(57,255,138,0.3);border-top-color:var(--green);color:var(--green);}
+.flash{position:fixed;inset:0;z-index:500;pointer-events:none;opacity:0;transition:opacity 0.35s;}
+.flash.show{opacity:1;background:rgba(255,107,0,0.04);}
+.combo-pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:var(--s2);border:2px solid var(--orange);padding:12px 24px;z-index:800;pointer-events:none;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);opacity:0;text-align:center;}
+.combo-pop.show{opacity:1;transform:translate(-50%,-60%) scale(1);}
+.combo-pop-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;color:var(--orange);letter-spacing:0.15em;}
+.combo-pop-sub{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.1em;margin-top:3px;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:600;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--s1);border:1px solid rgba(255,58,92,0.3);border-top:3px solid var(--red);padding:20px;width:100%;max-width:340px;}
+.modal-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;letter-spacing:0.15em;color:var(--red);margin-bottom:8px;}
+.modal-msg{font-size:11px;color:var(--dim);line-height:1.8;margin-bottom:12px;}
+.modal-close{width:100%;padding:11px;border:1px solid rgba(255,58,92,0.4);background:none;color:var(--red);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;}
+.modal-close:active{background:rgba(255,58,92,0.08);}
+.reward-modal{background:var(--s1);border:1px solid rgba(255,107,0,0.4);border-top:3px solid var(--orange);padding:24px 20px;width:100%;max-width:340px;text-align:center;}
+.reward-icon{font-size:38px;margin-bottom:10px;}
+.reward-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;letter-spacing:0.1em;color:var(--orange);margin-bottom:8px;}
+.reward-msg{font-size:11px;color:var(--dim);line-height:1.8;margin-bottom:16px;}
+.reward-close{width:100%;padding:11px;border:1px solid var(--orange-border);background:none;color:var(--orange);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;}
+.history-view,.settings-view,.stats-view{display:none;padding:14px;position:relative;z-index:1;}
+.hist-view-title,.settings-title,.stats-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;letter-spacing:0.2em;color:var(--orange);margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:10px;}
+.hist-day{background:var(--s1);border:1px solid var(--border2);border-left:3px solid var(--dim2);padding:11px 13px;margin-bottom:5px;display:flex;align-items:center;gap:11px;}
+.hist-date-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;color:var(--dim);min-width:30px;line-height:1;}
+.hist-info{flex:1;}
+.hist-lbl{font-size:11px;letter-spacing:0.05em;color:var(--text);}
+.hist-pts{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);margin-top:2px;}
+.hist-bar{width:50px;height:3px;background:var(--s3);}
+.hist-bar-fill{height:100%;background:var(--orange);}
+.hist-badge{font-family:'Roboto Mono',monospace;font-size:8px;padding:2px 5px;border:1px solid;margin-top:4px;display:inline-block;letter-spacing:0.1em;}
+.badge-perfect{color:var(--orange);border-color:var(--orange-border);}
+.badge-viol{color:var(--red);border-color:var(--red-dim);}
+.setting-row{background:var(--s1);border:1px solid var(--border2);padding:13px;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background 0.15s;}
+.setting-row:active{background:var(--s2);}
+.setting-lbl{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;letter-spacing:0.06em;color:var(--text);}
+.setting-sub{font-size:10px;color:var(--dim);margin-top:2px;}
+.stat-week-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.week-btn{background:var(--s1);border:1px solid var(--border2);color:var(--dim);font-size:12px;padding:6px 14px;cursor:pointer;font-family:'Roboto Mono',monospace;transition:all 0.15s;}
+.week-btn:active{border-color:var(--orange);color:var(--orange);}
+.week-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.2em;color:var(--orange);text-transform:uppercase;}
+.stat-card{background:var(--s1);border:1px solid var(--border2);border-top:1px solid var(--border);padding:13px;margin-bottom:8px;}
+.stat-card-title{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.25em;color:var(--dim);text-transform:uppercase;margin-bottom:12px;}
+.bar-chart{display:flex;align-items:flex-end;gap:5px;height:80px;margin-bottom:6px;}
+.bar-labels{display:flex;gap:5px;}
+.bar-day-lbl{flex:1;text-align:center;font-family:'Roboto Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.05em;}
+.bar-day-lbl.today-lbl-bar{color:var(--orange);}
+.stat-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px;}
+.stat-mini{background:var(--s1);border:1px solid var(--border2);padding:11px 10px;text-align:center;}
+.stat-mini-val{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;color:var(--orange);line-height:1;}
+.stat-mini-lbl{font-family:'Roboto Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.1em;text-transform:uppercase;margin-top:3px;}
+.growth-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:40px;line-height:1;letter-spacing:-0.02em;}
+.growth-positive{color:var(--green);}.growth-negative{color:var(--red);}.growth-neutral{color:var(--dim);}
+.growth-sub{font-size:10px;color:var(--dim);letter-spacing:0.06em;margin-top:4px;}
+.task-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border2);}
+.task-row:last-child{border-bottom:none;}
+.task-row-name{font-size:10px;color:var(--text);flex:1;letter-spacing:0.03em;}
+.task-row-bar{width:70px;height:2px;background:var(--s3);}
+.task-row-fill{height:100%;transition:width 0.5s ease;}
+.fill-green{background:var(--green);}.fill-amber{background:var(--amber);}.fill-red{background:var(--red);}
+.task-row-pct{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);width:26px;text-align:right;}
+.task-status{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:9px;padding:2px 6px;border:1px solid;letter-spacing:0.1em;flex-shrink:0;}
+.status-maintain{color:var(--green);border-color:rgba(57,255,138,0.3);}
+.status-focus{color:var(--red);border-color:rgba(255,58,92,0.3);}
+.status-improve{color:var(--amber);border-color:rgba(255,184,48,0.3);}
+.streak-map{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:6px;}
+.sm-cell{aspect-ratio:1;border:1px solid var(--border2);}
+.sm-full{background:var(--orange);border-color:var(--orange);}
+.sm-partial{background:var(--navy);border-color:var(--navy-light);}
+.sm-missed{background:rgba(255,58,92,0.2);border-color:var(--red-dim);}
+.sm-future{background:var(--s3);border-color:var(--border2);}
+.sm-today{outline:2px solid var(--orange);outline-offset:1px;}
+.viol-stat-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border2);}
+.viol-stat-row:last-child{border-bottom:none;}
+.viol-stat-name{font-size:10px;color:var(--text);flex:1;}
+.viol-stat-count{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;color:var(--red);}
+.prayer-stat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:8px;}
+.prayer-stat-cell{text-align:center;background:var(--s2);padding:6px 2px;border:1px solid var(--border2);}
+.prayer-stat-name{font-family:'Roboto Mono',monospace;font-size:7px;color:var(--dim);letter-spacing:0.06em;}
+.prayer-stat-count{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;color:var(--orange);}
+.prayer-stat-pct{font-size:7px;color:var(--dim);font-family:'Roboto Mono',monospace;}
+.plank-note{font-family:'Roboto Mono',monospace;font-size:8px;color:var(--teal);letter-spacing:0.08em;padding:5px 8px;background:rgba(0,212,170,0.05);border-left:2px solid rgba(0,212,170,0.3);margin-top:2px;margin-bottom:4px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes taskBounce{0%{transform:scale(1);}40%{transform:scale(1.04);}100%{transform:scale(1);}}
+.task-bounce{animation:taskBounce 0.35s ease;}
+/* ===== V2 ADDITIONS ===== */
+/* Merged inspiration card */
+.insp-card{margin:10px 14px 0;background:linear-gradient(135deg,rgba(11,21,32,0.98),rgba(14,20,43,0.98));border:1px solid rgba(255,184,48,0.25);border-top:2px solid var(--amber);padding:12px 14px;position:relative;z-index:1;overflow:hidden;}
+.insp-card::before{content:'⚡';position:absolute;right:12px;top:8px;font-size:30px;opacity:0.07;pointer-events:none;}
+.insp-chal-label{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.3em;color:var(--amber);text-transform:uppercase;margin-bottom:5px;}
+.insp-chal-text{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:var(--text-bright);letter-spacing:0.04em;line-height:1.4;}
+.insp-chal-sub{font-size:10px;color:var(--dim);margin-top:3px;}
+.insp-divider{height:1px;background:var(--border2);margin:10px 0;}
+.insp-quote{font-family:'Barlow',sans-serif;font-style:italic;font-size:11px;color:var(--text);line-height:1.7;min-height:1.7em;}
+.insp-quote-cursor{display:inline-block;width:2px;height:11px;background:var(--orange);animation:blink 0.7s step-end infinite;vertical-align:middle;margin-left:1px;}
+/* Foundation strip */
+.foundation-card{margin:10px 14px 0;background:var(--s1);border:1px solid var(--border);border-top:2px solid var(--teal);padding:12px 14px;position:relative;z-index:1;}
+.foundation-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.foundation-title{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.3em;color:var(--teal);text-transform:uppercase;}
+.foundation-count{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;color:var(--text-bright);letter-spacing:0.05em;}
+.foundation-track{height:3px;background:var(--s3);overflow:hidden;margin-bottom:8px;}
+.foundation-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--green));transition:width 0.6s cubic-bezier(0.16,1,0.3,1);}
+.foundation-keys{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;}
+.foundation-key{text-align:center;padding:6px 2px;background:rgba(5,10,15,0.4);border:1px solid var(--border2);}
+.foundation-key.fk-done{border-color:var(--teal);background:var(--teal-dim);}
+.fk-icon{font-size:14px;line-height:1;}
+.fk-lbl{font-family:'Roboto Mono',monospace;font-size:6.5px;letter-spacing:0.05em;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+.foundation-key.fk-done .fk-lbl{color:var(--teal);}
+/* Target card extras */
+.target-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:10px 0;}
+.target-stat{background:rgba(5,10,15,0.5);border:1px solid var(--border2);padding:8px 4px;text-align:center;}
+.target-stat-val{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;color:var(--green);line-height:1;}
+.target-stat-lbl{font-family:'Roboto Mono',monospace;font-size:6.5px;color:var(--dim);letter-spacing:0.08em;text-transform:uppercase;margin-top:3px;}
+/* Urge button */
+.urge-btn{margin:12px 14px 0;display:block;width:calc(100% - 28px);background:linear-gradient(135deg,rgba(0,212,170,0.12),rgba(42,74,107,0.18));border:1px solid var(--teal);border-top:2px solid var(--teal);color:var(--teal);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:0.08em;text-transform:uppercase;padding:14px;cursor:pointer;position:relative;z-index:1;transition:all 0.18s;}
+.urge-btn:active{transform:scale(0.98);background:rgba(0,212,170,0.2);}
+.urge-btn-sub{display:block;font-family:'Barlow',sans-serif;font-weight:400;font-size:10px;letter-spacing:0.04em;text-transform:none;color:var(--dim);margin-top:3px;}
+/* Urge overlay */
+.urge-overlay{display:none;position:fixed;inset:0;z-index:700;background:linear-gradient(180deg,#050A0F 0%,#03101a 100%);flex-direction:column;align-items:center;justify-content:center;padding:30px 24px;max-width:480px;margin:0 auto;}
+.urge-overlay.show{display:flex;}
+.urge-overlay::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 30%,rgba(0,212,170,0.12) 0%,transparent 60%);pointer-events:none;}
+.urge-timer{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:80px;color:var(--teal);line-height:1;letter-spacing:-0.02em;text-shadow:0 0 30px rgba(0,212,170,0.4);position:relative;z-index:1;}
+.urge-intro{font-family:'Barlow',sans-serif;font-size:13px;color:var(--text);text-align:center;line-height:1.7;margin-top:14px;max-width:300px;position:relative;z-index:1;}
+.urge-support{font-family:'Barlow',sans-serif;font-size:14px;color:var(--text-bright);text-align:center;line-height:1.8;margin-top:24px;min-height:60px;max-width:320px;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;}
+.urge-support .ar{font-family:'Amiri',serif;font-size:20px;direction:rtl;}
+.urge-btns{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;margin-top:30px;position:relative;z-index:1;}
+.urge-action{padding:15px;border:1px solid;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;background:none;transition:all 0.15s;}
+.urge-action.primary{border-color:var(--green);color:var(--green);background:var(--green-dim);}
+.urge-action.primary:active{background:rgba(57,255,138,0.2);transform:scale(0.98);}
+.urge-action.secondary{border-color:var(--teal);color:var(--teal);}
+.urge-action.secondary:active{transform:scale(0.98);}
+.urge-slip-link{margin-top:18px;font-family:'Roboto Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:0.08em;text-decoration:underline;cursor:pointer;background:none;border:none;position:relative;z-index:1;}
+/* Mercy / new-start modal */
+.mercy-modal{background:var(--s1);border:1px solid rgba(0,212,170,0.4);border-top:3px solid var(--teal);padding:24px 20px;width:100%;max-width:360px;text-align:center;}
+.mercy-icon{font-size:36px;margin-bottom:10px;}
+.mercy-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;letter-spacing:0.12em;color:var(--teal);margin-bottom:10px;}
+.mercy-msg{font-size:12px;color:var(--text);line-height:1.9;margin-bottom:14px;}
+.mercy-msg .ar{font-family:'Amiri',serif;font-size:16px;color:var(--text-bright);display:block;margin:8px 0 4px;}
+.mercy-clean{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:var(--green);line-height:1.5;background:var(--green-dim);border:1px solid rgba(57,255,138,0.25);padding:12px;margin-bottom:14px;letter-spacing:0.02em;}
+.mercy-chips-lbl{font-family:'Roboto Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px;}
+.mercy-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:16px;}
+.mercy-chip{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.06em;color:var(--text);background:var(--s2);border:1px solid var(--border2);padding:6px 11px;cursor:pointer;transition:all 0.15s;}
+.mercy-chip.sel{border-color:var(--teal);color:var(--teal);background:var(--teal-dim);}
+.mercy-close{width:100%;padding:12px;border:1px solid var(--teal);background:none;color:var(--teal);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;}
+.mercy-close:active{background:rgba(0,212,170,0.1);}
+/* Clean tracker */
+.clean-card{margin:var(--gap) 14px 14px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--card-radius);padding:var(--pad);position:relative;z-index:1;}
+.clean-title{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.3em;color:var(--green);text-transform:uppercase;margin-bottom:10px;}
+.clean-status{display:flex;align-items:center;gap:10px;}
+.clean-badge{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;letter-spacing:0.06em;padding:5px 12px;border:1px solid;}
+.clean-badge.is-clean{color:var(--green);border-color:rgba(57,255,138,0.4);background:var(--green-dim);}
+.clean-badge.not-clean{color:var(--amber);border-color:rgba(255,184,48,0.4);background:var(--amber-dim);}
+.clean-sub{font-size:10px;color:var(--dim);flex:1;line-height:1.5;}
+.clean-slip-link{display:block;margin-top:12px;font-family:'Roboto Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:0.08em;text-decoration:underline;cursor:pointer;text-align:center;}
+.fnd-mini{display:flex;gap:6px;margin-top:9px;}
+.fnd-mini-key{flex:1;text-align:center;padding:8px 2px 7px;border:1px solid var(--card-border);border-radius:8px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.03em;color:var(--dim);user-select:none;transition:all .15s;}
+.fnd-mini-key:active{transform:scale(0.95);}
+.fnd-mini-st{display:block;font-family:'Roboto Mono',monospace;font-weight:700;font-size:13px;margin-bottom:3px;color:var(--dim2);}
+.fnd-mini-key.fk-done{color:var(--text-bright);border-color:var(--orange-border);background:var(--orange-dim);}
+.fnd-mini-key.fk-done .fnd-mini-st{color:var(--orange);}
+/* Collapsible depth sections — styled as clean section headers */
+.task-group{margin:var(--gap) 14px 0;border:1px solid var(--card-border);border-radius:var(--card-radius);background:rgba(11,21,32,0.55);position:relative;z-index:1;overflow:hidden;}
+.task-group summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;padding:13px 14px;user-select:none;-webkit-user-select:none;}
+.task-group summary::-webkit-details-marker{display:none;}
+.task-group[open] summary{border-bottom:1px solid var(--border2);}
+.tg-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-bright);}
+.tg-pts{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--navy-light);letter-spacing:0.08em;margin-left:auto;background:rgba(42,74,107,0.18);border:1px solid var(--border2);border-radius:20px;padding:2px 9px;}
+.tg-arrow{font-family:'Roboto Mono',monospace;font-size:11px;color:var(--dim);transition:transform 0.2s;margin-left:8px;}
+.task-group[open] .tg-arrow{transform:rotate(90deg);}
+.tg-body{padding:11px 11px 12px;}
+/* Study tab */
+.study-view{display:none;padding:14px;position:relative;z-index:1;}
+.study-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;letter-spacing:0.2em;color:var(--orange);margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:10px;}
+.countdown-card{background:linear-gradient(135deg,rgba(14,26,43,0.95),rgba(11,21,32,0.95));border:1px solid var(--border);border-top:2px solid var(--orange);padding:16px;margin-bottom:10px;position:relative;overflow:hidden;}
+.countdown-card.exam-today{border-top-color:var(--red);}
+.cd-label{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.3em;color:var(--orange);text-transform:uppercase;margin-bottom:6px;}
+.countdown-card.exam-today .cd-label{color:var(--red);}
+.cd-subject{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;color:var(--text-bright);letter-spacing:0.02em;line-height:1.1;}
+.cd-days{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;color:var(--orange);letter-spacing:0.06em;margin-top:4px;}
+.cd-upcoming{margin-top:12px;border-top:1px solid var(--border2);padding-top:10px;}
+.cd-up-row{display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:11px;}
+.cd-up-name{color:var(--text);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:0.04em;}
+.cd-up-date{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);}
+.study-active-card{background:var(--s1);border:1px solid var(--border);border-top:2px solid var(--green);padding:14px 16px;}
+.study-active-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.study-active-title{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.3em;color:var(--green);text-transform:uppercase;}
+.study-done-count{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;color:var(--green);letter-spacing:0.05em;}
+.study-task{background:var(--s2);border:1px solid var(--border2);border-left:3px solid var(--dim2);padding:12px 13px;margin-bottom:5px;display:flex;align-items:center;gap:11px;cursor:pointer;transition:all 0.15s;user-select:none;-webkit-user-select:none;}
+.study-task:active{transform:scale(0.99);}
+.study-task.s-done{border-left-color:var(--green);background:var(--green-dim);}
+.study-task .task-chk{border-color:var(--dim2);}
+.study-task.s-done .task-chk{background:var(--green);border-color:var(--green);color:var(--black);}
+.study-task-name{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:15px;letter-spacing:0.04em;color:var(--text-bright);flex:1;}
+.study-empty{background:var(--s1);border:1px solid var(--border2);padding:24px 16px;text-align:center;font-size:12px;color:var(--dim);line-height:1.7;}
+/* Backup banner */
+.backup-banner{margin:10px 14px 0;background:var(--s2);border:1px solid var(--amber-dim);border-top:2px solid var(--amber);padding:11px 13px;display:flex;align-items:center;gap:10px;position:relative;z-index:1;}
+.backup-banner-txt{flex:1;font-size:10px;color:var(--text);line-height:1.5;}
+.backup-banner-x{font-family:'Roboto Mono',monospace;font-size:14px;color:var(--dim);cursor:pointer;padding:0 4px;}
+.uni-managed-hint{font-size:9px;color:var(--teal);font-family:'Roboto Mono',monospace;letter-spacing:0.04em;margin-top:1px;}
+/* ============================================================
+   V6 PREMIUM HOME — single page, unified card system
+   Palette discipline: ORANGE primary · NAVY structure ·
+   GREEN = success/clean · RED = real alerts only.
+   ============================================================ */
+:root{
+  --card-bg:linear-gradient(160deg,rgba(14,26,43,0.96) 0%,rgba(9,17,27,0.98) 100%);
+  --card-border:rgba(42,74,107,0.45);
+  --card-radius:12px;
+  --pad:15px;
+  --gap:13px; /* vertical rhythm */
+}
+/* one consistent card shell */
+.pcard{margin:var(--gap) 14px 0;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--card-radius);padding:var(--pad);position:relative;z-index:1;}
+/* consistent micro-header used inside cards */
+.pcard-eyebrow{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.32em;text-transform:uppercase;color:var(--navy-light);}
+
+/* ===== HERO — Honor 600 reward reveal ===== */
+.hero{margin:var(--gap) 14px 0;position:relative;z-index:1;border:1px solid var(--orange-border);border-radius:var(--card-radius);overflow:hidden;background:linear-gradient(155deg,#0E1A2B 0%,#0A1320 55%,#0B0F18 100%);box-shadow:0 10px 34px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.04);}
+.hero::before{content:'HONOR 600';position:absolute;top:-14px;left:-6px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:52px;letter-spacing:0.02em;line-height:1;color:rgba(42,74,107,0.16);white-space:nowrap;pointer-events:none;z-index:0;}
+.hero::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--orange),var(--orange-bright),transparent 85%);z-index:3;}
+.hero-top{display:flex;align-items:stretch;position:relative;z-index:2;min-height:178px;}
+.hero-info{flex:1;min-width:0;padding:16px 0 14px 16px;display:flex;flex-direction:column;}
+.hero-tag{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.3em;color:var(--orange);text-transform:uppercase;display:flex;align-items:center;gap:5px;}
+.hero-name{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:34px;letter-spacing:0.03em;color:var(--text-bright);line-height:0.95;margin-top:5px;text-shadow:0 2px 14px rgba(0,0,0,0.5);}
+.hero-color{font-family:'Roboto Mono',monospace;font-size:8.5px;color:var(--dim);letter-spacing:0.1em;text-transform:uppercase;margin-top:5px;line-height:1.5;}
+.hero-specs{display:flex;flex-direction:column;gap:5px;margin-top:auto;padding-top:12px;}
+.hero-spec{display:flex;align-items:baseline;gap:7px;}
+.hero-spec-k{font-family:'Roboto Mono',monospace;font-size:7px;letter-spacing:0.16em;color:var(--orange);width:26px;flex-shrink:0;}
+.hero-spec-v{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;color:var(--text);letter-spacing:0.03em;}
+.hero-photo{width:128px;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center;}
+.hero-photo::before{content:'';position:absolute;left:0;top:0;bottom:0;width:46px;background:linear-gradient(90deg,#0A1320,transparent);z-index:2;}
+.hero-photo::after{content:'';position:absolute;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,0,0.16) 0%,transparent 68%);z-index:0;}
+.hero-img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;position:relative;z-index:1;filter:drop-shadow(-10px 8px 26px rgba(0,0,0,0.85)) drop-shadow(0 0 18px rgba(255,107,0,0.18));}
+/* graceful fallback if the remote phone image can't load (e.g. offline) */
+.hero-photo-fallback{display:none;position:relative;z-index:1;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:34px;line-height:1;}
+.hero-photo-fallback span{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:0.12em;color:var(--text-bright);}
+.hero-photo-fallback small{font-family:'Roboto Mono',monospace;font-size:8px;letter-spacing:0.1em;color:var(--dim);}
+/* hero progress + criteria block */
+.hero-prog{position:relative;z-index:2;padding:13px 16px 15px;border-top:1px solid var(--border2);background:rgba(5,10,15,0.35);}
+.hero-prog-bar{height:5px;background:var(--s3);border-radius:3px;overflow:hidden;}
+.hero-prog-fill{height:100%;background:linear-gradient(90deg,var(--navy) 0%,var(--orange) 75%,var(--orange-bright) 100%);border-radius:3px;transition:width 0.8s cubic-bezier(0.16,1,0.3,1);}
+.hero-prog-lbl{display:flex;justify-content:space-between;align-items:center;margin-top:7px;}
+.hero-prog-pct{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:13px;letter-spacing:0.06em;color:var(--orange);}
+.hero-prog-days{font-family:'Roboto Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.06em;}
+.hero-verdict{margin-top:10px;padding-top:9px;border-top:1px solid var(--border2);font-family:'Roboto Mono',monospace;font-size:10px;line-height:1.4;letter-spacing:0.03em;text-align:center;color:var(--dim);}
+.hero-crit{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:11px;}
+.hero-crit-item{background:rgba(5,10,15,0.55);border:1px solid var(--border2);border-radius:7px;padding:9px 6px;text-align:center;transition:all 0.3s;}
+.hero-crit-item.met{border-color:var(--green);background:var(--green-dim);}
+.hero-crit-val{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;color:var(--navy-light);line-height:1;}
+.hero-crit-item.met .hero-crit-val{color:var(--green);}
+.hero-crit-lbl{font-family:'Roboto Mono',monospace;font-size:6.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);margin-top:4px;}
+.hero-crit-need{font-family:'Roboto Mono',monospace;font-size:7px;color:var(--dim2);margin-top:2px;letter-spacing:0.04em;}
+.hero-crit-item.met .hero-crit-need{color:rgba(57,255,138,0.6);}
+
+/* ===== FOUNDATION (the daily floor) ===== */
+.fnd{margin:var(--gap) 14px 0;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--card-radius);padding:var(--pad);position:relative;z-index:1;}
+.fnd.secured{border-color:rgba(57,255,138,0.35);}
+.fnd-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;}
+.fnd-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-bright);}
+.fnd-count{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;letter-spacing:0.06em;color:var(--orange);}
+.fnd.secured .fnd-count{color:var(--green);}
+.fnd-track{height:4px;background:var(--s3);border-radius:3px;overflow:hidden;margin-bottom:11px;}
+.fnd-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--orange-bright));border-radius:3px;transition:width 0.6s cubic-bezier(0.16,1,0.3,1);}
+.fnd.secured .fnd-fill{background:linear-gradient(90deg,#1FB866,var(--green));}
+.fnd-keys{display:flex;flex-direction:column;gap:6px;}
+.fnd-key{display:flex;align-items:center;gap:12px;padding:12px 13px;background:rgba(5,10,15,0.45);border:1px solid var(--border2);border-radius:8px;cursor:pointer;transition:all 0.15s;user-select:none;-webkit-user-select:none;}
+.fnd-key:active{transform:scale(0.99);}
+.fnd-key.fk-done{border-color:var(--orange-border);background:var(--orange-dim);}
+.fnd-key-ic{font-size:19px;line-height:1;width:24px;text-align:center;flex-shrink:0;}
+.fnd-key-body{flex:1;min-width:0;}
+.fnd-key-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:0.04em;color:var(--text-bright);}
+.fnd-key-sub{font-size:9px;color:var(--dim);margin-top:1px;letter-spacing:0.02em;}
+.fnd-key-state{font-family:'Roboto Mono',monospace;font-size:14px;font-weight:700;color:var(--dim2);width:20px;text-align:center;flex-shrink:0;}
+.fnd-key.fk-done .fnd-key-state{color:var(--orange);}
+.fnd-msg{margin-top:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.06em;color:var(--green);text-align:center;}
+.fnd-why{margin-top:11px;font-family:'Barlow',sans-serif;font-style:italic;font-size:11px;color:var(--orange-bright);line-height:1.5;padding:9px 11px;border-left:2px solid var(--orange-border);background:var(--orange-dim);border-radius:0 6px 6px 0;cursor:pointer;}
+.fnd-why.empty{color:var(--dim);border-left-color:var(--border2);background:rgba(255,255,255,0.02);font-style:normal;}
+
+/* ===== INSPIRATION STRIP (compact) ===== */
+.insp-strip{margin:var(--gap) 14px 0;background:var(--s1);border:1px solid var(--card-border);border-left:3px solid var(--orange);border-radius:var(--card-radius);padding:11px 14px;position:relative;z-index:1;overflow:hidden;}
+.insp-strip-chal{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:var(--text-bright);letter-spacing:0.03em;line-height:1.35;}
+.insp-strip-chal::before{content:'TODAY ';font-family:'Roboto Mono',monospace;font-weight:400;font-size:8px;letter-spacing:0.28em;color:var(--orange);}
+.insp-strip-sub{font-size:9px;color:var(--dim);margin-top:2px;letter-spacing:0.02em;}
+.insp-strip-rule{height:1px;background:var(--border2);margin:9px 0;}
+.insp-strip-quote{font-family:'Barlow',sans-serif;font-style:italic;font-size:11px;color:var(--text);line-height:1.6;min-height:1.6em;}
+.insp-strip-ayah{font-family:'Amiri',serif;font-size:14px;direction:rtl;text-align:right;line-height:1.9;color:var(--text-bright);margin-top:8px;}
+.insp-strip-ayah-tr{font-size:9px;color:var(--dim);font-style:italic;line-height:1.6;margin-top:3px;}
+
+/* ===== Foundation-floor "my why" status removed; using fnd-why ===== */
+
+/* Grace day button + why in urge */
+.unc-btn.grace{border-color:var(--teal);color:var(--teal);}
+.urge-why{margin-top:14px;font-family:'Barlow',sans-serif;font-style:italic;font-size:13px;color:var(--teal);text-align:center;line-height:1.6;max-width:320px;position:relative;z-index:1;}
+.why-input{width:100%;background:var(--s2);border:1px solid var(--border2);color:var(--text-bright);font-family:'Barlow',sans-serif;font-size:13px;padding:10px;margin-top:8px;border-radius:0;resize:vertical;min-height:60px;}
+</style>
+</head>
+<body>
+<div class="flash" id="flash"></div>
+<div class="combo-pop" id="combo-pop"><div class="combo-pop-title" id="combo-pop-title">COMBO ×2</div><div class="combo-pop-sub" id="combo-pop-sub">KEEP THE MOMENTUM</div></div>
+<input type="file" id="import-file-input" accept=".json" style="display:none;" onchange="handleImportFile(event)">
+<div class="modal-overlay" id="reward-modal"><div class="reward-modal"><div class="reward-icon" id="rm-icon">⚡</div><div class="reward-title" id="rm-title">ACHIEVEMENT</div><div class="reward-msg" id="rm-msg"></div><button class="reward-close" onclick="closeModal('reward-modal')">RECEIVED</button></div></div>
+<div class="modal-overlay" id="mercy-modal"><div class="mercy-modal">
+  <div class="mercy-icon">🌅</div>
+  <div class="mercy-title">A NEW START</div>
+  <div class="mercy-msg">Turning back to Allah is itself an act of worship. The best of those who slip are those who return — so return, without despair.<span class="ar">وَلَا تَيْأَسُوا مِن رَّحْمَةِ اللَّهِ</span>"Do not despair of the mercy of Allah." — 39:53</div>
+  <div class="mercy-clean" id="mercy-clean">Your total is still 0 days — this is one day, not the whole road.</div>
+  <div class="mercy-chips-lbl">What pulled you? (optional)</div>
+  <div class="mercy-chips" id="mercy-chips">
+    <div class="mercy-chip" onclick="setSlipTrigger(this,'Tired')">Tired</div>
+    <div class="mercy-chip" onclick="setSlipTrigger(this,'Bored')">Bored</div>
+    <div class="mercy-chip" onclick="setSlipTrigger(this,'Alone / late night')">Alone / late night</div>
+    <div class="mercy-chip" onclick="setSlipTrigger(this,'Stress')">Stress</div>
+    <div class="mercy-chip" onclick="setSlipTrigger(this,'Other')">Other</div>
+  </div>
+  <button class="mercy-close" onclick="closeModal('mercy-modal')">Begin again</button>
+</div></div>
+<div class="urge-overlay" id="urge-overlay">
+  <div class="urge-timer" id="urge-timer">5:00</div>
+  <div class="urge-intro">Urges peak and pass. Don't act — just wait it out.</div>
+  <div class="urge-why" id="urge-why" style="display:none;"></div>
+  <div class="urge-support" id="urge-support"></div>
+  <div class="urge-btns">
+    <button class="urge-action primary" onclick="urgeBeat()">I rode it out ✓</button>
+    <button class="urge-action secondary" onclick="urgeKeepGoing()">Keep going</button>
+  </div>
+  <button class="urge-slip-link" onclick="urgeSlipped()">I slipped</button>
+</div>
+<div class="toast" id="toast"></div>
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-top">
+      <div class="logo-real">
+        <div class="licon licon-hdr"><svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;"><text x="10" y="15.5" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-weight="900" font-size="16" fill="#0a0a0a" letter-spacing="-0.5">30</text></svg></div>
+        <div class="lwm"><div class="ltech-wrap"><span class="ltech">PROTOCOL</span></div></div>
+      </div>
+      <div class="day-block"><div class="day-num" id="day-num">—</div><div class="day-lbl" id="day-lbl">OF 53</div></div>
+    </div>
+    <div class="hdr-date" id="hdr-date">—</div>
+    <div class="hdr-date" id="hdr-program" style="margin-top:2px;color:var(--navy-light);">—</div>
+    <div class="level-row">
+      <div class="level-badge lvl-recruit" id="level-badge">◆ RECRUIT</div>
+      <div class="streak-fire" id="streak-fire">🔥 0</div>
+    </div>
+    <div class="honor-row"><div class="honor-track"><div class="honor-fill" id="pts-fill" style="width:0%"></div></div><div class="honor-lbl" id="pts-lbl">0 pts</div></div>
+    <div class="today-pts-lbl" id="today-lbl">TODAY: 0 PTS</div>
+  </div>
+</div>
+
+<!-- DAILY VIEW -->
+<div id="view-daily">
+  <div class="unconfirmed-screen" id="unconfirmed-screen">
+    <div class="unc-box">
+      <div class="unc-title">⚠ YESTERDAY UNCONFIRMED</div>
+      <div class="unc-msg" id="unc-msg">Tasks from yesterday were never confirmed.</div>
+      <div id="unc-task-list" style="margin-bottom:10px;"></div>
+      <div style="font-size:9px;color:var(--amber);font-family:'Roboto Mono',monospace;letter-spacing:0.06em;margin-bottom:10px;">⚠ LATE LOG — 25% POINT PENALTY APPLIES</div>
+      <div class="unc-btns">
+        <button class="unc-btn confirm" onclick="confirmYesterdayLate()">LOG WHAT I DID</button>
+        <button class="unc-btn admit" onclick="confirmYesterday(false)">I MISSED IT</button>
+      </div>
+      <button class="unc-btn grace" id="grace-btn" style="width:100%;margin-top:8px;display:none;" onclick="useGraceDay()">USE GRACE DAY — KEEP STREAK (<span id="grace-count">0</span> LEFT)</button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       2. HERO — Honor 600 reward reveal (premium product feel)
+       ============================================================ -->
+  <div class="hero">
+    <div class="hero-top">
+      <div class="hero-info">
+        <div class="hero-tag">◈ TARGET · YOU'RE EARNING THIS</div>
+        <div class="hero-name">HONOR 600</div>
+        <div class="hero-color">Obsidian Black · upgrade from Samsung A15 4G</div>
+        <div class="hero-specs">
+          <div class="hero-spec"><span class="hero-spec-k">CAM</span><span class="hero-spec-v">200MP f/1.9 OIS</span></div>
+          <div class="hero-spec"><span class="hero-spec-k">BAT</span><span class="hero-spec-v">7000mAh · 80W</span></div>
+          <div class="hero-spec"><span class="hero-spec-k">CPU</span><span class="hero-spec-v">SD 7 Gen 4 · 4nm</span></div>
+          <div class="hero-spec"><span class="hero-spec-k">DSP</span><span class="hero-spec-v">6.57" AMOLED · 8000nit</span></div>
+          <div class="hero-spec"><span class="hero-spec-k">RAM</span><span class="hero-spec-v">12GB · 256GB</span></div>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <img src="https://www.honor.com/content/dam/honor/common/product-list/product-series/honor-600/honor-600-list-black.png" onerror="this.style.display='none';var f=this.nextElementSibling;if(f)f.style.display='flex';" alt="Honor 600 Black" class="hero-img" id="phone-img">
+        <div class="hero-photo-fallback">📱<span>HONOR 600</span><small>Obsidian Black</small></div>
+      </div>
+    </div>
+    <div class="hero-prog">
+      <div class="hero-prog-bar"><div class="hero-prog-fill" id="phone-unlock-fill" style="width:0%"></div></div>
+      <div class="hero-prog-lbl">
+        <div class="hero-prog-pct" id="phone-unlock-lbl">0% to Honor 600</div>
+        <div class="hero-prog-days" id="honor-days-left">—</div>
+      </div>
+      <div class="hero-crit">
+        <div class="hero-crit-item" id="honor-req-pts-item"><div class="hero-crit-val" id="honor-pts-val">0%</div><div class="hero-crit-lbl">Efficiency</div><div class="hero-crit-need" id="honor-req-need-pts">Need 75%</div></div>
+        <div class="hero-crit-item" id="honor-req-streak"><div class="hero-crit-val" id="honor-streak-val">0</div><div class="hero-crit-lbl">Streak</div><div class="hero-crit-need" id="honor-clean-need">Need 30</div></div>
+        <div class="hero-crit-item" id="honor-req-exams"><div class="hero-crit-val" id="honor-exams-val">—</div><div class="hero-crit-lbl">Next exam</div><div class="hero-crit-need" id="honor-exams-need">—</div></div>
+      </div>
+      <div class="hero-verdict" id="honor-verdict"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       3. FOUNDATION — the daily floor
+       ============================================================ -->
+  <div class="fnd" id="fnd-card">
+    <div class="fnd-hdr">
+      <div class="fnd-title">Foundation</div>
+      <div class="fnd-count" id="foundation-count">0 / 5</div>
+    </div>
+    <div class="fnd-track"><div class="fnd-fill" id="foundation-fill" style="width:0%"></div></div>
+    <div class="fnd-mini">
+      <div class="fnd-mini-key" id="fk-fajr" onclick="cyclePrayer('fajr')"><span class="fnd-mini-st" id="fk-fajr-state">○</span>Fajr</div>
+      <div class="fnd-mini-key" id="fk-wird" onclick="toggleSimple('wird')"><span class="fnd-mini-st" id="fk-wird-state">○</span>Wird</div>
+      <div class="fnd-mini-key" id="fk-uni" onclick="onUniClick()"><span class="fnd-mini-st" id="fk-uni-state">○</span>Study</div>
+      <div class="fnd-mini-key" id="fk-athkar" onclick="toggleSimple('athkar_m')"><span class="fnd-mini-st" id="fk-athkar-state">○</span>Athkar</div>
+      <div class="fnd-mini-key" id="fk-clean" onclick="toggleSimple('nofog')"><span class="fnd-mini-st" id="fk-clean-state">○</span>Streak</div>
+    </div>
+    <div class="fnd-msg" id="foundation-msg" style="display:none;">Floor secured — today counts ✓</div>
+    <div class="fnd-why empty" id="fnd-why" onclick="switchView('settings')">Set your "why" in Settings — one line for the hard moments.</div>
+    <button class="urge-btn" style="margin:11px 0 0;width:100%;" onclick="openUrge()">Feeling an urge? — I'm here.<span class="urge-btn-sub">One tap. We'll wait it out together.</span></button>
+  </div>
+
+  <!-- ============================================================
+       4. INSPIRATION STRIP (compact: challenge + rotating quote/ayah)
+       ============================================================ -->
+  <div class="insp-strip">
+    <div class="insp-strip-quote" id="quote-text"><span class="insp-quote-cursor"></span></div>
+    <div class="insp-strip-ayah" id="ayah-ar">وَأَعِدُّوا لَهُم مَّا اسْتَطَعْتُم مِّن قُوَّةٍ</div>
+    <div class="insp-strip-ayah-tr" id="ayah-tr">"Prepare against them whatever force you are able." — 8:60</div>
+  </div>
+
+  <!-- BACKUP BANNER (shown by JS) -->
+  <div class="backup-banner" id="backup-banner" style="display:none;">
+    <div style="font-size:16px;">💾</div>
+    <div class="backup-banner-txt">Export a backup (Settings) to keep your progress safe.</div>
+    <div class="backup-banner-x" onclick="dismissBackupBanner()">✕</div>
+  </div>
+
+  <!-- ============================================================
+       5. DEPTH — collapsible sections
+       ============================================================ -->
+  <!-- Prayers (default OPEN) -->
+  <details class="task-group" id="group-prayers" open>
+    <summary><span class="tg-name">Prayers</span><span class="tg-pts" id="group-prayers-pts">0 PTS</span><span class="tg-arrow">▸</span></summary>
+    <div class="tg-body">
+    <div class="prayer-wrap" id="prayer-section">
+      <div class="prayer-wrap-hdr">
+        <div class="prayer-wrap-name">Salah — Fard</div>
+        <div class="prayer-wrap-pts" id="salah-pts-badge">0 / 11 pts</div>
+      </div>
+      <div class="prayer-legend">
+        <div class="prayer-legend-item"><div class="legend-dot legend-mosque"></div>MOSQUE = FULL PTS</div>
+        <div class="prayer-legend-item"><div class="legend-dot legend-home"></div>HOME = 1 PT</div>
+      </div>
+      <div class="prayer-grid" id="fard-prayer-grid">
+        <div class="prayer-btn" id="pb-fajr" onclick="cyclePrayer('fajr')"><div class="prayer-name">Fajr</div><div class="prayer-state" id="ps-fajr">○</div><div class="prayer-pts-row" id="pp-fajr">3 pts</div></div>
+        <div class="prayer-btn" id="pb-dhuhr" onclick="cyclePrayer('dhuhr')"><div class="prayer-name">Dhuhr</div><div class="prayer-state" id="ps-dhuhr">○</div><div class="prayer-pts-row" id="pp-dhuhr">2 pts</div></div>
+        <div class="prayer-btn" id="pb-asr" onclick="cyclePrayer('asr')"><div class="prayer-name">Asr</div><div class="prayer-state" id="ps-asr">○</div><div class="prayer-pts-row" id="pp-asr">2 pts</div></div>
+        <div class="prayer-btn" id="pb-maghrib" onclick="cyclePrayer('maghrib')"><div class="prayer-name">Mgrib</div><div class="prayer-state" id="ps-maghrib">○</div><div class="prayer-pts-row" id="pp-maghrib">2 pts</div></div>
+        <div class="prayer-btn" id="pb-isha" onclick="cyclePrayer('isha')"><div class="prayer-name">Isha</div><div class="prayer-state" id="ps-isha">○</div><div class="prayer-pts-row" id="pp-isha">2 pts</div></div>
+      </div>
+      <div class="prayer-summary" id="prayer-summary">0 / 5 today</div>
+    </div>
+    <div class="sec" style="padding:0;margin-top:10px;">
+    <div class="sec-hdr"><div class="sec-tag tag-sunnah">☽ Sunnah</div><div class="sec-pts" id="sunnah-pts-label">0 / 15 PTS</div></div>
+    <div class="sunnah-grid">
+      <div class="sunnah-btn" id="sb-fajr_sunnah" onclick="toggleSunnah('fajr_sunnah')">
+        <div class="sunnah-chk" id="sc-fajr_sunnah"></div>
+        <div class="sunnah-info"><div class="sunnah-name">Fajr Sunnah</div><div class="sunnah-sub">2 rakaat before Fajr</div></div>
+        <div class="sunnah-pts">+2</div>
+      </div>
+      <div class="sunnah-btn" id="sb-duha" onclick="toggleSunnah('duha')">
+        <div class="sunnah-chk" id="sc-duha"></div>
+        <div class="sunnah-info"><div class="sunnah-name">Duha</div><div class="sunnah-sub">2–8 rakaat after sunrise</div></div>
+        <div class="sunnah-pts">+2</div>
+      </div>
+      <div class="sunnah-btn" id="sb-dhuhr_before" onclick="toggleSunnah('dhuhr_before')">
+        <div class="sunnah-chk" id="sc-dhuhr_before"></div>
+        <div class="sunnah-info"><div class="sunnah-name">Dhuhr — Before</div><div class="sunnah-sub">4 rakaat before Dhuhr</div></div>
+        <div class="sunnah-pts">+2</div>
+      </div>
+      <div class="sunnah-btn" id="sb-dhuhr_after" onclick="toggleSunnah('dhuhr_after')">
+        <div class="sunnah-chk" id="sc-dhuhr_after"></div>
+        <div class="sunnah-info"><div class="sunnah-name">Dhuhr — After</div><div class="sunnah-sub">2 rakaat after Dhuhr</div></div>
+        <div class="sunnah-pts">+2</div>
+      </div>
+      <div class="sunnah-btn" id="sb-maghrib_sunnah" onclick="toggleSunnah('maghrib_sunnah')">
+        <div class="sunnah-chk" id="sc-maghrib_sunnah"></div>
+        <div class="sunnah-info"><div class="sunnah-name">Maghrib Sunnah</div><div class="sunnah-sub">2 rakaat after Maghrib</div></div>
+        <div class="sunnah-pts">+2</div>
+      </div>
+      <div class="sunnah-btn" id="sb-isha_sunnah" onclick="toggleSunnah('isha_sunnah')">
+        <div class="sunnah-chk" id="sc-isha_sunnah"></div>
+        <div class="sunnah-info"><div class="sunnah-name">Isha Sunnah</div><div class="sunnah-sub">2 rakaat after Isha</div></div>
+        <div class="sunnah-pts">+2</div>
+      </div>
+      <div class="sunnah-btn sunnah-full" id="sb-witr" onclick="toggleSunnah('witr')">
+        <div class="sunnah-chk" id="sc-witr"></div>
+        <div class="sunnah-info"><div class="sunnah-name">Witr</div><div class="sunnah-sub">Before sleep — min 1 rakaat</div></div>
+        <div class="sunnah-pts">+3</div>
+      </div>
+    </div>
+    </div>
+    </div>
+  </details>
+
+  <!-- Daily Habits (default OPEN) -->
+  <details class="task-group" id="group-foundation" open>
+    <summary><span class="tg-name">Daily Habits</span><span class="tg-pts" id="group-foundation-pts">0 PTS</span><span class="tg-arrow">▸</span></summary>
+    <div class="tg-body">
+    <div class="sec-hdr" style="margin-bottom:8px;">
+      <div class="sec-tag tag-core" id="core-pts-label">core 0 / 27 PTS</div>
+      <div class="sec-tag tag-disc" id="disc-pts-label" style="margin-left:6px;">disc 0 / 17 PTS</div>
+    </div>
+    <div class="task core-task" id="t-athkar_m" onclick="toggleSimple('athkar_m')"><div class="task-chk" id="chk-athkar_m"></div><div class="task-info"><div class="task-name">Athkar — Morning</div><div class="task-sub">After Fajr</div></div><div class="task-pts">+2</div></div>
+    <div class="task core-task" id="t-athkar_a" onclick="toggleSimple('athkar_a')"><div class="task-chk" id="chk-athkar_a"></div><div class="task-info"><div class="task-name">Athkar — Afternoon</div><div class="task-sub">After Asr</div></div><div class="task-pts">+2</div></div>
+    <div class="task core-task" id="t-wird" onclick="toggleSimple('wird')"><div class="task-chk" id="chk-wird"></div><div class="task-info"><div class="task-name">Daily Wird</div><div class="task-sub">Quran — daily portion</div></div><div class="task-pts">+3</div></div>
+    <div class="task core-task" id="t-walk" onclick="toggleSimple('walk')"><div class="task-chk" id="chk-walk"></div><div class="task-info"><div class="task-name">30min Walk</div><div class="task-sub">Outside. Move.</div></div><div class="task-pts">+2</div></div>
+    <div class="task core-task" id="t-uni" onclick="onUniClick()"><div class="task-chk" id="chk-uni"></div><div class="task-info"><div class="task-name">Uni Work</div><div class="task-sub" id="uni-sub">Focused session — university only</div></div><div class="task-pts">+7</div></div>
+    <div class="task disc-task" id="t-noscroll" onclick="toggleSimple('noscroll')"><div class="task-chk" id="chk-noscroll"></div><div class="task-info"><div class="task-name">No Doom Scrolling</div><div class="task-sub">Reels / mindless feed</div></div><div class="task-pts">+3</div></div>
+    <div class="task disc-task" id="t-nofog" onclick="toggleSimple('nofog')"><div class="task-chk" id="chk-nofog"></div><div class="task-info"><div class="task-name">No Fog</div><div class="task-sub">Clear mind. Clear soul. Mercy, not shame.</div></div><div class="task-pts">+5</div></div>
+    </div>
+  </details>
+
+  <!-- Body (default CLOSED) -->
+  <details class="task-group" id="group-body">
+    <summary><span class="tg-name">Body</span><span class="tg-pts" id="group-body-pts">0 PTS</span><span class="tg-arrow">▸</span></summary>
+    <div class="tg-body">
+    <div class="task disc-task" id="t-gym" onclick="toggleSimple('gym')"><div class="task-chk" id="chk-gym"></div><div class="task-info"><div class="task-name">Gym</div><div class="task-sub">Full session</div></div><div class="task-pts">+4</div></div>
+    <div class="task diet-task" id="t-steps" onclick="toggleSimple('steps')"><div class="task-chk" id="chk-steps"></div><div class="task-info"><div class="task-name">10,000 Steps</div><div class="task-sub">Minimum — daily</div></div><div class="task-pts">+3</div></div>
+    <div class="task diet-task" id="t-stairs" onclick="toggleSimple('stairs')"><div class="task-chk" id="chk-stairs"></div><div class="task-info"><div class="task-name">Stair Climbing — 15min</div><div class="task-sub">Every other day — continuous</div></div><div class="task-pts">+2</div></div>
+    <div class="plank-note"><span id="plank-target-txt">📈 Plank targets: —</span></div>
+    <div class="task diet-task" id="t-plank" onclick="toggleSimple('plank')"><div class="task-chk" id="chk-plank"></div><div class="task-info"><div class="task-name">Plank</div><div class="task-sub" id="plank-sub">30s — increases 3s/day</div></div><div class="task-pts">+2</div></div>
+    <div class="task diet-task" id="t-sideplank" onclick="toggleSimple('sideplank')"><div class="task-chk" id="chk-sideplank"></div><div class="task-info"><div class="task-name">Side Plank</div><div class="task-sub" id="sideplank-sub">20s each side — increases 2s/day</div></div><div class="task-pts">+2</div></div>
+    </div>
+  </details>
+
+  <!-- Growth (default CLOSED) -->
+  <details class="task-group" id="group-growth">
+    <summary><span class="tg-name">Growth</span><span class="tg-pts" id="group-growth-pts">0 PTS</span><span class="tg-arrow">▸</span></summary>
+    <div class="tg-body">
+    <div class="task disc-task" id="t-memorize" onclick="toggleSimple('memorize')"><div class="task-chk" id="chk-memorize"></div><div class="task-info"><div class="task-name">Quran Memorization</div><div class="task-sub">New verses — active recall</div></div><div class="task-pts">+5</div></div>
+    <div class="task growth-task" id="t-drone" onclick="toggleSimple('drone')"><div class="task-chk" id="chk-drone"></div><div class="task-info"><div class="task-name">Drone Building Course</div><div class="task-sub">Watch + apply — not passive</div></div><div class="task-pts">+4</div></div>
+    <div class="task growth-task" id="t-tajweed" onclick="toggleSimple('tajweed')"><div class="task-chk" id="chk-tajweed"></div><div class="task-info"><div class="task-name">Tajweed Session</div><div class="task-sub">Prepare or study rules</div></div><div class="task-pts">+4</div></div>
+    <div class="task growth-task" id="t-beneficial" onclick="toggleSimple('beneficial')"><div class="task-chk" id="chk-beneficial"></div><div class="task-info"><div class="task-name">Something Beneficial</div><div class="task-sub">Reading, skill, service — your call</div></div><div class="task-pts">+4</div></div>
+    </div>
+  </details>
+
+  <!-- Mood (default CLOSED) -->
+  <details class="task-group" id="group-mood">
+    <summary><span class="tg-name">Mood</span><span class="tg-pts" id="mood-submitted-label">ONCE PER DAY</span><span class="tg-arrow">▸</span></summary>
+    <div class="tg-body">
+      <div id="mood-area">
+        <div class="mood-grid" id="mood-grid">
+          <div class="mood-btn" onclick="submitMood(5)"><div class="mood-emoji">💪</div><div class="mood-lbl">Powerful</div></div>
+          <div class="mood-btn" onclick="submitMood(4)"><div class="mood-emoji">😊</div><div class="mood-lbl">Good</div></div>
+          <div class="mood-btn" onclick="submitMood(3)"><div class="mood-emoji">😐</div><div class="mood-lbl">Neutral</div></div>
+          <div class="mood-btn" onclick="submitMood(2)"><div class="mood-emoji">😔</div><div class="mood-lbl">Low</div></div>
+          <div class="mood-btn" onclick="submitMood(1)"><div class="mood-emoji">😤</div><div class="mood-lbl">Rough</div></div>
+        </div>
+        <div id="mood-done" style="display:none;font-size:11px;color:var(--dim);text-align:center;padding:10px 0;letter-spacing:0.06em;"></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- 6. CLEAN TRACKER -->
+  <div class="clean-card">
+    <div class="clean-title">🌿 Streak</div>
+    <div class="clean-status">
+      <div class="clean-badge" id="clean-badge">—</div>
+      <div class="clean-sub" id="clean-sub">—</div>
+    </div>
+    <div class="clean-slip-link" onclick="reportSlip()">Report a slip — with mercy, not shame</div>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div id="view-history" class="history-view"><div class="hist-view-title">HISTORY</div><div id="history-list"></div></div>
+
+<!-- SETTINGS -->
+<div id="view-settings" class="settings-view">
+  <div class="settings-title">SETTINGS</div>
+  <div class="setting-row"><div><div class="setting-lbl">Journey Start</div><div class="setting-sub" id="start-date-display">21 Jun 2026</div></div></div>
+  <div class="setting-row"><div><div class="setting-lbl">Current Streak</div><div class="setting-sub" id="streak-display">0 days</div></div></div>
+  <div class="setting-row" style="display:block;cursor:default;">
+    <div class="setting-lbl" style="color:var(--teal);">Why I started</div>
+    <div class="setting-sub">One line for the hard moments. Shown on Focus + during urges.</div>
+    <textarea class="why-input" id="why-input" placeholder="e.g. To become someone my future family can rely on." oninput="saveWhyNote(this.value)"></textarea>
+  </div>
+  <div class="setting-row"><div><div class="setting-lbl">Grace Days</div><div class="setting-sub" id="grace-display">1 available this week</div></div></div>
+  <div class="setting-row" onclick="exportWeeklyReport()"><div><div class="setting-lbl" style="color:#c890f0;">Export Weekly Report</div><div class="setting-sub">Download .txt report</div></div><div style="font-size:16px;color:#c890f0;">📋</div></div>
+  <div class="setting-row" onclick="exportBackup()"><div><div class="setting-lbl" style="color:var(--green);">Export Backup</div><div class="setting-sub">Download JSON backup</div></div><div style="font-size:16px;color:var(--green);">↓</div></div>
+  <div class="setting-row" onclick="document.getElementById('import-file-input').click()"><div><div class="setting-lbl" style="color:var(--orange);">Import Backup</div><div class="setting-sub">Restore from JSON</div></div><div style="font-size:16px;color:var(--orange);">↑</div></div>
+  <div class="setting-row" onclick="resetToday()"><div><div class="setting-lbl" style="color:var(--amber);">Reset Today</div><div class="setting-sub">Clear today's checkboxes</div></div><div style="font-size:16px;color:var(--amber);">↺</div></div>
+  <div class="setting-row" onclick="confirmStartFresh()"><div><div class="setting-lbl" style="color:var(--teal);">Start Fresh on Day 1</div><div class="setting-sub">Clear pre-program days · keeps your best streak</div></div><div style="font-size:16px;color:var(--teal);">✦</div></div>
+  <div class="setting-row" onclick="confirmReset()"><div><div class="setting-lbl" style="color:var(--red);">Reset All Data</div><div class="setting-sub">Wipes all history and points</div></div><div style="font-size:16px;color:var(--red);">✕</div></div>
+  <div class="ayah-card" style="margin-top:14px;"><div class="ayah-ar">وَمَا تَوْفِيقِي إِلَّا بِاللَّهِ</div><div class="ayah-tr">"My success is only through Allah." — 11:88</div></div>
+</div>
+
+<!-- STATS -->
+<div id="view-stats" class="stats-view">
+  <div class="stats-title">STATISTICS</div>
+  <div style="display:flex;gap:6px;margin-bottom:12px;">
+    <button id="sm-week" onclick="setStatsMode('week')" style="flex:1;padding:9px;border:1px solid var(--border2);background:var(--orange-dim);color:var(--orange);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.15em;cursor:pointer;">WEEKLY</button>
+    <button id="sm-deep" onclick="setStatsMode('deep')" style="flex:1;padding:9px;border:1px solid var(--border2);background:transparent;color:var(--dim);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.15em;cursor:pointer;">DEEP ANALYSIS</button>
+  </div>
+  <div id="stats-deep" style="display:none;"></div>
+  <div id="stats-weekly">
+  <div class="stat-week-row"><button class="week-btn" onclick="shiftWeek(-1)">◀</button><div class="week-label" id="stat-week-label">THIS WEEK</div><button class="week-btn" onclick="shiftWeek(1)">▶</button></div>
+  <div class="stat-row-3" id="stat-summary-row"></div>
+  <div class="stat-card"><div class="stat-card-title">YOUR 5 KEYSTONES · THIS WEEK</div><div id="keystone-breakdown"></div></div>
+  <div class="stat-card"><div class="stat-card-title">DAILY GRADE <span style="float:right;font-weight:400;color:var(--dim2);font-size:9px;letter-spacing:0;">50% = floor held</span></div><div class="bar-chart" id="bar-chart"></div><div class="bar-labels" id="bar-labels"></div></div>
+  <div class="stat-card"><div class="stat-card-title">CLEAN JOURNEY</div><div id="clean-journey"></div></div>
+  <div class="stat-card"><div class="stat-card-title">PRAYER ATTENDANCE</div><div class="prayer-stat-row" id="prayer-stat-row"></div></div>
+  <div class="stat-card"><div class="stat-card-title">TASK BREAKDOWN</div><div id="task-breakdown"></div></div>
+  <div class="stat-card"><div class="stat-card-title">MOMENTUM</div><div style="text-align:center;padding:8px 0;" id="growth-display"></div></div>
+  <div class="stat-card"><div class="stat-card-title">PROGRAM MAP <span id="map-sub" style="float:right;font-weight:400;color:var(--dim2);font-size:9px;letter-spacing:0;"></span></div><div class="streak-map" id="streak-map"></div><div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--dim);"><div style="width:9px;height:9px;background:var(--orange);"></div>STRONG 50%+</div><div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--dim);"><div style="width:9px;height:9px;background:var(--navy);"></div>SOME</div><div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--dim);"><div style="width:9px;height:9px;background:var(--red-dim);"></div>MISSED</div></div></div>
+  <div class="stat-card"><div class="stat-card-title">DAILY MOOD</div><div id="mood-chart" style="display:flex;align-items:flex-end;gap:5px;height:60px;margin-bottom:6px;"></div><div class="bar-labels" id="mood-chart-labels"></div></div>
+  </div>
+</div>
+
+<!-- STUDY -->
+<div id="view-study" class="study-view">
+  <div class="study-title">STUDY</div>
+  <div id="study-countdown"></div>
+  <div id="study-body"></div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-btn active" id="nav-daily" onclick="switchView('daily')"><span>⚡</span><span>Today</span></button>
+  <button class="nav-btn" id="nav-study" onclick="switchView('study')"><span>📚</span><span>Study</span></button>
+  <button class="nav-btn" id="nav-history" onclick="switchView('history')"><span>📅</span><span>History</span></button>
+  <button class="nav-btn" id="nav-stats" onclick="switchView('stats')"><span>📊</span><span>Stats</span></button>
+  <button class="nav-btn" id="nav-settings" onclick="switchView('settings')"><span>⚙</span><span>Settings</span></button>
+</nav>
+<script>
+// ================================================================
+// CONFIG
+// ================================================================
+const START_DATE_LOCAL = new Date(2026, 6, 1); // Jul 1 2026 local — Day 1 (fresh start)
+const PROGRAM_END_KEY = '2026-08-12'; // Physics 2 exam — final exam (Change J)
+const HONOR_TARGET_EFF = 0.75;
+const GOOD_CLEAN_STREAK = 30; // bestCleanStreak threshold for honor (Change J)
+
+// Program window: START_DATE_LOCAL .. PROGRAM_END_KEY inclusive
+function dateKeyToLocal(k){const p=k.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+const PROGRAM_END_LOCAL = dateKeyToLocal(PROGRAM_END_KEY);
+const PROGRAM_DAYS = Math.floor((PROGRAM_END_LOCAL - START_DATE_LOCAL)/86400000) + 1; // = 43 (Jul 1 → Aug 12)
+
+// ===== STUDY PLAN — auto-derived & prioritized from exam dates (no stale windows) =====
+const SUBJECTS=[
+  {k:'math2',label:'Math 2',exam:'2026-07-13'},
+  {k:'prog1',label:'Programming 1',exam:'2026-07-26'},
+  {k:'lang2',label:'Lang 2',exam:'2026-07-28'},
+  {k:'math1',label:'Math 1',exam:'2026-07-30'},
+  {k:'engdraw',label:'Engineering Drawing',exam:'2026-08-01'},
+  {k:'physics1',label:'Physics 1',exam:'2026-08-03'},
+  {k:'arabic1',label:'Arabic 1',exam:'2026-08-04'},
+  {k:'physics2',label:'Physics 2',exam:'2026-08-12'}
+];
+const SUBJ_LABEL={};SUBJECTS.forEach(s=>{SUBJ_LABEL[s.k]=s.label;});
+function _examDaysLeft(fromKey,examKey){return Math.round((dateKeyToLocal(examKey)-dateKeyToLocal(fromKey))/86400000);}
+// full plan: every subject with days-left, sorted nearest-exam-first
+function studyPlan(key){
+  return SUBJECTS.map(s=>({k:s.k,label:s.label,exam:s.exam,daysLeft:_examDaysLeft(key,s.exam)})).sort((a,b)=>a.daysLeft-b.daysLeft);
+}
+// today's auto-focus: the nearest upcoming exam is always the priority; add the next-nearest as a
+// "get ahead" subject while the priority exam is still >5 days out; in the final cram days it stands alone.
+function getActiveSubjects(key){
+  const up=studyPlan(key).filter(s=>s.daysLeft>=0);
+  if(!up.length)return [];
+  const focus=[up[0].k];
+  if(up[0].daysLeft>5&&up[1])focus.push(up[1].k);
+  return focus;
+}
+function getExam(key){const s=SUBJECTS.find(x=>x.exam===key);return s?s.label:null;}
+function nextExam(key){
+  const up=SUBJECTS.filter(s=>s.exam>=key).sort((a,b)=>a.exam<b.exam?-1:1);
+  if(!up.length)return null;
+  return {subject:up[0].label,date:up[0].exam,daysAway:_examDaysLeft(key,up[0].exam)};
+}
+
+const FARD_PRAYERS = ['fajr','dhuhr','asr','maghrib','isha'];
+const PRAYER_PTS_MOSQUE = {fajr:3,dhuhr:2,asr:2,maghrib:2,isha:2};
+const PRAYER_PTS_HOME = 1;
+
+// Sunnah includes duha now — total 7 items = 15pts max
+const SUNNAH_TASKS = {
+  fajr_sunnah: {pts:2, label:'Fajr Sunnah'},
+  duha:        {pts:2, label:'Duha'},
+  dhuhr_before:{pts:2, label:'Dhuhr Before'},
+  dhuhr_after: {pts:2, label:'Dhuhr After'},
+  maghrib_sunnah:{pts:2, label:'Maghrib Sunnah'},
+  isha_sunnah: {pts:2, label:'Isha Sunnah'},
+  witr:        {pts:3, label:'Witr'},
+};
+
+const SIMPLE_TASKS = {
+  athkar_m:{pts:2,type:'core'}, athkar_a:{pts:2,type:'core'},
+  wird:{pts:3,type:'core'}, walk:{pts:2,type:'core'}, uni:{pts:7,type:'core'}, // uni 3 -> 7 (Change B)
+  memorize:{pts:5,type:'disc'}, gym:{pts:4,type:'disc'},
+  noscroll:{pts:3,type:'disc'}, nofog:{pts:5,type:'disc'},
+  drone:{pts:4,type:'growth'}, tajweed:{pts:4,type:'growth'}, beneficial:{pts:4,type:'growth'},
+  steps:{pts:3,type:'diet'}, stairs:{pts:2,type:'diet'},
+  plank:{pts:2,type:'diet'}, sideplank:{pts:2,type:'diet'},
+};
+// unireview removed (Change B). uni now +7.
+
+// MAX DAILY BREAKDOWN (Change B):
+// Fard mosque: 3+2+2+2+2 = 11
+// Sunnah: 2+2+2+2+2+2+3 = 15
+// Core non-prayer: 2+2+3+2+7 = 16  (uni now 7)
+// Discipline: 5+4+3+5 = 17  (unireview removed)
+// Diet/Move: 3+2+2+2 = 9
+// Growth: 4+4+4 = 12
+// TOTAL = 80 (unchanged: uni +4, unireview -4)
+const MAX_DAILY = 80;
+
+// ================================================================
+// STATE
+// ================================================================
+let _activeView = 'daily';
+let _lastTaskTime = 0;
+let _comboCount = 0;
+let _comboTimer = null;
+let statsWeekOffset = 0;
+
+let S = {
+  v:6, version:6,
+  totalPts:0,
+  globalPenaltyPts:0,
+  bonusPts:0,
+  history:{},
+  streak:0,
+  seenSurprises:[],
+  honorAchieved:false,
+  // Change D — clean-streak model
+  cleanStreak:0,
+  bestCleanStreak:0,
+  totalCleanDays:0,
+  slips:[],
+  urgesBeaten:0,
+  urgeLog:[],
+  seenCleanMilestones:[],
+  lastBackupTs:0,
+  consistencyStreak:0,
+  // STEP 4/5 additions
+  whyNote:'',
+  graceTokens:1,
+  graceWeek:'',
+  graceDates:[],
+};
+
+const QUOTES = [
+  "The man who wakes up before sunrise is already ahead of 90% of the world.",
+  "إِنَّ مَعَ الْعُسْرِ يُسْرًا — With every hardship comes ease. Don't stop now.",
+  "Discipline is doing what needs to be done even when every cell in your body says no.",
+  "Your nafs will negotiate with you every single day. Win the negotiation.",
+  "The Fajr prayer separates the wolves from the sheep. Which one are you?",
+  "Every push-up, every page, every Quran verse — it compounds. Trust the math.",
+  "You are building a version of yourself that future-you will be proud of.",
+  "Weakness is a choice disguised as a feeling. Choose differently.",
+  "وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ — Man will only have what he strives for.",
+  "The strong man controls himself in anger. — Hadith. The warrior controls himself always.",
+  "30 days isn't long. But most people won't even start. You already did.",
+  "Every time you resist temptation, your willpower muscle gets stronger.",
+  "رَبِّ زِدْنِي عِلْمًا — My Lord, increase me in knowledge. Say it, then open the book.",
+  "You don't need motivation. You need systems. This is your system. Run it.",
+  "Champions are made in the moments they want to stop but don't.",
+  "Comfort is the enemy of growth. Choose discomfort with intention.",
+  "Talk is cheap. Your checkboxes are your words.",
+  "Allah sees every sujood, every sacrifice, every silent struggle. None of it is wasted.",
+  "Your future self is watching you from the other side of your decision right now.",
+  "One day you will look back and thank the version of you who didn't quit today.",
+  "Honor is not given. It is earned rep by rep, prayer by prayer, day by day.",
+  "Damascus has seen a thousand warriors rise. Be the one worth remembering.",
+  "Sleep less than your competition. Pray more than your doubts.",
+  "Small wins stack. Every check you tick today is a brick in tomorrow's fortress.",
+  "The Quran doesn't get memorized by thinking about memorizing it.",
+  "If you're not growing, you're dying. There is no neutral.",
+  "إن مع العسر يسرا — The ease is coming. First, finish this hard thing.",
+  "Day 1 or day 30 — the mission is the same: show up completely.",
+  "He who has no vision of eternity has no hold on time.",
+  "The grind is not glamorous. That's why so few see it through.",
+];
+
+const CHALLENGES = [
+  {text:"Complete ALL 5 fard prayers in the mosque today",sub:"Stand in the first row if you can",pts:"Mission-critical"},
+  {text:"Read 2 extra pages of Quran beyond your wird",sub:"Every letter is 10 hasanat",pts:"Spiritual depth"},
+  {text:"Do 100 push-ups throughout the day",sub:"Break it into sets — no excuses",pts:"Warrior mode"},
+  {text:"No phone until after Dhuhr",sub:"First half of the day belongs to Allah and your goals",pts:"Mental clarity"},
+  {text:"Write 3 things you're grateful for tonight",sub:"Shukr is a multiplier",pts:"Mindset reset"},
+  {text:"Memorize one extra verse today",sub:"One more than planned",pts:"Compound growth"},
+  {text:"Do your gym session fasted",sub:"Test the limits of your discipline",pts:"Iron will"},
+  {text:"Complete your uni work before Dhuhr",sub:"Front-load the hard thing",pts:"Peak performance"},
+  {text:"Make dua for your parents after every prayer",sub:"Their dua for you is answered",pts:"Barakah"},
+  {text:"No social media at all today",sub:"Replace every urge with Quran or dhikr",pts:"Full clarity"},
+  {text:"Hit 15,000 steps today",sub:"5,000 above the minimum — push it",pts:"Movement warrior"},
+  {text:"Pray Duha today — even 2 rakaat",sub:"The prayer of the grateful",pts:"Spiritual bonus"},
+  {text:"Study 30 minutes more than your planned session",sub:"Push past the comfort zone",pts:"Compound gains"},
+  {text:"Complete all tasks before Maghrib",sub:"Finish the day before the sun does",pts:"Full protocol"},
+  {text:"Do 200 tasbih today — SubhanAllah, Alhamdulillah, AllahuAkbar",sub:"Keep a mental or bead count",pts:"Dhikr warrior"},
+];
+
+const AYAHS = [
+  {ar:'وَأَعِدُّوا لَهُم مَّا اسْتَطَعْتُم مِّن قُوَّةٍ',tr:'"Prepare against them whatever force you are able." — 8:60'},
+  {ar:'إِنَّ اللَّهَ لَا يُغَيِّرُ مَا بِقَوْمٍ حَتَّىٰ يُغَيِّرُوا مَا بِأَنفُسِهِمْ',tr:'"Allah will not change a people\'s condition until they change themselves." — 13:11'},
+  {ar:'وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا',tr:'"Whoever fears Allah — He will make for him a way out." — 65:2'},
+  {ar:'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا',tr:'"For indeed, with hardship will be ease." — 94:5'},
+  {ar:'وَقُل رَّبِّ زِدْنِي عِلْمًا',tr:'"My Lord, increase me in knowledge." — 20:114'},
+  {ar:'وَلَا تَهِنُوا وَلَا تَحْزَنُوا وَأَنتُمُ الْأَعْلَوْنَ',tr:'"Do not weaken and do not grieve — you will be superior." — 3:139'},
+  {ar:'قُل لَّن يُصِيبَنَا إِلَّا مَا كَتَبَ اللَّهُ لَنَا',tr:'"Nothing will befall us except what Allah has decreed for us." — 9:51'},
+  {ar:'وَاصْبِرْ وَمَا صَبْرُكَ إِلَّا بِاللَّهِ',tr:'"Be patient — and your patience is only through Allah." — 16:127'},
+  {ar:'فَاذْكُرُونِي أَذْكُرْكُمْ',tr:'"Remember Me and I will remember you." — 2:152'},
+  {ar:'وَمَن جَاهَدَ فَإِنَّمَا يُجَاهِدُ لِنَفْسِهِ',tr:'"Whoever strives, strives only for himself." — 29:6'},
+  {ar:'لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ',tr:'"Do not despair of the mercy of Allah." — 39:53'},
+  {ar:'إِن تَنصُرُوا اللَّهَ يَنصُرْكُمْ',tr:'"If you support Allah, He will support you." — 47:7'},
+];
+
+const SURPRISES = [
+  {id:'s3',check:s=>s.streak>=3,icon:'🔥',title:'3-DAY FIRE',msg:'Three days straight. The body adapts. Keep the heat.'},
+  {id:'s7',check:s=>s.streak>=7,icon:'⚡',title:'ONE WEEK SOLID',msg:'Seven days. New habits are taking root. You are not the same person you were a week ago.'},
+  {id:'s14',check:s=>s.streak>=14,icon:'🏗️',title:'TWO WEEKS BUILT',msg:'The 14-day mark. The protocol is becoming identity. Bonus: +20 pts added.'},
+  {id:'s21',check:s=>s.streak>=21,icon:'🌙',title:'21 DAYS — HABIT FORGED',msg:'Three weeks of war against your lower self. You\'re winning. Bonus: +15 pts.'},
+  {id:'s30',check:s=>s.streak>=30,icon:'🕌',title:'30 DAYS — HONOR EARNED',msg:'The protocol held for a full month. This is no longer a challenge — this is who you are.'},
+];
+
+// Change E — clean-streak milestones (merciful tone)
+const CLEAN_MILESTONES = [
+  {days:1,  id:'c1',  icon:'🌱', title:'DAY ONE', msg:'One clear day. This is how every long road begins — with a single honest step. Allah loves the one who returns.'},
+  {days:3,  id:'c3',  icon:'🌿', title:'THREE-DAY STREAK', msg:'Three days. The fog is thinning. Each clear day rewires you a little more. Keep going gently.'},
+  {days:7,  id:'c7',  icon:'☀️', title:'ONE WEEK STRONG', msg:'A full week of clarity. Notice how your mind feels lighter. This is the version of you that was always there.'},
+  {days:14, id:'c14', icon:'💎', title:'TWO WEEKS STRONG', msg:'Fourteen days. This is no longer luck — this is you choosing yourself, day after day. Be proud, then keep walking.'},
+  {days:30, id:'c30', icon:'🏔️', title:'THIRTY-DAY STREAK', msg:'A month of clear days. The hardest part is behind you. You have proven what you are capable of, by the mercy of Allah.'},
+  {days:90, id:'c90', icon:'🕌', title:'90 DAYS — REBOOT', msg:'Ninety days. The reboot is complete. The chains that once felt unbreakable are behind you. Whatever comes next, you now know who you really are.'},
+];
+
+// ================================================================
+// PLANK PROGRESSION
+// ================================================================
+function getPlankTargets() {
+  const dn = getDayNum() || 1;
+  return { plankSec: 30 + (dn-1)*3, sideSec: 20 + (dn-1)*2 };
+}
+function fmtSec(s) {
+  if(s<60) return s+'s';
+  return Math.floor(s/60)+'m '+(s%60?s%60+'s':'');
+}
+
+// ================================================================
+// STATE MANAGEMENT
+// ================================================================
+// Ensure v6 fields exist on whatever object we loaded (migration, Change D)
+function migrateState(){
+  const defaults={cleanStreak:0,bestCleanStreak:0,totalCleanDays:0,slips:[],urgesBeaten:0,urgeLog:[],seenCleanMilestones:[],lastBackupTs:0,consistencyStreak:0,bonusPts:0,seenSurprises:[],whyNote:'',graceTokens:1,graceWeek:'',graceDates:[]};
+  Object.entries(defaults).forEach(([k,v])=>{if(S[k]===undefined||S[k]===null)S[k]=v;});
+  // drop legacy tasbih fields if a backup still carries them
+  delete S.tasbihCount;delete S.tasbihDhikrIdx;delete S.tasbihTotal;
+  refillGraceToken();
+  S.version=6;S.v=6;
+}
+function loadState() {
+  try {
+    // KEEP same localStorage key 'daraya_v5' so existing data is preserved
+    const r=localStorage.getItem('daraya_v5');
+    if(r){const p=JSON.parse(r);if(p.version===5||p.version===6){S=p;migrateState();return;}}
+    const r4=localStorage.getItem('daraya_v4');
+    if(r4){const p=JSON.parse(r4);if(p.version===4){S={...S,totalPts:p.totalPts||0,globalPenaltyPts:p.globalPenaltyPts||0,history:p.history||{},streak:p.streak||0,seenSurprises:p.seenSurprises||[]};migrateState();save();}}
+  } catch(e){}
+}
+function save(){try{localStorage.setItem('daraya_v5',JSON.stringify(S));}catch(e){}}
+
+// ================================================================
+// DATE HELPERS
+// ================================================================
+function keyFromDate(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function todayKey(){const n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');}
+function yesterKey(){const n=new Date(Date.now()-86400000);return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');}
+function getDayNum(){
+  const now=new Date();
+  const todayLocal=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const startLocal=START_DATE_LOCAL; // single source of truth (Change K)
+  const diff=Math.floor((todayLocal-startLocal)/86400000)+1;
+  return diff>0?diff:null;
+}
+function getTD(){
+  const k=todayKey();
+  if(!S.history[k])S.history[k]={simple:{},prayers:{},sunnah:{},pts:0,violations:[],confirmed:false};
+  if(!S.history[k].prayers)S.history[k].prayers={};
+  if(!S.history[k].sunnah)S.history[k].sunnah={};
+  if(!S.history[k].study)S.history[k].study={};
+  return S.history[k];
+}
+
+// ================================================================
+// POINTS
+// ================================================================
+function calcTodayPts(){
+  const td=getTD();let pts=0;
+  FARD_PRAYERS.forEach(p=>{
+    const state=td.prayers[p];
+    if(state==='mosque')pts+=PRAYER_PTS_MOSQUE[p];
+    else if(state==='home')pts+=PRAYER_PTS_HOME;
+  });
+  Object.entries(SUNNAH_TASKS).forEach(([k,cfg])=>{if(td.sunnah[k])pts+=cfg.pts;});
+  Object.entries(SIMPLE_TASKS).forEach(([k,cfg])=>{if(td.simple[k])pts+=cfg.pts;});
+  return Math.max(0,pts);
+}
+
+// ===== Mercy-scale day grade (keystones = 50%, rest of the protocol = 50%) =====
+// The 5 keystones ARE the daily floor (mirrors the Foundation card): fajr (any state),
+// wird, uni, athkar_m, clean (nofog && no slip). All 5 = 50%; a full monk day = 100%.
+const KEYSTONE_MAX_PTS = 20;                              // fajr3 + wird3 + uni7 + athkar_m2 + nofog5
+const NONKEYSTONE_MAX_PTS = MAX_DAILY - KEYSTONE_MAX_PTS; // 60
+const FULL_DAY_PCT = 50;                                 // floor held => a "full"/green day on the map
+function dayKeystones(day){
+  if(!day)return{count:0,pts:0};
+  const pr=day.prayers||{},si=day.simple||{};let count=0,pts=0;
+  if(pr.fajr){count++;pts+=pr.fajr==='mosque'?PRAYER_PTS_MOSQUE.fajr:PRAYER_PTS_HOME;}
+  if(si.wird){count++;pts+=SIMPLE_TASKS.wird.pts;}
+  if(si.uni){count++;pts+=SIMPLE_TASKS.uni.pts;}
+  if(si.athkar_m){count++;pts+=SIMPLE_TASKS.athkar_m.pts;}
+  if(si.nofog===true&&!day.slip){count++;pts+=SIMPLE_TASKS.nofog.pts;}
+  return{count,pts};
+}
+// raw points recomputed from a day's flags (penalty-independent — the grade reflects what was DONE)
+function rawDayPts(day){
+  if(!day)return 0;let p=0;const pr=day.prayers||{};
+  FARD_PRAYERS.forEach(k=>{const s=pr[k];if(s==='mosque')p+=PRAYER_PTS_MOSQUE[k];else if(s==='home')p+=PRAYER_PTS_HOME;});
+  const su=day.sunnah||{};Object.entries(SUNNAH_TASKS).forEach(([k,c])=>{if(su[k])p+=c.pts;});
+  const si=day.simple||{};Object.entries(SIMPLE_TASKS).forEach(([k,c])=>{if(k==='nofog'&&day.slip)return;if(si[k])p+=c.pts;});
+  return p;
+}
+function dayPercent(day){
+  if(!day)return 0;
+  const ks=dayKeystones(day);
+  const rest=Math.max(0,rawDayPts(day)-ks.pts);
+  const fnd=(ks.count/5)*50;
+  const ext=NONKEYSTONE_MAX_PTS>0?(rest/NONKEYSTONE_MAX_PTS)*50:0;
+  return Math.min(100,Math.round(fnd+ext));
+}
+
+function recalcTotal(){
+  // Points are scoped to the program window: a new START_DATE_LOCAL = a genuine clean slate.
+  // Pre-program days stay in S.history (recoverable, visible in History) but no longer count here.
+  let t=0;const sk=keyFromDate(START_DATE_LOCAL);
+  Object.entries(S.history).forEach(([k,d])=>{if(k>=sk)t+=(d.pts||0);});
+  t=t+(S.bonusPts||0)-(S.globalPenaltyPts||0);
+  S.totalPts=Math.max(0,t);save();
+}
+
+// ================================================================
+// LEVEL
+// ================================================================
+function getLevel(pts){
+  if(pts>=1000)return{label:'LEGEND',cls:'lvl-legend',icon:'⚜️'};
+  if(pts>=500)return{label:'ELITE',cls:'lvl-elite',icon:'🔱'};
+  if(pts>=200)return{label:'WARRIOR',cls:'lvl-warrior',icon:'⚔️'};
+  return{label:'RECRUIT',cls:'lvl-recruit',icon:'◆'};
+}
+
+// ================================================================
+// HONOR
+// ================================================================
+function calcHonorProgress(){
+  // Efficiency on the mercy scale: average of each in-window day's grade (keystones=50% + rest=50%).
+  // Elapsed program days only; gaps count as 0% (honest). Pre-start it is 0, and old pre-program
+  // data can no longer inflate it. The 75% Honor gate is now reachable on realistic strong days.
+  const tkH=todayKey();let _sumPct=0,_nDays=0;
+  for(let _d=new Date(START_DATE_LOCAL.getFullYear(),START_DATE_LOCAL.getMonth(),START_DATE_LOCAL.getDate());keyFromDate(_d)<=tkH;_d.setDate(_d.getDate()+1)){
+    _sumPct+=dayPercent(S.history[keyFromDate(_d)]);_nDays++;
+  }
+  const daysElapsed=_nDays;
+  const possible=_nDays*100;
+  const efficiency=_nDays>0?(_sumPct/_nDays)/100:0;
+  const effOk=efficiency>=HONOR_TARGET_EFF;                       // (1) spiritual + uni effort
+  const cleanOk=(S.bestCleanStreak||0)>=GOOD_CLEAN_STREAK;        // (2) good clean run
+  const programEnded=todayKey()>=PROGRAM_END_KEY;
+  const examsOk=programEnded;                                     // (3) satisfied once program reaches end
+  // Verdict only finalizes at/after program end
+  const honorAchieved=programEnded&&effOk&&cleanOk&&examsOk;
+  if(honorAchieved&&!S.honorAchieved){S.honorAchieved=true;save();showReward('🏆','HONOR 600 — EARNED','By the mercy of Allah: 75%+ effort, a strong streak, and the exams behind you. The Honor 600 is yours, inshaAllah. The growth was real.');}
+  return{effOk,cleanOk,examsOk,programEnded,honorAchieved,efficiency,daysElapsed,possible};
+}
+// Clean stats (Change D)
+function isCleanDay(day){return !!(day&&day.simple&&day.simple.nofog===true&&!day.slip);}
+function recalcCleanStats(){
+  const tk=todayKey();
+  // totalCleanDays = clean days with key<=today. Past days must be confirmed (today need not be) so the
+  // total and the Clean-Now streak (which breaks on an unconfirmed day) stay consistent. (audit fix)
+  let total=0;
+  Object.keys(S.history).forEach(k=>{const day=S.history[k];if(k<=tk&&isCleanDay(day)&&(k===tk||day.confirmed))total++;});
+  S.totalCleanDays=total;
+  // cleanStreak = consecutive clean days walking back, counting today if clean
+  let streak=0;let d=new Date(Date.now()-86400000);
+  for(let i=0;i<400;i++){
+    const yr=d.getFullYear(),mo=String(d.getMonth()+1).padStart(2,'0'),dy=String(d.getDate()).padStart(2,'0');
+    const k=yr+'-'+mo+'-'+dy;const day=S.history[k];
+    if(!day||!day.confirmed)break;
+    if(!isCleanDay(day))break;
+    streak++;d=new Date(d.getTime()-86400000);
+  }
+  if(isCleanDay(S.history[tk]))streak++;
+  S.cleanStreak=streak;
+  S.bestCleanStreak=Math.max(S.bestCleanStreak||0,streak);
+  save();
+  checkCleanMilestones();
+}
+function checkCleanMilestones(){
+  CLEAN_MILESTONES.forEach(m=>{
+    if(!S.seenCleanMilestones.includes(m.id)&&(S.cleanStreak||0)>=m.days){
+      S.seenCleanMilestones.push(m.id);save();
+      showReward(m.icon,m.title,m.msg);
+    }
+  });
+}
+
+// ================================================================
+// COMBO
+// ================================================================
+function triggerCombo(){
+  const now=Date.now();
+  if(now-_lastTaskTime<8000){
+    _comboCount++;
+    if(_comboCount>=2){
+      const pop=document.getElementById('combo-pop');
+      document.getElementById('combo-pop-title').textContent='COMBO ×'+(_comboCount+1);
+      document.getElementById('combo-pop-sub').textContent=['KEEP THE MOMENTUM','ON A ROLL!','UNSTOPPABLE!','MACHINE MODE!'][Math.min(_comboCount-1,3)];
+      pop.classList.add('show');
+      if(_comboTimer)clearTimeout(_comboTimer);
+      _comboTimer=setTimeout(()=>pop.classList.remove('show'),1800);
+    }
+  } else {_comboCount=0;}
+  _lastTaskTime=now;
+}
+
+// ================================================================
+// PRAYER — 3-state cycle: null → home → mosque → null
+// ================================================================
+function cyclePrayer(name){
+  const td=getTD();
+  const cur=td.prayers[name]||null;
+  const next=!cur?'home':cur==='home'?'mosque':null;
+  td.prayers[name]=next;
+  td.pts=calcTodayPts();recalcTotal();calcStreak();recalcCleanStats();save();renderToday();
+  if(next==='home')showToast(name+' — home (+1)');
+  else if(next==='mosque')showToast(name+' — mosque (+'+PRAYER_PTS_MOSQUE[name]+') 🕌');
+  if(next){flashGold();triggerCombo();}
+  checkStreakSurprises();syncStatsIfVisible();
+}
+
+// ================================================================
+// SUNNAH TOGGLE
+// ================================================================
+function toggleSunnah(key){
+  const td=getTD();const was=!!td.sunnah[key];td.sunnah[key]=!was;
+  td.pts=calcTodayPts();recalcTotal();calcStreak();recalcCleanStats();save();renderToday();
+  if(!was){
+    flashGold();showToast('+'+(SUNNAH_TASKS[key]?.pts||0)+' pts ☽');triggerCombo();
+    const el=document.getElementById('sb-'+key);
+    if(el){el.classList.add('task-bounce');setTimeout(()=>el.classList.remove('task-bounce'),350);}
+  }
+  checkStreakSurprises();syncStatsIfVisible();
+}
+
+// ================================================================
+// SIMPLE TASK TOGGLE
+// ================================================================
+function toggleSimple(key){
+  const td=getTD();const was=!!td.simple[key];td.simple[key]=!was;
+  td.pts=calcTodayPts();recalcTotal();calcStreak();recalcCleanStats();save();renderToday();
+  if(!was){
+    flashGold();showToast('+'+(SIMPLE_TASKS[key]?.pts||0)+' pts');triggerCombo();
+    const el=document.getElementById('t-'+key);
+    if(el){el.classList.add('task-bounce');setTimeout(()=>el.classList.remove('task-bounce'),350);}
+  }
+  checkStreakSurprises();syncStatsIfVisible();
+}
+
+function syncStatsIfVisible(){if(_activeView==='stats')renderStatsActive();}
+
+// ================================================================
+// QUOTE TYPEWRITER
+// ================================================================
+let _quoteTimer=null;
+function typewriterQuote(text,el){
+  if(_quoteTimer)clearTimeout(_quoteTimer);
+  el.innerHTML='<span class="insp-quote-cursor"></span>';
+  let i=0;
+  function next(){if(i<text.length){el.innerHTML=text.substring(0,i+1)+'<span class="insp-quote-cursor"></span>';i++;_quoteTimer=setTimeout(next,20+Math.random()*10);}}
+  next();
+}
+function renderQuote(){const dn=getDayNum()||1;const q=QUOTES[(dn-1)%QUOTES.length];const el=document.getElementById('quote-text');if(el)typewriterQuote(q,el);}
+function renderChallenge(){const dn=getDayNum()||1;const c=CHALLENGES[(dn-1)%CHALLENGES.length];document.getElementById('challenge-text').textContent=c.text;document.getElementById('challenge-sub').textContent=c.sub;}
+
+// ================================================================
+// VIOLATIONS
+// ================================================================
+// Change C — mercy-based slip. No penalty, no streak nuke.
+let _pendingSlip=null;
+function reportSlip(trigger){
+  const td=getTD();
+  td.simple.nofog=false;
+  td.slip=true;
+  S.slips=S.slips||[];
+  _pendingSlip={date:todayKey(),trigger:trigger||null};
+  S.slips.push(_pendingSlip);
+  // keep violations array for stats continuity — NO penalty, NO streak reset
+  td.violations=td.violations||[];
+  td.violations.push({type:'haram',ts:Date.now()});
+  td.pts=calcTodayPts();
+  save();recalcTotal();recalcCleanStats();calcStreak();
+  // Calm new-start modal
+  document.querySelectorAll('#mercy-chips .mercy-chip').forEach(c=>c.classList.remove('sel'));
+  const cleanEl=document.getElementById('mercy-clean');
+  if(cleanEl)cleanEl.textContent='Your total is still '+(S.totalCleanDays||0)+' days — this is one day, not the whole road.';
+  document.getElementById('mercy-modal').classList.add('show');
+  renderToday();
+}
+function setSlipTrigger(el,trigger){
+  document.querySelectorAll('#mercy-chips .mercy-chip').forEach(c=>c.classList.remove('sel'));
+  if(el)el.classList.add('sel');
+  if(_pendingSlip)_pendingSlip.trigger=trigger;
+  save();
+}
+
+// ================================================================
+// STREAK
+// ================================================================
+// Consistency streak — consecutive confirmed/active days. DECOUPLED from fog (Change D).
+function calcStreak(){
+  const todayKeyStr=todayKey();const todayDay=S.history[todayKeyStr];
+  let streak=0;let d=new Date(Date.now()-86400000);
+  for(let i=0;i<400;i++){
+    const yr=d.getFullYear(),mo=String(d.getMonth()+1).padStart(2,'0'),dy=String(d.getDate()).padStart(2,'0');
+    const k=yr+'-'+mo+'-'+dy;const day=S.history[k];
+    // graced days are confirmed and protect the streak (STEP 5); otherwise an unconfirmed day breaks it
+    if(!day||(!day.confirmed&&!day.graced))break; // no nofog gate, no haram nuke
+    streak++;d=new Date(d.getTime()-86400000);
+  }
+  // count today if it has any activity
+  const todayActive=todayDay&&(Object.values(todayDay.simple||{}).some(Boolean)||Object.values(todayDay.prayers||{}).some(v=>!!v)||Object.values(todayDay.sunnah||{}).some(Boolean));
+  if(todayActive)streak++;
+  S.streak=streak;S.consistencyStreak=streak;save();
+}
+function checkStreakSurprises(){
+  calcStreak();recalcCleanStats();
+  SURPRISES.forEach(s=>{
+    if(!S.seenSurprises.includes(s.id)&&s.check(S)){
+      S.seenSurprises.push(s.id);
+      if(s.id==='s14')S.bonusPts=(S.bonusPts||0)+20;
+      if(s.id==='s21')S.bonusPts=(S.bonusPts||0)+15;
+      save();showReward(s.icon,s.title,s.msg);
+    }
+  });
+  calcHonorProgress();
+}
+
+// ================================================================
+// UNCONFIRMED
+// ================================================================
+function checkUnconfirmed(){
+  const now=new Date();
+  for(let i=1;i<=7;i++){
+    const d=new Date(now.getTime()-i*86400000);
+    const yr=d.getFullYear(),mo=String(d.getMonth()+1).padStart(2,'0'),dy=String(d.getDate()).padStart(2,'0');
+    const k=yr+'-'+mo+'-'+dy;const day=S.history[k];
+    if(day&&!day.confirmed){
+      document.getElementById('unc-msg').textContent='What did you actually complete on '+k+'? (25% late penalty applies)';
+      const container=document.getElementById('unc-task-list');container.innerHTML='';
+      const allTasks=[
+        {key:'fajr',label:'Fajr (Mosque)',pts:3,type:'prayer',pstate:'mosque'},
+        {key:'fajr',label:'Fajr (Home)',pts:1,type:'prayer',pstate:'home'},
+        {key:'dhuhr',label:'Dhuhr (Mosque)',pts:2,type:'prayer',pstate:'mosque'},
+        {key:'dhuhr',label:'Dhuhr (Home)',pts:1,type:'prayer',pstate:'home'},
+        {key:'asr',label:'Asr (Mosque)',pts:2,type:'prayer',pstate:'mosque'},
+        {key:'asr',label:'Asr (Home)',pts:1,type:'prayer',pstate:'home'},
+        {key:'maghrib',label:'Maghrib (Mosque)',pts:2,type:'prayer',pstate:'mosque'},
+        {key:'maghrib',label:'Maghrib (Home)',pts:1,type:'prayer',pstate:'home'},
+        {key:'isha',label:'Isha (Mosque)',pts:2,type:'prayer',pstate:'mosque'},
+        {key:'isha',label:'Isha (Home)',pts:1,type:'prayer',pstate:'home'},
+        {key:'fajr_sunnah',label:'Fajr Sunnah',pts:2,type:'sunnah'},
+        {key:'duha',label:'Duha',pts:2,type:'sunnah'},
+        {key:'dhuhr_before',label:'Dhuhr Sunnah Before',pts:2,type:'sunnah'},
+        {key:'dhuhr_after',label:'Dhuhr Sunnah After',pts:2,type:'sunnah'},
+        {key:'maghrib_sunnah',label:'Maghrib Sunnah',pts:2,type:'sunnah'},
+        {key:'isha_sunnah',label:'Isha Sunnah',pts:2,type:'sunnah'},
+        {key:'witr',label:'Witr',pts:3,type:'sunnah'},
+        {key:'athkar_m',label:'Athkar Morning',pts:2,type:'simple'},
+        {key:'athkar_a',label:'Athkar Afternoon',pts:2,type:'simple'},
+        {key:'wird',label:'Daily Wird',pts:3,type:'simple'},
+        {key:'walk',label:'30min Walk',pts:2,type:'simple'},
+        {key:'uni',label:'Uni Work',pts:7,type:'simple'},
+        {key:'memorize',label:'Quran Memorization',pts:5,type:'simple'},
+        {key:'gym',label:'Gym',pts:4,type:'simple'},
+        {key:'noscroll',label:'No Doom Scrolling',pts:3,type:'simple'},
+        {key:'nofog',label:'No Fog',pts:5,type:'simple'},
+        {key:'steps',label:'10,000 Steps',pts:3,type:'simple'},
+        {key:'stairs',label:'Stair Climbing',pts:2,type:'simple'},
+        {key:'plank',label:'Plank',pts:2,type:'simple'},
+        {key:'sideplank',label:'Side Plank',pts:2,type:'simple'},
+        {key:'drone',label:'Drone Course',pts:4,type:'simple'},
+        {key:'tajweed',label:'Tajweed',pts:4,type:'simple'},
+        {key:'beneficial',label:'Something Beneficial',pts:4,type:'simple'},
+      ];
+      allTasks.forEach(t=>{
+        const row=document.createElement('div');
+        row.style.cssText='display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border2);cursor:pointer;';
+        row.dataset.key=t.key;row.dataset.type=t.type;row.dataset.pts=t.pts;
+        if(t.pstate)row.dataset.pstate=t.pstate;
+        const chk=document.createElement('div');
+        chk.style.cssText='width:15px;height:15px;border:1px solid var(--dim2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-family:"Roboto Mono",monospace;';
+        let already=false;
+        if(t.type==='prayer'&&t.pstate)already=(day?.prayers?.[t.key]===t.pstate);
+        else if(t.type==='sunnah')already=day?.sunnah?.[t.key]||false;
+        else already=day?.simple?.[t.key]||false;
+        chk.dataset.checked=already?'1':'0';
+        if(already){chk.textContent='✓';chk.style.background='var(--orange)';chk.style.borderColor='var(--orange)';chk.style.color='var(--black)';}
+        const lbl=document.createElement('div');
+        lbl.style.cssText='flex:1;font-size:11px;color:var(--text);font-family:"Barlow Condensed",sans-serif;font-weight:600;letter-spacing:0.04em;';
+        lbl.textContent=t.label;
+        const ptsEl=document.createElement('div');
+        ptsEl.style.cssText='font-size:10px;color:var(--orange);font-family:"Roboto Mono",monospace;';
+        ptsEl.textContent='+'+t.pts;
+        row.appendChild(chk);row.appendChild(lbl);row.appendChild(ptsEl);
+        row.onclick=()=>{const on=chk.dataset.checked==='0';chk.dataset.checked=on?'1':'0';chk.textContent=on?'✓':'';chk.style.background=on?'var(--orange)':'';chk.style.borderColor=on?'var(--orange)':'var(--dim2)';chk.style.color=on?'var(--black)':'';};
+        container.appendChild(row);
+      });
+      refillGraceToken();
+      const gbtn=document.getElementById('grace-btn');const gcnt=document.getElementById('grace-count');
+      if(gcnt)gcnt.textContent=(S.graceTokens||0);
+      if(gbtn)gbtn.style.display=((S.graceTokens||0)>0)?'block':'none';
+      document.getElementById('unconfirmed-screen').style.display='block';return true;
+    }
+  }
+  return false;
+}
+function getUnconfirmedKey(){
+  const now=new Date();
+  for(let i=1;i<=7;i++){
+    const d=new Date(now.getTime()-i*86400000);
+    const yr=d.getFullYear(),mo=String(d.getMonth()+1).padStart(2,'0'),dy=String(d.getDate()).padStart(2,'0');
+    const k=yr+'-'+mo+'-'+dy;const day=S.history[k];
+    if(day&&!day.confirmed)return k;
+  }
+  return null;
+}
+function confirmYesterday(yes){
+  const k=getUnconfirmedKey();if(!k)return;const day=S.history[k];
+  if(!yes){day.simple=day.simple||{};day.simple.nofog=false;}
+  day.confirmed=true;day.coreAchieved=!!day.simple?.nofog;
+  document.getElementById('unconfirmed-screen').style.display='none';
+  save();calcStreak();renderToday();
+}
+function confirmYesterdayLate(){
+  const k=getUnconfirmedKey();if(!k)return;const day=S.history[k];
+  const rows=document.querySelectorAll('#unc-task-list [data-key]');
+  day.simple={};day.prayers={};day.sunnah={};let rawPts=0;
+  const prayerBest={};
+  rows.forEach(row=>{
+    const chk=row.querySelector('[data-checked]');
+    if(chk&&chk.dataset.checked==='1'){
+      const key=row.dataset.key;const pts=parseInt(row.dataset.pts)||0;
+      const type=row.dataset.type;const pstate=row.dataset.pstate;
+      if(type==='prayer'&&pstate){if(!prayerBest[key]||(pstate==='mosque'))prayerBest[key]={pstate,pts};}
+      else if(type==='sunnah'){day.sunnah[key]=true;rawPts+=pts;}
+      else{day.simple[key]=true;rawPts+=pts;}
+    }
+  });
+  Object.entries(prayerBest).forEach(([k,v])=>{day.prayers[k]=v.pstate;rawPts+=v.pts;});
+  day.pts=Math.floor(rawPts*0.75);day.confirmed=true;day.coreAchieved=!!day.simple?.nofog;day.lateConfirmed=true;
+  document.getElementById('unconfirmed-screen').style.display='none';
+  recalcTotal();save();calcStreak();renderToday();showToast('Logged: '+rawPts+' pts → '+day.pts+' (25% penalty)');
+}
+function autoConfirmTrackedDays(){
+  const now=new Date();let changed=false;
+  for(let i=1;i<=7;i++){
+    const d=new Date(now.getTime()-i*86400000);
+    const yr=d.getFullYear(),mo=String(d.getMonth()+1).padStart(2,'0'),dy=String(d.getDate()).padStart(2,'0');
+    const k=yr+'-'+mo+'-'+dy;const day=S.history[k];
+    if(!day||day.confirmed)continue;
+    const hasData=Object.values(day.simple||{}).some(Boolean)||Object.values(day.prayers||{}).some(v=>!!v)||Object.values(day.sunnah||{}).some(Boolean);
+    if(hasData){day.confirmed=true;day.coreAchieved=!!day.simple?.nofog;changed=true;}
+  }
+  if(changed)save();
+}
+let _midnightConfirmFired=false;
+function checkMidnightConfirm(){
+  const yKey=yesterKey();const yDay=S.history[yKey];
+  if(!yDay||yDay.confirmed)return;
+  const hasData=Object.values(yDay.simple||{}).some(Boolean)||Object.values(yDay.prayers||{}).some(v=>!!v)||Object.values(yDay.sunnah||{}).some(Boolean);
+  if(hasData){yDay.confirmed=true;yDay.coreAchieved=!!yDay.simple?.nofog;save();calcStreak();renderToday();return;}
+  if(_midnightConfirmFired)return;
+  const mn=new Date();mn.setHours(0,0,0,0);
+  if(Date.now()>mn.getTime()+12*3600*1000){_midnightConfirmFired=true;checkUnconfirmed();}
+}
+
+// ================================================================
+// RENDER TODAY
+// ================================================================
+function setText(id,t){const el=document.getElementById(id);if(el)el.textContent=t;}
+function renderToday(){
+  const td=getTD();const dn=getDayNum();const tk=todayKey();
+  const ayahIdx=dn?(dn-1)%AYAHS.length:0;
+  setText('ayah-ar',AYAHS[ayahIdx].ar);
+  setText('ayah-tr',AYAHS[ayahIdx].tr);
+  setText('day-num',dn?'D'+dn:'—');
+  setText('day-lbl','OF '+PROGRAM_DAYS);
+  document.title='PROTOCOL — '+PROGRAM_DAYS;
+  const now=new Date();
+  const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  setText('hdr-date',DAYS[now.getDay()].toUpperCase()+' · '+now.getDate()+' '+MONTHS[now.getMonth()].toUpperCase()+' '+now.getFullYear());
+  setText('start-date-display',START_DATE_LOCAL.getDate()+' '+MONTHS[START_DATE_LOCAL.getMonth()]+' '+START_DATE_LOCAL.getFullYear());
+  // Program countdown
+  const daysLeftProgram=Math.max(0,Math.round((PROGRAM_END_LOCAL-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/86400000));
+  setText('hdr-program','PROGRAM ENDS 12 AUG · '+daysLeftProgram+' DAYS LEFT');
+
+  const todayPts=calcTodayPts();const totalPts=S.totalPts;
+  const fullTarget=Math.round(PROGRAM_DAYS*MAX_DAILY*0.75);
+  const pct=fullTarget>0?Math.min(100,(totalPts/fullTarget)*100):0;
+  document.getElementById('pts-fill').style.width=pct+'%';
+  setText('pts-lbl',totalPts+' / '+fullTarget);
+  setText('today-lbl','TODAY: '+todayPts+' PTS · '+dayPercent(getTD())+'%');
+
+  const lvl=getLevel(totalPts);
+  const badge=document.getElementById('level-badge');
+  badge.className='level-badge '+lvl.cls;badge.textContent=lvl.icon+' '+lvl.label;
+
+  const fire=document.getElementById('streak-fire');
+  fire.textContent=(S.streak>=3?'🔥':'◆')+' '+S.streak;
+  fire.className='streak-fire'+(S.streak>=3?' on-fire':'');
+
+  const h=calcHonorProgress();const effPct=Math.round(h.efficiency*100);
+  const effOk=h.effOk,cleanOk=h.cleanOk;
+  // Target card stats
+  // clean/urge counters intentionally not displayed (privacy)
+  setText('honor-pts-val',effPct+'%');
+  setText('honor-req-need-pts',effOk?'✓ met':'need 75%');
+  setText('honor-streak-val',S.bestCleanStreak||0);
+  setText('honor-clean-need',cleanOk?'✓ met':'need '+GOOD_CLEAN_STREAK);
+  const _ne=nextExam(tk);const _examToday=getExam(tk);
+  if(h.programEnded){setText('honor-exams-val','✓');setText('honor-exams-need','all done');}
+  else if(_examToday){setText('honor-exams-val','TODAY');setText('honor-exams-need',_examToday);}
+  else if(_ne){setText('honor-exams-val',_ne.daysAway+'d');setText('honor-exams-need',_ne.subject);}
+  else{setText('honor-exams-val','—');setText('honor-exams-need','—');}
+  // criteria readout — .met (green) when satisfied
+  const critPts=document.getElementById('honor-req-pts-item');if(critPts)critPts.classList.toggle('met',effOk);
+  const critStreak=document.getElementById('honor-req-streak');if(critStreak)critStreak.classList.toggle('met',cleanOk);
+  const critExams=document.getElementById('honor-req-exams');if(critExams)critExams.classList.toggle('met',h.programEnded);
+  // overall progress toward 3 criteria (live) — drives the hero bar
+  const overallProg=Math.round((Math.min(100,(h.efficiency/0.75)*100)+Math.min(100,((S.bestCleanStreak||0)/GOOD_CLEAN_STREAK)*100)+(h.programEnded?100:Math.min(100,(h.daysElapsed/PROGRAM_DAYS)*100)))/3);
+  const phoneFill=document.getElementById('phone-unlock-fill');if(phoneFill)phoneFill.style.width=overallProg+'%';
+  const phoneLbl=document.getElementById('phone-unlock-lbl');
+  if(phoneLbl){
+    if(S.honorAchieved){phoneLbl.textContent='✦ HONOR 600 EARNED ✦';phoneLbl.style.color='var(--green)';}
+    else{phoneLbl.textContent=overallProg+'% to Honor 600';phoneLbl.style.color='';}
+  }
+  const honorDaysLeft=document.getElementById('honor-days-left');
+  if(honorDaysLeft){
+    if(h.programEnded){
+      honorDaysLeft.textContent=S.honorAchieved?'achieved ✦':'program complete';
+    }else{
+      honorDaysLeft.textContent=daysLeftProgram+' days left';
+    }
+  }
+  // honest, motivating status line on the reward card
+  const verdictEl=document.getElementById('honor-verdict');
+  if(verdictEl){
+    const dnNow=getDayNum();let vt,vc;
+    if(S.honorAchieved){vt='✦ Earned, by the mercy of Allah. The growth was real.';vc='var(--green)';}
+    else if(h.programEnded){vt='Program complete — the verdict is locked in.';vc='var(--orange)';}
+    else if(!dnNow){vt='Your fresh run begins '+START_DATE_LOCAL.getDate()+' '+MONTHS[START_DATE_LOCAL.getMonth()]+'. Day 1 loads then — get ready.';vc='var(--dim)';}
+    else{const ep=Math.round(h.efficiency*100);
+      if(ep>=75){vt='On pace for the Honor 600. Hold the line.';vc='var(--green)';}
+      else if(ep>=50){vt='Close. A strong week locks it in, inshaAllah.';vc='var(--orange-bright)';}
+      else{vt='Behind pace — but your floor pulls it back. One day at a time.';vc='var(--orange)';}}
+    verdictEl.textContent=vt;verdictEl.style.color=vc;
+  }
+
+  // Fard prayers
+  let fardPts=0;let fardCount=0;
+  FARD_PRAYERS.forEach(name=>{
+    const state=td.prayers[name]||null;
+    const btn=document.getElementById('pb-'+name);
+    const ps=document.getElementById('ps-'+name);
+    const pp=document.getElementById('pp-'+name);
+    if(!btn)return;
+    btn.className='prayer-btn'+(state==='home'?' p-home':state==='mosque'?' p-mosque':'');
+    if(!state){ps.textContent='○';pp.textContent=PRAYER_PTS_MOSQUE[name]+' pts';}
+    else if(state==='home'){ps.textContent='🏠';pp.textContent='+1 pt';}
+    else{ps.textContent='🕌';pp.textContent='+'+PRAYER_PTS_MOSQUE[name]+' pts';}
+    if(state==='mosque')fardPts+=PRAYER_PTS_MOSQUE[name];
+    else if(state==='home')fardPts+=PRAYER_PTS_HOME;
+    if(state)fardCount++;
+  });
+  setText('prayer-summary',fardCount+' / 5 today');
+  setText('salah-pts-badge',fardPts+' / 11 pts');
+  const ps2=document.getElementById('prayer-section');
+  if(fardCount===5)ps2.classList.add('p-active');else ps2.classList.remove('p-active');
+
+  // Sunnah — 7 items max 15pts
+  let sunnahPts=0;
+  Object.keys(SUNNAH_TASKS).forEach(key=>{
+    const done=!!td.sunnah[key];
+    const btn=document.getElementById('sb-'+key);const chk=document.getElementById('sc-'+key);
+    if(!btn)return;
+    btn.classList.toggle('s-done',done);
+    if(chk)chk.textContent=done?'✓':'';
+    if(done)sunnahPts+=SUNNAH_TASKS[key].pts;
+  });
+  setText('sunnah-pts-label',sunnahPts+' / 15 PTS');
+
+  // Simple tasks
+  Object.keys(SIMPLE_TASKS).forEach(key=>{
+    const tDone=!!td.simple[key];const tEl=document.getElementById('t-'+key);const tChk=document.getElementById('chk-'+key);
+    if(!tEl)return;tEl.classList.toggle('t-done',tDone);if(tChk)tChk.textContent=tDone?'✓':'';
+  });
+
+  // Uni Work — managed in Study tab when active subjects exist (Change B)
+  const activeSubs=getActiveSubjects(tk);
+  const uniSub=document.getElementById('uni-sub');
+  if(uniSub){
+    if(activeSubs.length>0)uniSub.innerHTML='<span class="uni-managed-hint">▸ managed in Study tab — tap to open</span>';
+    else uniSub.textContent='Focused session — university only';
+  }
+
+  // Plank progressive
+  const {plankSec,sideSec}=getPlankTargets();
+  setText('plank-target-txt','📈 Plank targets: '+fmtSec(plankSec)+' · Side plank '+fmtSec(sideSec)+' each');
+  setText('plank-sub',fmtSec(plankSec)+' — day '+(dn||1)+' target');
+  setText('sideplank-sub',fmtSec(sideSec)+' each side — day '+(dn||1)+' target');
+
+  // Group point chips
+  let prayersPts=fardPts+sunnahPts;
+  setText('group-prayers-pts',prayersPts+' PTS');
+  let foundPts=0;['athkar_m','athkar_a','wird','walk','uni','noscroll','nofog'].forEach(k=>{if(td.simple[k])foundPts+=SIMPLE_TASKS[k].pts;});
+  setText('group-foundation-pts',foundPts+' PTS');
+  let bodyPts=0;['gym','steps','stairs','plank','sideplank'].forEach(k=>{if(td.simple[k])bodyPts+=SIMPLE_TASKS[k].pts;});
+  setText('group-body-pts',bodyPts+' PTS');
+  let growthPts=0;['memorize','drone','tajweed','beneficial'].forEach(k=>{if(td.simple[k])growthPts+=SIMPLE_TASKS[k].pts;});
+  setText('group-growth-pts',growthPts+' PTS');
+
+  // core / discipline labelled totals (Requirement #4): core max 27 (fard 11 + core tasks 16), discipline max 17
+  let coreTaskPts=0;['athkar_m','athkar_a','wird','walk','uni'].forEach(k=>{if(td.simple[k])coreTaskPts+=SIMPLE_TASKS[k].pts;});
+  setText('core-pts-label','core '+(fardPts+coreTaskPts)+' / 27 PTS');
+  let discPts=0;['memorize','gym','noscroll','nofog'].forEach(k=>{if(td.simple[k])discPts+=SIMPLE_TASKS[k].pts;});
+  setText('disc-pts-label','disc '+discPts+' / 17 PTS');
+
+  // Foundation card (5 keystones) — single source of truth, merged from old renderFocus
+  const fkFajr=!!td.prayers.fajr;                         // Fajr prayed any state
+  const fkWird=!!td.simple.wird;                          // Daily wird
+  const fkUni=!!td.simple.uni;                            // Uni / study done
+  const fkClean=(td.simple.nofog===true)&&!td.slip;       // clean today
+  const fkAthkar=!!td.simple.athkar_m;                    // athkar morning
+  const fkeys=[['fk-fajr',fkFajr],['fk-wird',fkWird],['fk-uni',fkUni],['fk-athkar',fkAthkar],['fk-clean',fkClean]];
+  let fkDone=0;
+  fkeys.forEach(([id,on])=>{
+    const el=document.getElementById(id);if(el)el.classList.toggle('fk-done',on);
+    const stEl=document.getElementById(id+'-state');if(stEl)stEl.textContent=on?'✓':'○';
+    if(on)fkDone++;
+  });
+  const fndAllDone=fkDone===5;
+  setText('foundation-count',fkDone+' / 5');
+  const ffill=document.getElementById('foundation-fill');if(ffill)ffill.style.width=(fkDone/5*100)+'%';
+  const fndCard=document.getElementById('fnd-card');if(fndCard)fndCard.classList.toggle('secured',fndAllDone);
+  const fndMsg=document.getElementById('foundation-msg');if(fndMsg)fndMsg.style.display=fndAllDone?'block':'none';
+  // Fajr sub reflects current 3-state
+  const fajrState=td.prayers.fajr||null;
+  const fSub=document.getElementById('fk-fajr-sub');
+  if(fSub)fSub.textContent=fajrState==='mosque'?'Mosque 🕌':fajrState==='home'?'Home 🏠 — tap for mosque':'Tap: home → mosque';
+  const fUniSub=document.getElementById('fk-uni-sub');
+  if(fUniSub)fUniSub.textContent=getActiveSubjects(tk).length>0?'Managed in Study tab':'Focused session';
+  // "my why" one-liner in foundation
+  const wy=document.getElementById('fnd-why');
+  if(wy){
+    if(S.whyNote&&S.whyNote.trim()){wy.textContent='“'+S.whyNote.trim()+'”';wy.classList.remove('empty');}
+    else{wy.textContent='Set your "why" in Settings — one line for the hard moments.';wy.classList.add('empty');}
+  }
+
+  // Clean tracker
+  const cleanBadge=document.getElementById('clean-badge');
+  const cleanSub=document.getElementById('clean-sub');
+  const isClean=fkClean;
+  if(cleanBadge){
+    cleanBadge.className='clean-badge '+(isClean?'is-clean':'not-clean');
+    cleanBadge.textContent=isClean?'ON TRACK ✓':(td.slip?'A NEW START':'NOT YET MARKED');
+  }
+  if(cleanSub){
+    cleanSub.textContent=isClean
+      ? (S.cleanStreak||0)+' day streak · '+(S.totalCleanDays||0)+' days total. Keep going.'
+      : (td.slip?'Today was hard — that is okay. Your '+(S.totalCleanDays||0)+'-day total still stands. Begin again.':'Mark "Streak" above when the day stays on track.');
+  }
+
+  renderMoodUI();
+  setText('streak-display',S.streak+' day'+(S.streak!==1?'s':''));
+  setText('grace-display',(S.graceTokens||0)+' available this week');
+  const wi=document.getElementById('why-input');if(wi&&document.activeElement!==wi)wi.value=S.whyNote||'';
+}
+// Uni Work click handler (Change B)
+function onUniClick(){
+  if(getActiveSubjects(todayKey()).length>0){switchView('study');return;}
+  toggleSimple('uni');
+}
+
+// ================================================================
+// MOOD
+// ================================================================
+function submitMood(val){getTD().mood=val;save();renderMoodUI();showToast('Mood logged ✓');}
+function renderMoodUI(){
+  const td=getTD();const hasMood=td.mood!=null;
+  document.getElementById('mood-grid').style.display=hasMood?'none':'grid';
+  document.getElementById('mood-done').style.display=hasMood?'block':'none';
+  document.getElementById('mood-submitted-label').textContent=hasMood?'LOGGED ✓':'ONCE PER DAY';
+  if(hasMood){const emojis={1:'😤',2:'😔',3:'😐',4:'😊',5:'💪'};const labels={1:'Rough',2:'Low',3:'Neutral',4:'Good',5:'Powerful'};document.getElementById('mood-done').textContent=emojis[td.mood]+' '+labels[td.mood]+' — logged ✓';}
+}
+
+// ================================================================
+// HISTORY
+// ================================================================
+function renderHistory(){
+  const list=document.getElementById('history-list');if(!list)return;
+  const keys=Object.keys(S.history).sort().reverse();
+  if(!keys.length){list.innerHTML='<div style="font-size:11px;color:var(--dim);text-align:center;padding:40px 0;">No history yet.</div>';return;}
+  list.innerHTML='';const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  keys.forEach(key=>{
+    const day=S.history[key];if(!day||(!day.pts&&!day.confirmed))return;
+    const d=new Date(key+'T12:00:00');const pct=dayPercent(day);const ks=dayKeystones(day).count;
+    const el=document.createElement('div');el.className='hist-day';
+    const badges=[];
+    if(pct>=90)badges.push('<span class="hist-badge badge-perfect">PERFECT</span>');
+    else if(ks>=4)badges.push('<span class="hist-badge badge-perfect">FLOOR HELD</span>');
+    el.innerHTML=`<div class="hist-date-num">${d.getDate()}</div><div class="hist-info"><div class="hist-lbl">${MONTHS[d.getMonth()]} ${d.getFullYear()}</div><div class="hist-pts">${pct}% · floor ${ks}/5</div><div>${badges.join('')}</div></div><div class="hist-bar"><div class="hist-bar-fill" style="width:${pct}%"></div></div>`;
+    list.appendChild(el);
+  });
+}
+
+// ================================================================
+// UI HELPERS
+// ================================================================
+function showToast(msg,red){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(red?' red':'');setTimeout(()=>t.classList.remove('show'),2200);}
+function flashGold(){const f=document.getElementById('flash');f.className='flash show';setTimeout(()=>f.className='flash',350);}
+function closeModal(id){document.getElementById(id).classList.remove('show');renderToday();}
+function showReward(icon,title,msg){document.getElementById('rm-icon').textContent=icon;document.getElementById('rm-title').textContent=title;document.getElementById('rm-msg').textContent=msg;document.getElementById('reward-modal').classList.add('show');}
+
+// ================================================================
+// WHY NOTE (STEP 5) — shown in the Foundation card + during urges
+// ================================================================
+function saveWhyNote(v){S.whyNote=v||'';save();const wy=document.getElementById('fnd-why');if(wy){if(S.whyNote.trim()){wy.textContent='“'+S.whyNote.trim()+'”';wy.classList.remove('empty');}else{wy.textContent='Set your "why" in Settings — one line for the hard moments.';wy.classList.add('empty');}}}
+
+// ================================================================
+// GRACE DAY (STEP 5)
+// ================================================================
+function isoWeekKey(d){
+  // ISO week: Thursday-based. Returns 'YYYY-Www'
+  const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  const day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-day);
+  const yearStart=new Date(Date.UTC(t.getUTCFullYear(),0,1));
+  const wk=Math.ceil((((t-yearStart)/86400000)+1)/7);
+  return t.getUTCFullYear()+'-W'+String(wk).padStart(2,'0');
+}
+function refillGraceToken(){
+  // week turns over on Sunday (Muslim week: Sun..Sat) — token refills each Sunday
+  const n=new Date();const s=new Date(n.getFullYear(),n.getMonth(),n.getDate());s.setDate(s.getDate()-s.getDay());
+  const wk=keyFromDate(s);
+  if(S.graceWeek!==wk){S.graceWeek=wk;S.graceTokens=1;}
+}
+function useGraceDay(){
+  refillGraceToken();
+  if((S.graceTokens||0)<=0){showToast('No grace day left this week',true);return;}
+  const k=getUnconfirmedKey();if(!k)return;const day=S.history[k];
+  S.graceTokens=Math.max(0,(S.graceTokens||0)-1);
+  S.graceDates=S.graceDates||[];if(!S.graceDates.includes(k))S.graceDates.push(k);
+  day.confirmed=true;day.graced=true;day.coreAchieved=!!day.simple?.nofog;
+  document.getElementById('unconfirmed-screen').style.display='none';
+  save();calcStreak();recalcCleanStats();renderToday();
+  showToast('Grace day used — streak protected 🟢');
+}
+
+function switchView(v){
+  _activeView=v;
+  document.getElementById('view-daily').style.display=v==='daily'?'block':'none';
+  document.getElementById('view-study').style.display=v==='study'?'block':'none';
+  document.getElementById('view-history').style.display=v==='history'?'block':'none';
+  document.getElementById('view-stats').style.display=v==='stats'?'block':'none';
+  document.getElementById('view-settings').style.display=v==='settings'?'block':'none';
+  ['daily','study','history','stats','settings'].forEach(n=>{const el=document.getElementById('nav-'+n);if(el)el.classList.toggle('active',n===v);});
+  if(v==='history')renderHistory();
+  if(v==='stats')renderStatsActive();
+  if(v==='study')renderStudy();
+  window.scrollTo(0,0);
+}
+
+// ================================================================
+// STUDY TAB (Change A)
+// ================================================================
+function renderStudy(){
+  const tk=todayKey();
+  const cd=document.getElementById('study-countdown');
+  const body=document.getElementById('study-body');
+  const examToday=getExam(tk);const ne=nextExam(tk);
+  let cdHtml='';
+  if(examToday){
+    cdHtml='<div class="countdown-card exam-today"><div class="cd-label">⚠ Exam Today</div><div class="cd-subject">EXAM TODAY: '+examToday+'</div><div class="cd-days">Bismillah. You prepared for this.</div></div>';
+  }else if(ne){
+    cdHtml='<div class="countdown-card"><div class="cd-label">◈ Next Exam</div><div class="cd-subject">'+ne.subject+'</div><div class="cd-days">in '+ne.daysAway+' day'+(ne.daysAway===1?'':'s')+' · '+ne.date+'</div></div>';
+  }else{
+    cdHtml='<div class="countdown-card"><div class="cd-label">◈ Exams</div><div class="cd-subject">All exams complete</div><div class="cd-days">Alhamdulillah — the program window is closed.</div></div>';
+  }
+  cd.innerHTML=cdHtml;
+
+  const plan=studyPlan(tk);const upcoming=plan.filter(s=>s.daysLeft>=0);
+  const focus=getActiveSubjects(tk);const td=getTD();
+  let h='';
+  // ---- Today's Focus (auto-prioritized by nearest exam) ----
+  if(focus.length===0){
+    h+='<div class="study-empty">All exams are behind you.<br>Alhamdulillah — rest well, you earned it.</div>';
+  }else{
+    let done=0;focus.forEach(k=>{if(td.study[k])done++;});
+    h+='<div class="study-active-card"><div class="study-active-hdr"><div class="study-active-title">🎯 Today\'s Focus</div><div class="study-done-count">'+done+' / '+focus.length+' done</div></div>';
+    focus.forEach((k,i)=>{
+      const on=!!td.study[k];const dl=(plan.find(s=>s.k===k)||{}).daysLeft;
+      const tag=i===0
+        ?'<span style="font-size:9px;font-weight:700;color:var(--orange);letter-spacing:0.08em;margin-left:7px;">PRIORITY · '+dl+'d</span>'
+        :'<span style="font-size:9px;color:var(--dim);letter-spacing:0.08em;margin-left:7px;">GET AHEAD · '+dl+'d</span>';
+      h+='<div class="study-task'+(on?' s-done':'')+'" onclick="toggleStudy(\''+k+'\')"><div class="task-chk">'+(on?'✓':'')+'</div><div class="study-task-name">'+SUBJ_LABEL[k]+tag+'</div></div>';
+    });
+    h+='<div style="font-size:10px;color:var(--dim);text-align:center;margin-top:9px;line-height:1.5;">Nearest exam leads. Clear today\'s focus and Uni Work completes (+7).</div></div>';
+  }
+  // ---- Full plan overview (all 8, nearest exam first) ----
+  h+='<div class="stat-card" style="margin-top:8px;"><div class="stat-card-title">FULL PLAN <span style="float:right;font-weight:400;color:var(--dim2);font-size:9px;letter-spacing:0;">'+upcoming.length+' of 8 left</span></div>';
+  plan.forEach(s=>{
+    let badge,bcol,op='1';
+    if(s.daysLeft<0){badge='DONE ✓';bcol='var(--dim)';op='0.45';}
+    else if(s.daysLeft===0){badge='TODAY';bcol='var(--red)';}
+    else{const fi=focus.indexOf(s.k);if(fi===0){badge='PRIORITY';bcol='var(--orange)';}else if(fi>0){badge='FOCUS';bcol='var(--orange-bright)';}else{badge='in '+s.daysLeft+'d';bcol='var(--dim)';}}
+    const sub=s.daysLeft<0?'done':s.daysLeft===0?'exam today':s.daysLeft+' days left';
+    h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border2);opacity:'+op+';">'
+      +'<div><div style="font-size:14px;color:var(--text-bright);font-weight:600;font-family:\'Barlow Condensed\',sans-serif;letter-spacing:0.03em;">'+s.label+'</div><div style="font-size:9px;color:var(--dim);font-family:\'Roboto Mono\',monospace;">'+s.exam+' · '+sub+'</div></div>'
+      +'<div style="font-size:10px;font-weight:800;letter-spacing:0.06em;color:'+bcol+';font-family:\'Barlow Condensed\',sans-serif;">'+badge+'</div></div>';
+  });
+  h+='</div>';
+  body.innerHTML=h;
+}
+function toggleStudy(key){
+  const tk=todayKey();const td=getTD();
+  td.study[key]=!td.study[key];
+  // recompute uni auto-complete
+  const active=getActiveSubjects(tk);
+  const allDone=active.length>0&&active.every(k=>td.study[k]);
+  td.simple.uni=allDone;
+  td.pts=calcTodayPts();
+  save();recalcTotal();recalcCleanStats();calcStreak();
+  renderStudy();renderToday();syncStatsIfVisible();
+  if(allDone){flashGold();showToast('All subjects done — Uni Work complete ✓');}
+}
+
+// ================================================================
+// URGE OVERLAY (Change F)
+// ================================================================
+let _urgeTimer=null,_urgeSecs=300,_urgeMsgIdx=0,_urgeMsgTimer=null;
+const URGE_MSGS=[
+  {html:'<span class="ar">أَعُوذُ بِاللهِ مِنَ الشَّيْطَانِ الرَّجِيمِ</span><br>I seek refuge in Allah from the accursed Shaytan.'},
+  {html:'You have <b id="urge-clean-n">0</b> days built — don\'t trade them for 5 minutes.'},
+  {html:'Make wudu now. Cold water. Reset your state.'},
+  {html:'Step outside. Change the room, change the moment.'},
+  {html:'Drop and do 20 push-ups. Move the energy.'},
+  {html:'Drink a full glass of water. Slowly.'},
+  {html:'Message your accountability person. One text breaks the spell.'},
+  {html:'This feeling is a wave. Waves crest and fall. Just float.'},
+];
+function fmtMMSS(s){const m=Math.floor(s/60);const sec=s%60;return m+':'+String(sec).padStart(2,'0');}
+function urgeRenderMsg(){
+  const el=document.getElementById('urge-support');
+  if(!el)return;
+  el.innerHTML=URGE_MSGS[_urgeMsgIdx%URGE_MSGS.length].html;
+  const cn=document.getElementById('urge-clean-n');if(cn)cn.textContent=S.totalCleanDays||0;
+}
+function openUrge(){
+  _urgeSecs=300;_urgeMsgIdx=0;
+  document.getElementById('urge-timer').textContent=fmtMMSS(_urgeSecs);
+  const wy=document.getElementById('urge-why');
+  if(wy){if(S.whyNote&&S.whyNote.trim()){wy.textContent='Remember why you started: “'+S.whyNote.trim()+'”';wy.style.display='block';}else{wy.style.display='none';}}
+  urgeRenderMsg();
+  document.getElementById('urge-overlay').classList.add('show');
+  if(_urgeTimer)clearInterval(_urgeTimer);
+  _urgeTimer=setInterval(()=>{
+    _urgeSecs--;
+    if(_urgeSecs<=0){_urgeSecs=0;document.getElementById('urge-timer').textContent='0:00';clearInterval(_urgeTimer);}
+    else document.getElementById('urge-timer').textContent=fmtMMSS(_urgeSecs);
+  },1000);
+  if(_urgeMsgTimer)clearInterval(_urgeMsgTimer);
+  _urgeMsgTimer=setInterval(()=>{_urgeMsgIdx++;urgeRenderMsg();},6000);
+}
+function closeUrge(){
+  if(_urgeTimer)clearInterval(_urgeTimer);
+  if(_urgeMsgTimer)clearInterval(_urgeMsgTimer);
+  document.getElementById('urge-overlay').classList.remove('show');
+}
+function urgeBeat(){
+  S.urgesBeaten=(S.urgesBeaten||0)+1;
+  S.urgeLog=S.urgeLog||[];S.urgeLog.push({ts:Date.now(),outcome:'beat'});
+  S.bonusPts=(S.bonusPts||0)+2;
+  save();recalcTotal();checkStreakSurprises();
+  closeUrge();renderToday();
+  flashGold();showToast('You rode it out. +2 bonus 🟢',false);
+  showReward('💪','URGE BEATEN','You waited, and it passed — just like it always does. That is real strength. +2 bonus points.');
+}
+function urgeKeepGoing(){
+  _urgeSecs=300;
+  document.getElementById('urge-timer').textContent=fmtMMSS(_urgeSecs);
+  _urgeMsgIdx++;urgeRenderMsg();
+}
+function urgeSlipped(){closeUrge();reportSlip();}
+
+// ================================================================
+// BACKUP NUDGE (Change I)
+// ================================================================
+function maybeShowBackupBanner(){
+  const banner=document.getElementById('backup-banner');if(!banner)return;
+  // "history non-empty" = at least one day with real data (points or confirmed)
+  const hasHistory=Object.values(S.history).some(d=>d&&((d.pts||0)>0||d.confirmed));
+  if(hasHistory && (Date.now()-(S.lastBackupTs||0))>7*86400000){banner.style.display='flex';}
+  else banner.style.display='none';
+}
+function dismissBackupBanner(){const b=document.getElementById('backup-banner');if(b)b.style.display='none';}
+
+function resetToday(){const k=todayKey();S.history[k]={simple:{},prayers:{},sunnah:{},pts:0,violations:[],confirmed:false};recalcTotal();save();renderToday();showToast('Today reset');}
+function tsStamp(){const n=new Date();const pad=x=>String(x).padStart(2,'0');return n.getFullYear()+'-'+pad(n.getMonth()+1)+'-'+pad(n.getDate())+'_'+pad(n.getHours())+'-'+pad(n.getMinutes());}
+function exportBackup(){S.lastBackupTs=Date.now();save();const ts=tsStamp();const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='daraya_backup_'+ts+'.json';a.click();URL.revokeObjectURL(url);maybeShowBackupBanner();showToast('Backup exported ✓');}
+function handleImportFile(e){
+  const file=e.target.files[0];if(!file)return;
+  const ts=tsStamp();const oldBlob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});const oldUrl=URL.createObjectURL(oldBlob);const oldA=document.createElement('a');oldA.href=oldUrl;oldA.download='daraya_old_'+ts+'.json';oldA.click();URL.revokeObjectURL(oldUrl);
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    const backup=JSON.stringify(S);
+    try{const parsed=JSON.parse(ev.target.result);if(typeof parsed!=='object'||parsed===null)throw new Error('Not an object');if(parsed.version!==6&&parsed.version!==5&&parsed.version!==4)throw new Error('Unknown version');S={...S,...parsed};migrateState();save();recalcTotal();recalcCleanStats();calcStreak();renderToday();showToast('Backup restored ✓');}
+    catch(err){try{S=JSON.parse(backup);}catch(e){}showToast('Import failed: '+err.message,true);}
+  };
+  reader.readAsText(file);e.target.value='';
+}
+function confirmReset(){
+  const modal=document.createElement('div');modal.className='modal-overlay show';
+  modal.innerHTML=`<div class="modal" style="border-color:var(--red-dim);"><div class="modal-title">RESET ALL DATA?</div><div class="modal-msg">Current data will be exported as backup first.</div><div style="display:flex;gap:8px;margin-top:4px;"><button class="modal-close" style="border-color:var(--red);color:var(--red);" id="confirm-reset-yes">EXPORT + WIPE</button><button class="modal-close" style="border-color:var(--border2);color:var(--dim);" id="confirm-reset-no">CANCEL</button></div></div>`;
+  document.body.appendChild(modal);
+  document.getElementById('confirm-reset-yes').onclick=()=>{const ts=tsStamp();const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='daraya_before_reset_'+ts+'.json';a.click();URL.revokeObjectURL(url);setTimeout(()=>{localStorage.removeItem('daraya_v5');localStorage.removeItem('daraya_v4');location.reload();},500);};
+  document.getElementById('confirm-reset-no').onclick=()=>modal.remove();
+}
+
+// ================================================================
+// STATS
+// ================================================================
+function shiftWeek(dir){statsWeekOffset+=dir;if(statsWeekOffset>0)statsWeekOffset=0;renderStats();}
+function getWeekDays(offset){
+  const now=new Date();const todayLocal=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const dow=todayLocal.getDay();const sundayOffset=-dow;const days=[]; // week starts Sunday (getDay 0=Sun .. 6=Sat)
+  for(let i=0;i<7;i++){const d=new Date(todayLocal.getFullYear(),todayLocal.getMonth(),todayLocal.getDate()+sundayOffset+offset*7+i);const yr=d.getFullYear(),mo=String(d.getMonth()+1).padStart(2,'0'),dy=String(d.getDate()).padStart(2,'0');days.push(yr+'-'+mo+'-'+dy);}
+  return days;
+}
+function getDayStatus(key){
+  const day=S.history[key];const k=todayKey();
+  const startK=keyFromDate(START_DATE_LOCAL);
+  // Today is evaluated first so it is NEVER misclassified as 'future' (e.g. before program start). (audit fix)
+  if(key===k){if(!day)return'missed';const p=dayPercent(day);if(p>=FULL_DAY_PCT)return'full';if(p>0)return'partial';return'missed';}
+  if(key>k)return'future';                 // strictly after today only
+  if(key<startK)return'future';            // before the program window
+  if(!day||(!day.pts&&!day.confirmed))return'missed';
+  // mercy-scale: the floor (50%) holding makes a day "full" — clean status is tracked separately, not gated here
+  const p=dayPercent(day);if(p>=FULL_DAY_PCT)return'full';if(p>0||day.confirmed)return'partial';return'missed';
+}
+// ================================================================
+// DEEP ANALYSIS — advanced offline analytics (vanilla JS + hand-built SVG, no libs)
+// ================================================================
+let statsMode='week';
+function _mean(a){return a.length?a.reduce((s,x)=>s+x,0)/a.length:0;}
+function _pearson(xs,ys){const n=Math.min(xs.length,ys.length);if(n<3)return null;const mx=_mean(xs),my=_mean(ys);let num=0,dx=0,dy=0;for(let i=0;i<n;i++){const a=xs[i]-mx,b=ys[i]-my;num+=a*b;dx+=a*a;dy+=b*b;}if(dx===0||dy===0)return null;return num/Math.sqrt(dx*dy);}
+function _linreg(xs,ys){const n=xs.length;if(n<2)return null;const mx=_mean(xs),my=_mean(ys);let num=0,den=0;for(let i=0;i<n;i++){const a=xs[i]-mx;num+=a*(ys[i]-my);den+=a*a;}if(den===0)return null;const slope=num/den;return{slope,intercept:my-slope*mx};}
+function _movAvg(arr,w){return arr.map((_,i)=>{const seg=arr.slice(Math.max(0,i-w+1),i+1).filter(v=>v!=null);return seg.length?_mean(seg):null;});}
+function _clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+
+// Analyzable dataset from every logged day up to today (adapts to whatever history exists)
+function deepData(){
+  const tk=todayKey();
+  return Object.keys(S.history).filter(k=>k<=tk).sort().map(k=>{
+    const d=S.history[k];if(!d||(!((d.pts||0)>0)&&!d.confirmed&&!d.slip))return null;
+    const dt=new Date(k+'T12:00:00');const si=d.simple||{},pr=d.prayers||{};
+    return {key:k,dt,dow:dt.getDay(),grade:dayPercent(d),
+      clean:(si.nofog===true&&!d.slip)?1:0,
+      slip:(d.slip||(d.violations&&d.violations.length))?1:0,
+      mood:d.mood||null,ks:dayKeystones(d).count,
+      fajrMosque:pr.fajr==='mosque'?1:0,fajrAny:pr.fajr?1:0,
+      wird:si.wird?1:0,uni:si.uni?1:0,athkar:si.athkar_m?1:0,
+      gym:si.gym?1:0,walk:si.walk?1:0,noscroll:si.noscroll?1:0,memorize:si.memorize?1:0};
+  }).filter(Boolean);
+}
+
+// ---- SVG builders (theme hexes: orange #FF6B00, teal #00D4AA, navy #2A4A6B, dim #3A5070) ----
+function svgTrend(rows){
+  const W=320,H=140,pl=8,pr=8,pt=10,pb=18,n=rows.length;
+  const iW=W-pl-pr,iH=H-pt-pb;
+  const xAt=i=>pl+(n<=1?iW/2:(i/(n-1))*iW);
+  const yAt=v=>pt+iH-(_clamp(v,0,100)/100)*iH;
+  const grades=rows.map(r=>r.grade);const ma=_movAvg(grades,7);
+  const area=`${xAt(0)},${yAt(0)} `+rows.map((r,i)=>`${xAt(i).toFixed(1)},${yAt(r.grade).toFixed(1)}`).join(' ')+` ${xAt(n-1)},${yAt(0)}`;
+  const gLine=rows.map((r,i)=>`${xAt(i).toFixed(1)},${yAt(r.grade).toFixed(1)}`).join(' ');
+  const mLine=ma.map((v,i)=>v==null?null:`${xAt(i).toFixed(1)},${yAt(v).toFixed(1)}`).filter(Boolean).join(' ');
+  const lr=_linreg(rows.map((_,i)=>i),grades);
+  let proj='';
+  if(lr)proj=`<line x1="${xAt(0).toFixed(1)}" y1="${yAt(lr.intercept).toFixed(1)}" x2="${xAt(n-1).toFixed(1)}" y2="${yAt(lr.intercept+lr.slope*(n-1)).toFixed(1)}" stroke="#FF8C2A" stroke-width="1.3" stroke-dasharray="3 3" opacity="0.85"/>`;
+  const fy=yAt(50).toFixed(1);
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block;overflow:visible;">`
+    +`<line x1="${pl}" y1="${fy}" x2="${W-pr}" y2="${fy}" stroke="#3A5070" stroke-width="1" stroke-dasharray="2 3"/>`
+    +`<polygon points="${area}" fill="rgba(0,212,170,0.10)"/>`
+    +`<polyline points="${gLine}" fill="none" stroke="#2A4A6B" stroke-width="1"/>`
+    +(mLine?`<polyline points="${mLine}" fill="none" stroke="#00D4AA" stroke-width="2"/>`:'')
+    +proj+`</svg>`;
+}
+function svgRadar(vals){
+  const W=260,H=200,cx=W/2,cy=H/2,R=66,N=vals.length;
+  const ang=i=>(-Math.PI/2)+(i/N)*Math.PI*2;
+  const pt=(i,r)=>[cx+Math.cos(ang(i))*r,cy+Math.sin(ang(i))*r];
+  let rings='';[0.25,0.5,0.75,1].forEach(f=>{let p=[];for(let i=0;i<N;i++){const[x,y]=pt(i,R*f);p.push(`${x.toFixed(1)},${y.toFixed(1)}`);}rings+=`<polygon points="${p.join(' ')}" fill="none" stroke="#1E3040" stroke-width="1"/>`;});
+  let axes='',labels='';
+  for(let i=0;i<N;i++){const[x,y]=pt(i,R);axes+=`<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#1E3040" stroke-width="1"/>`;const[lx,ly]=pt(i,R+15);labels+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="#C8D8E8" font-size="9" font-weight="700" text-anchor="middle" dominant-baseline="middle">${vals[i].label}</text><text x="${lx.toFixed(1)}" y="${(ly+10).toFixed(1)}" fill="#3A5070" font-size="8" text-anchor="middle">${vals[i].pct}%</text>`;}
+  let poly=[];for(let i=0;i<N;i++){const[x,y]=pt(i,R*(vals[i].pct/100));poly.push(`${x.toFixed(1)},${y.toFixed(1)}`);}
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block;overflow:visible;">${rings}${axes}<polygon points="${poly.join(' ')}" fill="rgba(255,107,0,0.20)" stroke="#FF6B00" stroke-width="2"/>${labels}</svg>`;
+}
+function svgWeekday(avgByDow){
+  const W=320,H=120,pb=22,pt=10,n=7,gap=8,bw=(W-gap*(n-1))/n;
+  const names=['SUN','MON','TUE','WED','THU','FRI','SAT'];let bars='';
+  for(let i=0;i<7;i++){const v=avgByDow[i];const x=i*(bw+gap);const h=v==null?0:(v/100)*(H-pb-pt);const y=H-pb-h;const col=v==null?'#142030':(v>=50?'#FF6B00':'#2A4A6B');
+    bars+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(0,h).toFixed(1)}" fill="${col}" rx="2"/>`;
+    bars+=`<text x="${(x+bw/2).toFixed(1)}" y="${H-pb+12}" fill="#3A5070" font-size="8" text-anchor="middle">${names[i]}</text>`;
+    if(v!=null)bars+=`<text x="${(x+bw/2).toFixed(1)}" y="${(y-3).toFixed(1)}" fill="#C8D8E8" font-size="8" text-anchor="middle">${Math.round(v)}</text>`;}
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block;overflow:visible;">${bars}</svg>`;
+}
+// Lift: P(clean | habit) vs P(clean | not habit)
+function cleanLift(rows){
+  const habits=[['Fajr at mosque','fajrMosque'],['Fajr prayed','fajrAny'],['Wird','wird'],['Study','uni'],['Athkar','athkar'],['Gym','gym'],['No-scroll','noscroll'],['Walk','walk'],['Memorize','memorize']];
+  const out=[];
+  habits.forEach(([label,key])=>{const w=rows.filter(r=>r[key]===1),wo=rows.filter(r=>r[key]!==1);if(w.length<2||wo.length<1)return;const cw=_mean(w.map(r=>r.clean))*100,co=_mean(wo.map(r=>r.clean))*100;out.push({label,withRate:cw,withoutRate:co,lift:cw-co,n:w.length});});
+  return out.sort((a,b)=>b.lift-a.lift);
+}
+function genInsights(rows,avgByDow,lift){
+  const ins=[];if(rows.length<2)return ins;
+  const grades=rows.map(r=>r.grade);const avg=Math.round(_mean(grades));
+  const lr=_linreg(rows.map((_,i)=>i),grades);
+  if(lr){if(lr.slope>0.4)ins.push({i:'📈',t:`Trending UP — about +${lr.slope.toFixed(1)}% a day. Momentum is real; keep feeding it.`});
+    else if(lr.slope<-0.4)ins.push({i:'📉',t:`Drifting down ~${lr.slope.toFixed(1)}% a day. Not a verdict — one floor day flips the line.`});
+    else ins.push({i:'➡️',t:`Holding steady near ${avg}%. Boring consistency is exactly the goal.`});}
+  const valid=avgByDow.map((v,i)=>({v,i})).filter(o=>o.v!=null);
+  if(valid.length>=3){const names=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];const best=valid.reduce((a,b)=>b.v>a.v?b:a),worst=valid.reduce((a,b)=>b.v<a.v?b:a);if(best.i!==worst.i&&best.v-worst.v>=8){ins.push({i:'🗓️',t:`Strongest on ${names[best.i]} (${Math.round(best.v)}%), weakest on ${names[worst.i]} (${Math.round(worst.v)}%). Protect ${names[worst.i]}.`});}}
+  if(lift.length&&lift[0].lift>12)ins.push({i:'🛡️',t:`Your strongest shield: on ${lift[0].label} days you stay clean ${Math.round(lift[0].withRate)}% vs ${Math.round(lift[0].withoutRate)}% otherwise (+${Math.round(lift[0].lift)} pts).`});
+  const mr=rows.filter(r=>r.mood!=null);if(mr.length>=4){const r=_pearson(mr.map(x=>x.mood),mr.map(x=>x.grade));if(r!=null&&Math.abs(r)>0.3)ins.push({i:'🧠',t:`Mood and discipline move ${r>0?'together':'in opposite directions'} (r=${r.toFixed(2)}). ${r>0?'A good day lifts both.':''}`});}
+  ins.push({i:'🟢',t:`Clean journey — ${S.cleanStreak||0} now, best ${S.bestCleanStreak||0}, ${S.totalCleanDays||0} total. Never resets.`});
+  return ins;
+}
+function _statCard(title,inner){return `<div class="stat-card"><div class="stat-card-title">${title}</div>${inner}</div>`;}
+function renderDeepStats(){
+  getTD().pts=calcTodayPts();
+  const el=document.getElementById('stats-deep');if(!el)return;
+  const rows=deepData();
+  if(rows.length<2){el.innerHTML=`<div class="stat-card" style="text-align:center;padding:26px 14px;color:var(--dim);"><div style="font-size:30px;margin-bottom:8px;">🔬</div><div style="color:var(--text);font-weight:700;margin-bottom:6px;">Deep Analysis is warming up</div><div style="font-size:11px;line-height:1.5;">Log a few days and this fills with your trends, weekday patterns, what protects your clean days, and ranked insights. It needs data to find your edge.</div></div>`;return;}
+  const grades=rows.map(r=>r.grade);const avg=Math.round(_mean(grades));
+  const byDow=Array.from({length:7},()=>[]);rows.forEach(r=>byDow[r.dow].push(r.grade));
+  const avgByDow=byDow.map(a=>a.length?_mean(a):null);
+  const lift=cleanLift(rows);
+  const lr=_linreg(rows.map((_,i)=>i),grades);
+  const spanDays=Math.round((dateKeyToLocal(todayKey())-dateKeyToLocal(rows[0].key))/86400000)+1;
+  const showUp=Math.round(rows.length/Math.max(1,spanDays)*100);
+  const trendArrow=lr?(lr.slope>0.4?'▲':lr.slope<-0.4?'▼':'—'):'—';
+  const trendCol=lr?(lr.slope>0.4?'var(--green)':lr.slope<-0.4?'var(--red)':'var(--dim)'):'var(--dim)';
+  // 1. State of the protocol
+  const head=`<div class="stat-row-3" style="margin-bottom:8px;">`
+    +`<div class="stat-mini"><div class="stat-mini-val">${avg}%</div><div class="stat-mini-lbl">AVG GRADE</div></div>`
+    +`<div class="stat-mini"><div class="stat-mini-val" style="color:${trendCol};">${trendArrow}</div><div class="stat-mini-lbl">TREND</div></div>`
+    +`<div class="stat-mini"><div class="stat-mini-val">${showUp}%</div><div class="stat-mini-lbl">SHOW-UP</div></div></div>`
+    +`<div style="text-align:center;font-size:10px;color:var(--dim);margin-bottom:8px;">${rows.length} days logged over ${spanDays} days since you started</div>`;
+  // 2. insights
+  const insights=genInsights(rows,avgByDow,lift);
+  const insHtml=insights.map(o=>`<div style="display:flex;gap:9px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border2);"><div style="font-size:15px;line-height:1.2;">${o.i}</div><div style="font-size:12px;line-height:1.45;color:var(--text);">${o.t}</div></div>`).join('');
+  // 3. radar (all-time keystone hit-rate)
+  const ksKeys=[['Fajr',r=>r.fajrAny],['Wird',r=>r.wird],['Study',r=>r.uni],['Athkar',r=>r.athkar],['Clean',r=>r.clean]];
+  const radarVals=ksKeys.map(([label,fn])=>({label,pct:Math.round(_mean(rows.map(r=>fn(r)?1:0))*100)}));
+  // 4. weekday best/worst caption
+  const valid=avgByDow.map((v,i)=>({v,i})).filter(o=>o.v!=null);const dn=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let wkCap='';if(valid.length>=2){const b=valid.reduce((a,c)=>c.v>a.v?c:a),w=valid.reduce((a,c)=>c.v<a.v?c:a);wkCap=`<div style="text-align:center;font-size:10px;color:var(--dim);margin-top:6px;">Best ${dn[b.i]} ${Math.round(b.v)}% · toughest ${dn[w.i]} ${Math.round(w.v)}%</div>`;}
+  // 5. lift rows
+  let liftHtml;
+  if(lift.length&&lift.some(l=>Math.abs(l.lift)>=5)){
+    liftHtml=lift.slice(0,6).map(l=>{const pos=l.lift>=0;const col=pos?'var(--green)':'var(--red)';return `<div style="margin-bottom:9px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text);margin-bottom:3px;"><span>${l.label}</span><span style="color:${col};font-weight:700;">${pos?'+':''}${Math.round(l.lift)} pts</span></div><div style="height:7px;background:var(--s3);border-radius:4px;overflow:hidden;"><div style="height:100%;width:${Math.round(l.withRate)}%;background:${col};"></div></div><div style="font-size:9px;color:var(--dim);margin-top:2px;">clean ${Math.round(l.withRate)}% on these days vs ${Math.round(l.withoutRate)}% without · ${l.n} days</div></div>`;}).join('');
+  } else { liftHtml=`<div style="font-size:11px;color:var(--dim);text-align:center;padding:8px 0;">A few more clean and slip days and the protective patterns will surface here.</div>`; }
+  // 6. mood corr
+  const mr=rows.filter(r=>r.mood!=null);let moodHtml;
+  if(mr.length>=4){const r=_pearson(mr.map(x=>x.mood),mr.map(x=>x.grade));if(r!=null){const strength=Math.abs(r)>0.6?'strong':Math.abs(r)>0.3?'moderate':'weak';moodHtml=`<div style="text-align:center;padding:6px 0;"><div style="font-size:34px;font-weight:900;font-family:'Barlow Condensed',sans-serif;color:${r>0?'var(--teal)':'var(--red)'};line-height:1;">r = ${r.toFixed(2)}</div><div style="font-size:11px;color:var(--dim);margin-top:5px;">${strength} ${r>0?'positive':'negative'} link between your mood and your grade (${mr.length} days)</div></div>`;}else moodHtml=`<div style="font-size:11px;color:var(--dim);text-align:center;padding:8px 0;">Not enough variation yet.</div>`;}
+  else moodHtml=`<div style="font-size:11px;color:var(--dim);text-align:center;padding:8px 0;">Log your mood on more days to unlock this.</div>`;
+
+  el.innerHTML = _statCard('STATE OF THE PROTOCOL',head)
+    + _statCard('INSIGHTS',insHtml||'<div style="font-size:11px;color:var(--dim);padding:6px 0;">More days needed.</div>')
+    + _statCard('GRADE TREND · 7-DAY AVERAGE <span style="float:right;font-weight:400;color:var(--dim2);font-size:9px;letter-spacing:0;">teal=avg · orange=trend</span>',svgTrend(rows))
+    + _statCard('KEYSTONE SHAPE · ALL-TIME',svgRadar(radarVals))
+    + _statCard('GRADE BY WEEKDAY',svgWeekday(avgByDow)+wkCap)
+    + _statCard('WHAT PROTECTS YOUR CLEAN DAYS',liftHtml)
+    + _statCard('MOOD ↔ DISCIPLINE',moodHtml);
+}
+function setStatsMode(m){
+  statsMode=m;
+  const wk=document.getElementById('stats-weekly'),dp=document.getElementById('stats-deep');
+  const bw=document.getElementById('sm-week'),bd=document.getElementById('sm-deep');
+  if(wk)wk.style.display=m==='week'?'block':'none';
+  if(dp)dp.style.display=m==='deep'?'block':'none';
+  if(bw){bw.style.background=m==='week'?'var(--orange-dim)':'transparent';bw.style.color=m==='week'?'var(--orange)':'var(--dim)';}
+  if(bd){bd.style.background=m==='deep'?'var(--orange-dim)':'transparent';bd.style.color=m==='deep'?'var(--orange)':'var(--dim)';}
+  if(m==='deep')renderDeepStats();else renderStats();
+  window.scrollTo(0,0);
+}
+function renderStatsActive(){if(statsMode==='deep')renderDeepStats();else renderStats();}
+
+function renderStats(){
+  getTD().pts=calcTodayPts();const todayK=todayKey();const days=getWeekDays(statsWeekOffset);
+  const DAY_NAMES=['SUN','MON','TUE','WED','THU','FRI','SAT'];const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const first=new Date(days[0]+'T12:00:00');const last=new Date(days[6]+'T12:00:00');const isCurrent=statsWeekOffset===0;
+  document.getElementById('stat-week-label').textContent=isCurrent?'THIS WEEK':first.getDate()+' '+MONTHS[first.getMonth()].toUpperCase()+' — '+last.getDate()+' '+MONTHS[last.getMonth()].toUpperCase();
+  const moodChart=document.getElementById('mood-chart');const moodLabels=document.getElementById('mood-chart-labels');moodChart.innerHTML='';moodLabels.innerHTML='';
+  const emojis={1:'😤',2:'😔',3:'😐',4:'😊',5:'💪'};
+  days.forEach((key,i)=>{
+    const day=S.history[key];const mood=day?.mood;
+    const col=document.createElement('div');col.style.cssText='flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;height:100%;';
+    const val=document.createElement('div');val.style.cssText='font-size:9px;min-height:14px;';val.textContent=mood?emojis[mood]:'';
+    const fill=document.createElement('div');const hp=mood?(mood/5)*100:0;fill.style.cssText=`width:100%;height:${hp}%;background:#a07cc5;opacity:${mood?1:0.12};transition:height 0.5s;`;
+    col.appendChild(val);col.appendChild(fill);moodChart.appendChild(col);
+    const lbl=document.createElement('div');lbl.className='bar-day-lbl'+(key===todayK?' today-lbl-bar':'');lbl.textContent=DAY_NAMES[i];moodLabels.appendChild(lbl);
+  });
+  const barChart=document.getElementById('bar-chart');const barLabels=document.getElementById('bar-labels');barChart.innerHTML='';barLabels.innerHTML='';
+  days.forEach((key,i)=>{
+    const day=S.history[key];const pts=day?.pts||0;const status=getDayStatus(key);
+    const dpc=dayPercent(day);const hp=status==='future'?4:dpc===0?0:Math.max(10,dpc);
+    const col=document.createElement('div');col.style.cssText='flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;height:100%;';
+    const valEl=document.createElement('div');valEl.style.cssText='font-size:8px;color:var(--dim);min-height:12px;';valEl.textContent=(status!=='future'&&dpc>0)?dpc+'%':'';
+    const fill=document.createElement('div');fill.style.cssText=`width:100%;height:${hp}%;transition:height 0.5s;`;
+    if(status==='future')fill.style.background='var(--s3)';
+    else if(key===todayK)fill.style.background='var(--orange)';
+    else if(status==='missed'||pts===0)fill.style.background='var(--red-dim)';
+    else fill.style.background='rgba(42,74,107,0.4)';
+    col.appendChild(valEl);col.appendChild(fill);barChart.appendChild(col);
+    const lbl=document.createElement('div');lbl.className='bar-day-lbl'+(key===todayK?' today-lbl-bar':'');lbl.textContent=DAY_NAMES[i];barLabels.appendChild(lbl);
+  });
+  barChart.style.position='relative';const _fl=document.createElement('div');_fl.style.cssText='position:absolute;left:0;right:0;bottom:50%;height:1px;background:rgba(255,255,255,0.13);pointer-events:none;';barChart.appendChild(_fl);
+  const startK=keyFromDate(START_DATE_LOCAL);
+  // pastDays = elapsed days in the program window, always including today (today is an active, non-future day). (audit fix)
+  const pastDays=days.filter(k=>k<=todayK&&(k>=startK||k===todayK));const activeDays=pastDays.length||1;
+  // numerator and divisor use the SAME day-set so WEEK PTS / AVG / FULL DAYS stay consistent. (audit fix)
+  const weekPts=pastDays.reduce((s,k)=>s+(S.history[k]?.pts||0),0);
+  const fullDays=pastDays.filter(k=>getDayStatus(k)==='full').length;
+  // mercy-scale week metrics: average day-grade over logged days, off the 80-pt economy
+  let _logged=0,_sumG=0;pastDays.forEach(k=>{const d=S.history[k];if(d&&((d.pts||0)>0||d.confirmed)){_logged++;_sumG+=dayPercent(d);}});
+  const avgGrade=_logged?Math.round(_sumG/_logged):0;
+  document.getElementById('stat-summary-row').innerHTML=`<div class="stat-mini"><div class="stat-mini-val">${avgGrade}%</div><div class="stat-mini-lbl">AVG GRADE</div></div><div class="stat-mini"><div class="stat-mini-val">${fullDays}</div><div class="stat-mini-lbl">STRONG 50%+</div></div><div class="stat-mini"><div class="stat-mini-val">${_logged}</div><div class="stat-mini-lbl">DAYS LOGGED</div></div>`;
+  // 5-keystone consistency this week — the floor, made actionable (which one is slipping)
+  const ksDefs=[['Fajr',d=>!!(d.prayers&&d.prayers.fajr)],['Wird',d=>!!(d.simple&&d.simple.wird)],['Study',d=>!!(d.simple&&d.simple.uni)],['Athkar',d=>!!(d.simple&&d.simple.athkar_m)],['Clean',d=>!!(d.simple&&d.simple.nofog===true&&!d.slip)]];
+  const ksDenom=pastDays.length||1;const ksEl=document.getElementById('keystone-breakdown');ksEl.innerHTML='';
+  ksDefs.forEach(([label,fn])=>{
+    let c=0;pastDays.forEach(k=>{const d=S.history[k];if(d&&fn(d))c++;});const pct=Math.round((c/ksDenom)*100);
+    const fc=pct>=70?'fill-green':pct>=40?'fill-amber':'fill-red';const sl=pct>=70?'SOLID':pct>=40?'BUILDING':'START HERE';const sc=pct>=70?'status-maintain':pct>=40?'status-improve':'status-focus';
+    const row=document.createElement('div');row.className='task-row';row.innerHTML=`<div class="task-row-name">${label}</div><div class="task-row-bar"><div class="task-row-fill ${fc}" style="width:${pct}%"></div></div><div class="task-row-pct">${c}/${ksDenom}</div><div class="task-status ${sc}">${sl}</div>`;ksEl.appendChild(row);
+  });
+  const prayerStatRow=document.getElementById('prayer-stat-row');prayerStatRow.innerHTML='';
+  const pLbls={fajr:'Fajr',dhuhr:'Dhuhr',asr:'Asr',maghrib:'Mgrib',isha:'Isha'};
+  FARD_PRAYERS.forEach(name=>{
+    let mosqueCount=0,homeCount=0;
+    pastDays.forEach(k=>{const day=S.history[k];if(day?.prayers?.[name]==='mosque')mosqueCount++;else if(day?.prayers?.[name]==='home')homeCount++;});
+    const total=mosqueCount+homeCount;
+    const cell=document.createElement('div');cell.className='prayer-stat-cell';
+    cell.innerHTML=`<div class="prayer-stat-name">${pLbls[name]}</div><div class="prayer-stat-count" style="color:${mosqueCount>homeCount?'var(--orange)':'var(--navy-light)'}">${total}</div><div class="prayer-stat-pct">${mosqueCount}🕌 ${homeCount}🏠</div>`;
+    prayerStatRow.appendChild(cell);
+  });
+  const prevDays=getWeekDays(statsWeekOffset-1);const prevPts=prevDays.reduce((s,k)=>s+(S.history[k]?.pts||0),0);
+  const growthEl=document.getElementById('growth-display');
+  if(prevPts===0&&weekPts===0){growthEl.innerHTML='<div style="font-size:11px;color:var(--dim);padding:8px 0;">Not enough data yet.</div>';}
+  else{const diff=weekPts-prevPts;const pct2=prevPts>0?Math.round((diff/prevPts)*100):(weekPts>0?100:0);const cls=diff>0?'growth-positive':diff<0?'growth-negative':'growth-neutral';const arrow=diff>0?'▲':diff<0?'▼':'—';growthEl.innerHTML=`<div class="growth-num ${cls}">${arrow} ${Math.abs(pct2)}%</div><div class="growth-sub">${diff>=0?'+':''}${diff} pts vs last week</div>`;}
+  const allTaskKeys=[
+    {key:'athkar_m',label:'Athkar Morn'},{key:'athkar_a',label:'Athkar Aft'},
+    {key:'wird',label:'Wird'},{key:'walk',label:'Walk'},{key:'uni',label:'Uni Work'},
+    {key:'memorize',label:'Memorize'},{key:'gym',label:'Gym'},
+    {key:'noscroll',label:'No Scroll'},{key:'nofog',label:'No Fog'},
+    {key:'steps',label:'10k Steps'},{key:'stairs',label:'Stairs'},
+    {key:'plank',label:'Plank'},{key:'sideplank',label:'Side Plank'},
+    {key:'drone',label:'Drone'},{key:'tajweed',label:'Tajweed'},{key:'beneficial',label:'Beneficial'},
+  ];
+  const total=pastDays.length||1;
+  const taskData=allTaskKeys.map(t=>{let count=0;pastDays.forEach(k=>{const day=S.history[k];if(day?.simple?.[t.key])count++;});return{...t,pct:Math.round((count/total)*100)};}).sort((a,b)=>a.pct-b.pct);
+  const breakdown=document.getElementById('task-breakdown');breakdown.innerHTML='';
+  taskData.forEach(t=>{const fc=t.pct>=80?'fill-green':t.pct>=50?'fill-amber':'fill-red';const sl=t.pct>=80?'MAINTAIN':t.pct>=50?'IMPROVE':'FOCUS';const sc=t.pct>=80?'status-maintain':t.pct>=50?'status-improve':'status-focus';const row=document.createElement('div');row.className='task-row';row.innerHTML=`<div class="task-row-name">${t.label}</div><div class="task-row-bar"><div class="task-row-fill ${fc}" style="width:${t.pct}%"></div></div><div class="task-row-pct">${t.pct}%</div><div class="task-status ${sc}">${sl}</div>`;breakdown.appendChild(row);});
+  // CLEAN JOURNEY — replaces the old shame-framed VIOLATIONS card. Honest about hard days, hopeful in frame.
+  let hardThisWeek=0,strip='';
+  days.forEach(k=>{
+    const d=S.history[k];const fut=getDayStatus(k)==='future';let color,ch,title;
+    if(fut){color='var(--s3)';ch='·';title='upcoming';}
+    else if(d&&(d.slip||(d.violations&&d.violations.length))){color='var(--navy-light)';ch='○';title='hard day';hardThisWeek++;}
+    else if(d&&d.simple&&d.simple.nofog===true){color='var(--green)';ch='●';title='clean';}
+    else{color='var(--dim2)';ch='·';title='no log';}
+    strip+=`<div title="${title}" style="flex:1;text-align:center;color:${color};font-size:15px;line-height:1;">${ch}</div>`;
+  });
+  const cj=document.getElementById('clean-journey');
+  cj.innerHTML=`<div style="display:flex;gap:14px;justify-content:center;text-align:center;margin-bottom:10px;"><div><div style="font-size:26px;font-weight:900;color:var(--green);font-family:'Barlow Condensed',sans-serif;line-height:1;">${S.cleanStreak||0}</div><div style="font-size:8px;letter-spacing:1px;color:var(--dim);">CURRENT</div></div><div><div style="font-size:26px;font-weight:900;color:var(--orange);font-family:'Barlow Condensed',sans-serif;line-height:1;">${S.bestCleanStreak||0}</div><div style="font-size:8px;letter-spacing:1px;color:var(--dim);">BEST</div></div><div><div style="font-size:26px;font-weight:900;color:var(--teal);font-family:'Barlow Condensed',sans-serif;line-height:1;">${S.totalCleanDays||0}</div><div style="font-size:8px;letter-spacing:1px;color:var(--dim);">TOTAL CLEAN</div></div></div><div style="display:flex;gap:3px;">${strip}</div>`+(hardThisWeek>0?`<div style="font-size:10px;color:var(--dim);text-align:center;margin-top:9px;">${hardThisWeek} hard day${hardThisWeek>1?'s':''} this week — you came back. That's what counts.</div>`:`<div style="font-size:10px;color:var(--green);text-align:center;margin-top:9px;">All clear this week ✓</div>`);
+  const mapEl=document.getElementById('streak-map');mapEl.innerHTML='';
+  for(let i=0;i<PROGRAM_DAYS;i++){
+    const d=new Date(START_DATE_LOCAL.getFullYear(),START_DATE_LOCAL.getMonth(),START_DATE_LOCAL.getDate()+i);
+    const k=keyFromDate(d);const status=getDayStatus(k);
+    const cell=document.createElement('div');cell.className='sm-cell';
+    if(k===todayK)cell.classList.add('sm-today');
+    if(status==='full')cell.classList.add('sm-full');else if(status==='partial')cell.classList.add('sm-partial');else if(status==='missed'&&k<=todayK)cell.classList.add('sm-missed');else cell.classList.add('sm-future');
+    mapEl.appendChild(cell);
+  }
+  const dnx=getDayNum();let strongInProg=0;for(let i=0;i<PROGRAM_DAYS;i++){const dd=new Date(START_DATE_LOCAL.getFullYear(),START_DATE_LOCAL.getMonth(),START_DATE_LOCAL.getDate()+i);const kk=keyFromDate(dd);if(kk<=todayK&&getDayStatus(kk)==='full')strongInProg++;}
+  const ms=document.getElementById('map-sub');if(ms)ms.textContent=(dnx?'DAY '+dnx+' OF '+PROGRAM_DAYS:'STARTS '+START_DATE_LOCAL.getDate()+' '+MONTHS[START_DATE_LOCAL.getMonth()])+' · '+strongInProg+' STRONG';
+}
+
+// Trailing 7 days ending today — fixes the old Monday-anchored window that collapsed to a single
+// day on Mondays. Always 7 valid days, works pre-start and mid-program, no crash on gaps.
+function buildWeeklyReport(){
+  const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const _td=getTD();_td.pts=calcTodayPts();recalcTotal();
+  const now=new Date();const todayLocal=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const week=[];for(let i=6;i>=0;i--){const d=new Date(todayLocal.getFullYear(),todayLocal.getMonth(),todayLocal.getDate()-i);week.push(keyFromDate(d));}
+  const first=new Date(week[0]+'T12:00:00');const last=new Date(week[6]+'T12:00:00');
+  const weekLabel=first.getDate()+' '+MONTHS[first.getMonth()]+' — '+last.getDate()+' '+MONTHS[last.getMonth()];
+  let logged=0,sumPct=0,fullDays=0,floorHeld=0,rawPts=0,hardDays=0;const dayLines=[];
+  week.forEach(k=>{
+    const day=S.history[k];const dt=new Date(k+'T12:00:00');const lbl=DOW[dt.getDay()]+' '+String(dt.getDate()).padStart(2,' ');
+    if(day&&((day.pts||0)>0||day.confirmed)){
+      const p=dayPercent(day);const ks=dayKeystones(day).count;logged++;sumPct+=p;rawPts+=(day.pts||0);
+      if(p>=FULL_DAY_PCT)fullDays++;if(ks>=4)floorHeld++;if(day.violations?.length)hardDays++;
+      const f=Math.round(p/10);const bar='#'.repeat(f)+'.'.repeat(10-f);
+      dayLines.push('  '+lbl+'  '+bar+' '+String(p).padStart(3,' ')+'%  floor '+ks+'/5');
+    } else {
+      dayLines.push('  '+lbl+'  .......... rest day');
+    }
+  });
+  const avgLogged=logged>0?Math.round(sumPct/logged):0;
+  let L=['===============================','  PROTOCOL - 7-DAY REPORT','  '+weekLabel,'  Exported: '+now.toLocaleString(),'==============================='];
+  L.push('','DAY BY DAY','-------------------------------',...dayLines);
+  L.push('','SUMMARY','-------------------------------');
+  L.push('  Days shown up    : '+logged+' / 7');
+  L.push('  Avg on those days: '+avgLogged+'%   (5 keystones = 50%, full day = 100%)');
+  L.push('  Strong days 50%+ : '+fullDays+' / '+logged);
+  L.push('  Floor held (4-5) : '+floorHeld+' / '+logged);
+  L.push('  Raw points       : '+rawPts);
+  L.push('  Streak           : '+S.streak+' days');
+  L.push('  Clean streak     : '+(S.cleanStreak||0)+'  (best '+(S.bestCleanStreak||0)+', total '+(S.totalCleanDays||0)+')');
+  if(hardDays>0)L.push('  Hard days        : '+hardDays+'  - they do not erase the above');
+  L.push('','Showing up beats a perfect score. Keep coming back.','===============================');
+  return L.join('\n');
+}
+function _reportFallbackCopy(pre){const r=document.createRange();r.selectNodeContents(pre);const sel=window.getSelection();sel.removeAllRanges();sel.addRange(r);try{document.execCommand('copy');}catch(e){}sel.removeAllRanges();}
+function exportWeeklyReport(){
+  const text=buildWeeklyReport();
+  const old=document.getElementById('report-overlay');if(old)old.remove();
+  const ov=document.createElement('div');ov.id='report-overlay';
+  ov.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(8,12,20,0.95);display:flex;flex-direction:column;padding:18px 14px;';
+  const pre=document.createElement('pre');
+  pre.style.cssText='flex:1;white-space:pre;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;line-height:1.5;color:#cfe3ff;background:rgba(20,28,42,0.6);border:1px solid rgba(80,120,170,0.3);border-radius:10px;padding:14px;overflow:auto;margin:0 0 12px;';
+  pre.textContent=text;
+  const row=document.createElement('div');row.style.cssText='display:flex;gap:10px;flex-wrap:wrap;';
+  const mk=(label,bg)=>{const b=document.createElement('button');b.textContent=label;b.style.cssText='flex:1;min-width:90px;padding:13px;border:none;border-radius:10px;font-size:13px;font-weight:700;letter-spacing:0.5px;color:#fff;background:'+bg+';cursor:pointer;';return b;};
+  const copyB=mk('COPY','#3a6ea5'),dlB=mk('DOWNLOAD','#2a4a6b'),closeB=mk('CLOSE','#444');
+  copyB.onclick=()=>{const done=()=>{copyB.textContent='COPIED ✓';};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done).catch(()=>{_reportFallbackCopy(pre);done();});}else{_reportFallbackCopy(pre);done();}};
+  dlB.onclick=()=>{const blob=new Blob([text],{type:'text/plain'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='protocol_report_'+tsStamp()+'.txt';a.click();URL.revokeObjectURL(url);dlB.textContent='SAVED ✓';};
+  closeB.onclick=()=>ov.remove();
+  row.appendChild(copyB);row.appendChild(dlB);row.appendChild(closeB);
+  ov.appendChild(pre);ov.appendChild(row);document.body.appendChild(ov);
+}
+
+// ================================================================
+// INIT
+// ================================================================
+// ===== Start Fresh: clear pre-program days so the new start date is a blank Day 1 =====
+function confirmStartFresh(){
+  const sk=keyFromDate(START_DATE_LOCAL);
+  const pre=Object.keys(S.history).filter(k=>k<sk);
+  if(!pre.length){showToast('Already starting clean ✓');return;}
+  const modal=document.createElement('div');modal.className='modal-overlay show';
+  modal.innerHTML=`<div class="modal" style="border-color:var(--teal);"><div class="modal-title">START FRESH ON DAY 1?</div><div class="modal-msg">${pre.length} day(s) logged before your Day 1 will be cleared so the program starts blank. A backup downloads first. Your best clean streak is kept.</div><div style="display:flex;gap:8px;margin-top:4px;"><button class="modal-close" style="border-color:var(--teal);color:var(--teal);" id="fresh-yes">BACKUP + CLEAR</button><button class="modal-close" style="border-color:var(--border2);color:var(--dim);" id="fresh-no">CANCEL</button></div></div>`;
+  document.body.appendChild(modal);
+  document.getElementById('fresh-yes').onclick=()=>{
+    const ts=tsStamp();const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='daraya_before_freshstart_'+ts+'.json';a.click();URL.revokeObjectURL(url);
+    pre.forEach(k=>{delete S.history[k];});
+    recalcTotal();recalcCleanStats();calcStreak();save();
+    modal.remove();renderToday();showToast('Clean slate — Day 1 awaits ✓');
+  };
+  document.getElementById('fresh-no').onclick=()=>modal.remove();
+}
+
+// ===== Welcome-Back: greet a return after a gap instead of showing a graveyard =====
+function daysSinceLastActivity(){
+  const tk=todayKey();let last=null;
+  Object.keys(S.history).forEach(k=>{
+    if(k>tk)return;const d=S.history[k];
+    if(d&&((d.pts||0)>0||d.confirmed||Object.values(d.simple||{}).some(Boolean)||Object.values(d.prayers||{}).some(v=>!!v)||Object.values(d.sunnah||{}).some(Boolean))){if(!last||k>last)last=k;}
+  });
+  if(!last)return 0;
+  return Math.round((dateKeyToLocal(tk)-dateKeyToLocal(last))/86400000);
+}
+function showWelcomeBack(gap){
+  const ov=document.createElement('div');ov.id='welcome-back-overlay';
+  ov.style.cssText='position:fixed;inset:0;z-index:10000;background:linear-gradient(180deg,#0a1018,#0d1622);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 22px;';
+  const best=S.bestCleanStreak||0,totalClean=S.totalCleanDays||0;
+  ov.innerHTML=`<div style="font-size:13px;letter-spacing:3px;color:#5a7ea5;margin-bottom:10px;">WELCOME BACK</div><div style="font-size:25px;font-weight:800;color:#eaf2ff;line-height:1.3;margin-bottom:14px;">You were away ${gap} days.<br>Coming back is the hard part —<br>and you just did it.</div><div style="font-size:14px;color:#8aa3c0;max-width:330px;line-height:1.5;margin-bottom:22px;">The gap erases nothing. Your record stands. Today is just the next rep.</div><div style="display:flex;gap:24px;margin-bottom:26px;"><div><div style="font-size:30px;font-weight:800;color:#e88a3c;">${best}</div><div style="font-size:10px;letter-spacing:1px;color:#6b8199;">BEST CLEAN STREAK</div></div><div><div style="font-size:30px;font-weight:800;color:#3ca5a0;">${totalClean}</div><div style="font-size:10px;letter-spacing:1px;color:#6b8199;">TOTAL CLEAN DAYS</div></div></div><button id="wb-start" style="width:100%;max-width:320px;padding:16px;border:none;border-radius:12px;font-size:15px;font-weight:800;letter-spacing:1px;color:#fff;background:#e8721c;cursor:pointer;">START TODAY FRESH</button><div id="wb-urge" style="margin-top:16px;font-size:13px;color:#a0b4cc;text-decoration:underline;cursor:pointer;">Feeling an urge right now? Tap here.</div>`;
+  document.body.appendChild(ov);
+  document.getElementById('wb-start').onclick=()=>ov.remove();
+  document.getElementById('wb-urge').onclick=()=>{ov.remove();if(typeof openUrge==='function')openUrge();};
+}
+function maybeShowWelcomeBack(){
+  const gap=daysSinceLastActivity();
+  if(gap<2)return;
+  if(S.welcomeBackShownDate===todayKey())return;
+  S.welcomeBackShownDate=todayKey();save();
+  showWelcomeBack(gap);
+}
+
+// ===== Honor 600 3D model — auto-spin + drag-to-rotate (vanilla, offline) =====
+loadState();recalcTotal();autoConfirmTrackedDays();recalcCleanStats();calcStreak();renderToday();renderQuote();checkMidnightConfirm();maybeShowBackupBanner();maybeShowWelcomeBack();
+{const wi=document.getElementById('why-input');if(wi)wi.value=S.whyNote||'';}
+
+setInterval(()=>{
+  const unc=document.getElementById('unconfirmed-screen');
+  if(unc&&unc.style.display==='block')return;
+  checkMidnightConfirm();renderToday();
+  const statsView=document.getElementById('view-stats');
+  if(statsView&&statsView.style.display==='block')renderStatsActive();
+},60000);
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',async()=>{try{await navigator.serviceWorker.register('/protocol/sw.js');}catch(e){}});
+}
+</script>
+</body>
+</html>
